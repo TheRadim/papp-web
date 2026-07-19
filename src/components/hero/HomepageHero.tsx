@@ -28,13 +28,22 @@ export function HomepageHero({ locale, content }: HomepageHeroProps) {
               sizes="(max-width: 992px) 118vw, 72vw"
             />
             <Link className="hero-hotspot hero-hotspot--sensors" href={`/${locale}/products/sensors`}>
-              <span>{locale === "da" ? "Sensorer" : "Sensors"}</span>
+              <span>
+                <strong>{locale === "da" ? "Sensorer" : "Sensors"}</strong>
+                <em>{locale === "da" ? "Måler belægning og opholdstid i realtid." : "Measure occupancy and dwell time in real time."}</em>
+              </span>
             </Link>
             <Link className="hero-hotspot hero-hotspot--cameras" href={`/${locale}/products/cameras`}>
-              <span>{locale === "da" ? "Kameraer" : "Cameras"}</span>
+              <span>
+                <strong>{locale === "da" ? "Kameraer" : "Cameras"}</strong>
+                <em>{locale === "da" ? "Registrerer flow og adfærd uden persondata." : "Capture flow and behaviour without personal data."}</em>
+              </span>
             </Link>
             <Link className="hero-hotspot hero-hotspot--insights" href={`/${locale}/products/insights`}>
-              <span>{locale === "da" ? "Intelligens" : "Intelligence"}</span>
+              <span>
+                <strong>{locale === "da" ? "Intelligens" : "Intelligence"}</strong>
+                <em>{locale === "da" ? "Samler data til klare beslutninger." : "Turns mobility data into clear next steps."}</em>
+              </span>
             </Link>
           </div>
         </div>
