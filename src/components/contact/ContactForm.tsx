@@ -46,19 +46,19 @@ export function ContactForm({ locale }: ContactFormProps) {
     <form className="contact-form" onSubmit={submit}>
       <label>
         {locale === "da" ? "Navn" : "Name"}
-        <input name="name" required autoComplete="name" />
+        <input name="name" required autoComplete="name" placeholder=" " />
       </label>
       <label>
         {locale === "da" ? "Organisation" : "Organisation"}
-        <input name="organisation" required autoComplete="organization" />
+        <input name="organisation" required autoComplete="organization" placeholder=" " />
       </label>
       <label>
         Email
-        <input name="email" type="email" required autoComplete="email" />
+        <input name="email" type="email" required autoComplete="email" placeholder=" " />
       </label>
       <label>
         {locale === "da" ? "Telefon, valgfri" : "Phone, optional"}
-        <input name="phone" autoComplete="tel" />
+        <input name="phone" autoComplete="tel" placeholder=" " />
       </label>
       <label className="contact-form__wide">
         {locale === "da" ? "Interesseområde" : "Area of interest"}
@@ -73,7 +73,7 @@ export function ContactForm({ locale }: ContactFormProps) {
       </label>
       <label className="contact-form__wide">
         {locale === "da" ? "Besked" : "Message"}
-        <textarea name="message" required minLength={10} rows={6} />
+        <textarea name="message" required minLength={10} rows={6} placeholder=" " />
       </label>
       <label className="checkbox-label contact-form__wide">
         <input name="privacyAccepted" type="checkbox" required />

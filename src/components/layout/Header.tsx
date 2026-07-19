@@ -231,7 +231,6 @@ export function Header({ locale }: HeaderProps) {
                   {item.label}
                 </Link>
               ))}
-              <LanguageSwitcher locale={locale} pathname={pathname} />
               <a href={company.insightsUrl} target="_blank" rel="noreferrer">
                 {navLabels.login[locale]}
               </a>

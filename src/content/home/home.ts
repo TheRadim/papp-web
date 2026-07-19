@@ -37,7 +37,7 @@ export function getHomepageContent(locale: Locale): HomeContent {
   const content: Record<Locale, HomeContent> = {
     en: {
       hero: {
-        eyebrow: "From movement to decisions",
+        eyebrow: "Data-based mobility decisions",
         title: "Papp Mobility",
         lead: "Papp Mobility transforms mobility data into insight, analysis and advisory that helps cities and operators plan with confidence.",
         body: "We collect data with IoT sensors and cameras, visualise it in Papp Insights and help you turn real behaviour, flow and dwell time into practical next steps.",
@@ -73,7 +73,7 @@ export function getHomepageContent(locale: Locale): HomeContent {
     },
     da: {
       hero: {
-        eyebrow: "Fra bevægelse til beslutning",
+        eyebrow: "Databaserede mobilitetsbeslutninger",
         title: "Papp Mobility",
         lead: "Papp Mobility forvandler mobilitetsdata til indsigter, analyser og rådgivning, der gør det lettere at planlægge fremtidens byer.",
         body: "Vi indsamler data med IoT-sensorer og kameraer, visualiserer dem i Papp Insights og hjælper jer med at bruge viden om adfærd, flow og opholdstid i praksis.",

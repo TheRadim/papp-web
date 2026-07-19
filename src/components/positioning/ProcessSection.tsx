@@ -13,8 +13,10 @@ export function ProcessSection({ content }: ProcessSectionProps) {
       <div className="process-grid">
         {content.steps.map((step, index) => (
           <article className="process-card" key={step.title}>
-            <span>{index + 1}</span>
-            <h3>{step.title}</h3>
+            <div className="process-card__header">
+              <span>{index + 1}</span>
+              <h3>{step.title}</h3>
+            </div>
             <p>{step.body}</p>
           </article>
         ))}

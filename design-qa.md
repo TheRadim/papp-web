@@ -7,18 +7,20 @@
 
 **Implementation Evidence**
 - URL: `http://127.0.0.1:3000/en`
-- Latest checked state: English homepage after merging the top bar into one continuous frosted/neumorphic surface, adding larger hotspot info bubbles, softening hero title sizing, changing contact fields to press only on focus, adding neumorphic footer social squares, and matching the solutions dropdown to the top bar style.
-- Viewports checked: desktop `1440x960`, mobile `390x900`
-- State: homepage hero, mobile layout, hotspot links, solutions dropdown, contact form focus state, footer.
+- Latest checked state: English homepage after extending the top-bar hover treatment to DK/Login, changing the hero kicker to `Data-based mobility decisions`, making the hero title more logo-like with heavier `Mobility`, increasing hotspot saturation, spacing/smoothing the solutions dropdown, applying neumorphic treatment to the process/project cards, keeping filled contact fields pressed, and restoring stronger mobile hero image opacity.
+- Viewports checked: desktop `1440x1200`, mobile `390x900`
+- State: homepage hero, mobile layout, hotspot links, solutions dropdown, contact form filled/focus state, process cards, footer.
 
 **Full-View Comparison Evidence**
-- The current implementation follows the requested revised composition: one continuous floating header over the hero background, one-line top-left `Papp Mobility` title, right-side contained illustration, three clickable desktop points with pulsing rings and neumorphic info bubbles, then paragraph and two soft raised actions below the image.
+- The current implementation follows the requested revised composition: one continuous floating header over the hero background, logo-like one-line top-left `Papp Mobility` title, right-side contained illustration, three more saturated clickable desktop points with pulsing rings and neumorphic info bubbles, then paragraph and two soft raised actions below the image.
 
 - Header: fixed/frosted nav sits over the hero background as one merged surface instead of separate islands, so page elements do not pass through visible gaps.
 - Hero points: `Sensors`, `Cameras`, and `Intelligence` link to their respective product pages on desktop, pulse gently, show larger title/description bubbles, and are hidden on mobile so the image behaves as a static picture.
+- Hero copy: the small line now reads `Data-based mobility decisions`; Danish uses `Databaserede mobilitetsbeslutninger`.
 - Buttons: hero actions no longer have the vertical color bars or inner outline lines; hover movement is reduced to a small neumorphic pressure shift.
+- Process/projects: cards use the neumorphic raised surface treatment, and process card numbers now sit smaller on the same line as the card title.
 - Partners: collaborations section uses the light surface treatment.
-- Contact: the form is larger, the fields are raised while idle, and fields become inset/pressed only when focused.
+- Contact: the form is larger, the fields are raised while idle, and fields become inset/pressed when focused or filled. Contact fields no longer show the blue focus outline.
 - Footer: footer no longer contains brand/positioning block or pill-style privacy link. Social links are neumorphic square buttons with blue icons.
 
 **Required Fidelity Surfaces**
@@ -30,7 +32,7 @@
 
 **Comparison History**
 - Initial implementation had centered text over a single background image and a fuller footer.
-- Fixes made: refactored hero layout, replaced two-option language switch with one-click alternate-language link, made login salmon and more visible, slimmed footer, moved privacy link to contact, made mobile menu opaque, removed the hero insight card, added three clickable desktop hero points, replaced pill CTAs with neumorphic controls, removed CTA line decorations, softened hover movement, made the partner section light, rebuilt the contact form as a larger neumorphic panel, merged the header into one surface, added pulsing hotspot bubbles, updated the dropdown and footer social links, and saved the project to private GitHub repo `TheRadim/papp-web`.
+- Fixes made: refactored hero layout, replaced two-option language switch with one-click alternate-language link, made login salmon and more visible, slimmed footer, moved privacy link to contact, made mobile menu opaque, removed the hero insight card, added three clickable desktop hero points, replaced pill CTAs with neumorphic controls, removed CTA line decorations, softened hover movement, made the partner section light, rebuilt the contact form as a larger neumorphic panel, merged the header into one surface, added pulsing hotspot bubbles, updated the dropdown and footer social links, improved hero typography/copy, expanded neumorphism to later cards, and saved the project to private GitHub repo `TheRadim/papp-web`.
 - Post-fix evidence: desktop and mobile screenshots were captured with Chrome during implementation.
 
 **Final Result**

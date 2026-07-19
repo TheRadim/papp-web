@@ -15,7 +15,10 @@ export function HomepageHero({ locale, content }: HomepageHeroProps) {
       <div className="container">
         <div className="hero-layout">
           <div className="hero-copy">
-            <h1>{content.title}</h1>
+            <h1 aria-label={content.title}>
+              <span className="hero-title-word hero-title-word--papp">Papp</span>
+              <span className="hero-title-word hero-title-word--mobility">Mobility</span>
+            </h1>
             <p className="hero-kicker">{content.eyebrow}</p>
           </div>
           <div className="hero-visual-panel">
