@@ -1,0 +1,23 @@
+@import "tokens";
+
+$primary: #1183ba;
+$secondary: #46565e;
+$dark: #172126;
+$light: #f7f5f2;
+$body-bg: #ffffff;
+$body-color: #172126;
+$border-radius: 0.5rem;
+$border-radius-sm: 0.375rem;
+$border-radius-lg: 1rem;
+$border-radius-pill: 999px;
+$grid-gutter-width: 1.75rem;
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1220px
+);
+
+@import "bootstrap/scss/bootstrap";

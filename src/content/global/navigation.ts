@@ -1,0 +1,78 @@
+import type { Locale } from "@/content/types";
+
+export const navLabels = {
+  solutions: { en: "Solutions", da: "Løsninger" },
+  projects: { en: "Projects", da: "Projekter" },
+  app: { en: "App", da: "App" },
+  about: { en: "About", da: "Om os" },
+  contact: { en: "Contact", da: "Kontakt" },
+  login: { en: "Log in", da: "Log ind" },
+  menu: { en: "Menu", da: "Menu" },
+  close: { en: "Close", da: "Luk" },
+  technology: { en: "Technology", da: "Teknologi" },
+  expertise: { en: "Expertise", da: "Ekspertise" }
+};
+
+export function primaryNavigation(locale: Locale) {
+  return [
+    { label: navLabels.projects[locale], href: `/${locale}/projects` },
+    { label: navLabels.app[locale], href: `/${locale}/app` },
+    { label: navLabels.about[locale], href: `/${locale}/about` },
+    { label: navLabels.contact[locale], href: `/${locale}/contact` }
+  ];
+}
+
+export const solutionGroups = [
+  {
+    id: "technology",
+    label: navLabels.technology,
+    items: [
+      {
+        label: { en: "Parking Sensors", da: "Parkeringssensorer" },
+        description: {
+          en: "Space-level data for occupancy, duration and utilisation.",
+          da: "Data på pladsniveau om belægning, varighed og udnyttelse."
+        },
+        href: { en: "/en/products/sensors", da: "/da/products/sensors" }
+      },
+      {
+        label: { en: "Camera Analytics", da: "Kameraanalyse" },
+        description: {
+          en: "Measurement of parking areas, streets and mobility flows.",
+          da: "Måling af parkeringsarealer, gader og mobilitetsflow."
+        },
+        href: { en: "/en/products/cameras", da: "/da/products/cameras" }
+      },
+      {
+        label: { en: "Papp Insights", da: "Papp Insights" },
+        description: {
+          en: "The platform that brings live and historical data together.",
+          da: "Platformen der samler live og historiske data."
+        },
+        href: { en: "/en/products/insights", da: "/da/products/insights" }
+      }
+    ]
+  },
+  {
+    id: "expertise",
+    label: navLabels.expertise,
+    items: [
+      {
+        label: { en: "Analysis", da: "Analyse" },
+        description: {
+          en: "Interpret data, compare periods and communicate findings.",
+          da: "Fortolk data, sammenlign perioder og formidl resultater."
+        },
+        href: { en: "/en/services/analysis", da: "/da/services/analysis" }
+      },
+      {
+        label: { en: "Consultancy", da: "Rådgivning" },
+        description: {
+          en: "Plan measurement projects and turn insight into decisions.",
+          da: "Planlæg måleprojekter og omsæt indsigt til beslutninger."
+        },
+        href: { en: "/en/services/consultancy", da: "/da/services/consultancy" }
+      }
+    ]
+  }
+];

@@ -1,0 +1,38 @@
+import type { Locale, Testimonial } from "@/content/types";
+
+export const testimonials: Testimonial[] = [
+  {
+    slug: "aarhus-data-basis",
+    quote: {
+      en: "Papp's data and sparring helped create a decision basis for business-parking work in Aarhus.",
+      da: "Papps data og sparring var en stor hjælp i arbejdet med beslutningsgrundlag for erhvervsparkering i Aarhus."
+    },
+    organisation: "Aarhus Kommune",
+    published: true,
+    contentStatus: "needs-review"
+  },
+  {
+    slug: "faaborg-city-development",
+    quote: {
+      en: "The collaboration opened several new efforts around city-centre behaviour and long-term urban development.",
+      da: "Samarbejdet åbnede for flere nye indsatser omkring adfærd i bymidten og langsigtet byudvikling."
+    },
+    organisation: "Faaborg-Midtfyn Kommune",
+    published: true,
+    contentStatus: "needs-review"
+  },
+  {
+    slug: "herning-useful-data",
+    quote: {
+      en: "Papp Mobility delivered usable data that strengthened parking and mobility work.",
+      da: "Papp Mobility leverede brugbare data, der styrkede arbejdet med parkering og mobilitet."
+    },
+    organisation: "Herning Kommune",
+    published: true,
+    contentStatus: "needs-review"
+  }
+];
+
+export function getTestimonials(_locale: Locale) {
+  return testimonials.filter((testimonial) => testimonial.published);
+}

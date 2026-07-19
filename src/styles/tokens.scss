@@ -1,0 +1,33 @@
+:root {
+  --papp-blue-deep: #055f8e;
+  --papp-blue: #1183ba;
+  --papp-blue-light: #35a7d7;
+  --papp-coral: #fb867f;
+  --papp-orange: #f7a074;
+  --papp-pink: #fb6d88;
+  --papp-gradient-primary: linear-gradient(120deg, var(--papp-blue-deep), var(--papp-blue-light), var(--papp-coral), var(--papp-pink));
+  --surface-primary: #ffffff;
+  --surface-neo: #eef3f6;
+  --surface-secondary: #f7f5f2;
+  --surface-salmon: #fff0ed;
+  --surface-tertiary: #eef5f8;
+  --text-primary: #172126;
+  --text-secondary: #46565e;
+  --text-muted: #708088;
+  --border-subtle: rgba(23, 33, 38, 0.12);
+  --shadow-soft: 0 22px 60px rgba(20, 31, 37, 0.1);
+  --shadow-card: 0 24px 54px rgba(20, 31, 37, 0.13);
+  --shadow-neo: 16px 16px 32px rgba(177, 190, 199, 0.48), -16px -16px 32px rgba(255, 255, 255, 0.92);
+  --shadow-neo-small: 8px 8px 18px rgba(177, 190, 199, 0.42), -8px -8px 18px rgba(255, 255, 255, 0.92);
+  --shadow-neo-inset: inset 8px 8px 18px rgba(177, 190, 199, 0.4), inset -8px -8px 18px rgba(255, 255, 255, 0.86);
+  --radius-small: 6px;
+  --radius-medium: 8px;
+  --radius-large: 18px;
+  --container-max-width: 1180px;
+  --container-padding: clamp(1rem, 2.5vw, 2rem);
+  --section-space-xs: 2rem;
+  --section-space-sm: 3rem;
+  --section-space-md: 5rem;
+  --section-space-lg: 7rem;
+  --section-space-xl: 9rem;
+}
