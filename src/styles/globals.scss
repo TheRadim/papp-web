@@ -384,6 +384,7 @@ img {
   max-width: none;
   margin-inline: 0;
   padding-top: 0;
+  pointer-events: none;
   text-align: left;
 }
 
@@ -447,14 +448,170 @@ img {
   z-index: 1;
   width: min(72vw, 62rem);
   max-width: 100%;
-  opacity: 0.9;
 }
 
-.hero-visual-panel img {
+.hero-visual-panel img,
+.mobility-city__fallback img {
   display: block;
   width: 100%;
   height: auto;
   filter: drop-shadow(0 36px 52px rgba(23, 33, 38, 0.1));
+}
+
+.mobility-city {
+  position: relative;
+  width: 100%;
+  min-height: 420px;
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  isolation: isolate;
+}
+
+.mobility-city__stage {
+  position: relative;
+  min-height: 420px;
+  aspect-ratio: 4 / 3;
+}
+
+.mobility-city__canvas {
+  position: absolute !important;
+  inset: 0;
+  z-index: 2;
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent;
+  touch-action: pan-y;
+}
+
+.mobility-city__fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+}
+
+.mobility-city--fallback .mobility-city__fallback {
+  position: relative;
+}
+
+.mobility-city__status {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  max-width: min(18rem, calc(100% - 2rem));
+  margin: 0;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 14px;
+  background: rgba(238, 243, 246, 0.88);
+  box-shadow: var(--shadow-neo-small);
+  padding: 0.7rem 0.85rem;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.mobility-city__panel {
+  position: absolute;
+  top: 5.15rem;
+  right: 1.2rem;
+  z-index: 3;
+  width: min(18rem, calc(100% - 2.4rem));
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 18px;
+  background: rgba(238, 243, 246, 0.9);
+  box-shadow: var(--shadow-neo);
+  padding: 1rem;
+  backdrop-filter: blur(18px) saturate(1.2);
+}
+
+.mobility-city__panel--idle {
+  top: auto;
+  right: auto;
+  bottom: 1rem;
+  left: 1rem;
+  width: max-content;
+  max-width: calc(100% - 2rem);
+  padding: 0.7rem 0.85rem;
+}
+
+.mobility-city__panel p {
+  margin-bottom: 0.6rem;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.mobility-city__panel h2 {
+  margin-bottom: 0.4rem;
+  color: var(--text-primary);
+  font-size: clamp(1.1rem, 1.45vw, 1.35rem);
+}
+
+.mobility-city__eyebrow {
+  margin-bottom: 0.25rem !important;
+  color: var(--papp-blue-deep) !important;
+  font-size: 0.72rem !important;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mobility-city__panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.8rem;
+}
+
+.mobility-city__learn,
+.mobility-city__back,
+.mobility-city__control {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 14px;
+  background: var(--surface-neo);
+  box-shadow: var(--shadow-neo-small);
+  padding: 0.65rem 0.78rem;
+  color: var(--papp-blue-deep);
+  font-size: 0.84rem;
+  font-weight: 900;
+  text-decoration: none;
+  transition: box-shadow 0.24s ease, color 0.24s ease, transform 0.24s ease;
+}
+
+.mobility-city__back {
+  color: var(--text-secondary);
+}
+
+.mobility-city__learn:hover,
+.mobility-city__learn:focus-visible,
+.mobility-city__back:hover,
+.mobility-city__back:focus-visible,
+.mobility-city__control:hover,
+.mobility-city__control:focus-visible,
+.mobility-city__control.is-active {
+  box-shadow: var(--shadow-neo-inset);
+  transform: translateY(1px);
+}
+
+.mobility-city__controls {
+  position: absolute;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: 1rem;
+  z-index: 4;
+  display: flex;
+  max-width: calc(100% - 2rem);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
+.mobility-city__control {
+  cursor: pointer;
 }
 
 .hero-hotspot {
@@ -1185,7 +1342,7 @@ img {
   }
 
   .hero-layout {
-    min-height: clamp(29rem, 82vw, 40rem);
+    min-height: auto;
     grid-template-columns: 1fr;
   }
 
@@ -1204,16 +1361,49 @@ img {
   }
 
   .hero-visual-panel {
-    right: 0;
-    bottom: 0.5rem;
-    left: 0;
+    position: relative;
+    right: auto;
+    bottom: auto;
+    left: auto;
     width: min(100%, 760px);
+    max-width: 100%;
+    margin-top: clamp(1.6rem, 8vw, 3rem);
     margin-inline: auto;
-    opacity: 0.88;
   }
 
   .hero-hotspot {
     display: none;
+  }
+
+  .mobility-city,
+  .mobility-city__stage {
+    min-height: 300px;
+    aspect-ratio: auto;
+  }
+
+  .mobility-city__fallback {
+    min-height: 250px;
+  }
+
+  .mobility-city__panel {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: auto;
+    max-width: none;
+    margin: 0.75rem 0 0;
+  }
+
+  .mobility-city__panel--idle {
+    display: none;
+  }
+
+  .mobility-city__controls {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    margin-top: 0.8rem;
+    justify-content: center;
   }
 
   .offering-feature--reverse .offering-feature__visual {

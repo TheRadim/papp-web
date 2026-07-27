@@ -1,81 +1,134 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
+import dynamic from "next/dynamic";
+import { useCallback, useEffect, useState } from "react";
+import type { Locale } from "@/content/types";
+import { MobilityCityControls } from "@/components/hero/MobilityCityControls";
+import { MobilityCityDetails } from "@/components/hero/MobilityCityDetails";
+import { MobilityCityFallback } from "@/components/hero/MobilityCityFallback";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import type { MobilityArea, MobilityModelStatus, MobilityView } from "@/types/mobility-city";
 
-export type MobilityArea = "sensors" | "cameras" | "insights";
+const MobilityCityCanvas = dynamic(() => import("./MobilityCityCanvas"), {
+  ssr: false,
+  loading: () => null
+});
 
 interface MobilityCityVisualProps {
   activeArea?: MobilityArea | null;
+  initialView?: MobilityView;
   onAreaHover?: (area: MobilityArea | null) => void;
   onAreaSelect?: (area: MobilityArea) => void;
+  onReturnToOverview?: () => void;
   interactive?: boolean;
   visualMode?: "image" | "video" | "3d";
-  locale: "en" | "da";
+  className?: string;
+  locale: Locale;
 }
 
-const hotspots: Array<{ area: MobilityArea; x: string; y: string; label: Record<"en" | "da", string>; target: string }> = [
-  { area: "sensors", x: "35%", y: "70%", label: { en: "Explore parking sensors", da: "Udforsk parkeringssensorer" }, target: "sensors" },
-  { area: "cameras", x: "55%", y: "48%", label: { en: "Explore camera analytics", da: "Udforsk kameraanalyse" }, target: "cameras" },
-  { area: "insights", x: "77%", y: "22%", label: { en: "Explore Papp Insights", da: "Udforsk Papp Insights" }, target: "insights" }
-];
+function browserSupportsWebGL() {
+  try {
+    const canvas = document.createElement("canvas");
+    return Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl"));
+  } catch {
+    return false;
+  }
+}
+
+function useDesktop3dEnabled() {
+  const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 992px)");
+
+    function update() {
+      setEnabled(query.matches && browserSupportsWebGL());
+    }
+
+    update();
+    query.addEventListener("change", update);
+
+    return () => {
+      query.removeEventListener("change", update);
+    };
+  }, []);
+
+  return enabled;
+}
 
 export function MobilityCityVisual({
   activeArea = null,
+  initialView = "overview",
   onAreaHover,
   onAreaSelect,
+  onReturnToOverview,
   interactive = true,
-  visualMode = "image",
+  visualMode = "3d",
+  className = "",
   locale
 }: MobilityCityVisualProps) {
-  const [localActive, setLocalActive] = useState<MobilityArea | null>(null);
-  const current = activeArea ?? localActive;
+  const reducedMotion = useReducedMotion();
+  const desktop3dEnabled = useDesktop3dEnabled();
+  const [hoveredArea, setHoveredArea] = useState<MobilityArea | null>(activeArea);
+  const [selectedArea, setSelectedArea] = useState<MobilityArea | null>(initialView === "overview" ? null : initialView);
+  const [modelStatus, setModelStatus] = useState<MobilityModelStatus>("idle");
 
-  function select(area: MobilityArea, target: string) {
-    onAreaSelect?.(area);
-    document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
+  const canUse3d = interactive && visualMode === "3d" && desktop3dEnabled;
+  const activeDisplayArea = selectedArea ?? activeArea ?? hoveredArea;
+  const view: MobilityView = selectedArea ?? "overview";
+
+  useEffect(() => {
+    return () => {
+      document.body.style.cursor = "";
+    };
+  }, []);
+
+  const handleHover = useCallback(
+    (area: MobilityArea | null) => {
+      setHoveredArea(area);
+      onAreaHover?.(area);
+    },
+    [onAreaHover]
+  );
+
+  const handleSelect = useCallback(
+    (area: MobilityArea) => {
+      setSelectedArea(area);
+      setHoveredArea(area);
+      onAreaSelect?.(area);
+    },
+    [onAreaSelect]
+  );
+
+  const handleReturnToOverview = useCallback(() => {
+    setSelectedArea(null);
+    setHoveredArea(null);
+    onReturnToOverview?.();
+  }, [onReturnToOverview]);
 
   return (
-    <figure className={`mobility-visual mobility-visual--${visualMode}`} data-active={current ?? "none"}>
-      <Image
-        src="/images/hero/mobility-city-visual.png"
-        alt={locale === "da" ? "Miniatureby med vej, parkering, kamera og dataoverblik" : "Miniature city with road, parking, camera and data overview"}
-        width={1672}
-        height={941}
-        priority
-        sizes="(max-width: 992px) 100vw, 54vw"
-      />
-      {interactive
-        ? hotspots.map((hotspot) => (
-            <button
-              key={hotspot.area}
-              type="button"
-              className={`mobility-hotspot ${current === hotspot.area ? "is-active" : ""}`}
-              style={{ left: hotspot.x, top: hotspot.y }}
-              aria-label={hotspot.label[locale]}
-              onMouseEnter={() => {
-                setLocalActive(hotspot.area);
-                onAreaHover?.(hotspot.area);
-              }}
-              onMouseLeave={() => {
-                setLocalActive(null);
-                onAreaHover?.(null);
-              }}
-              onFocus={() => {
-                setLocalActive(hotspot.area);
-                onAreaHover?.(hotspot.area);
-              }}
-              onBlur={() => {
-                setLocalActive(null);
-                onAreaHover?.(null);
-              }}
-              onClick={() => select(hotspot.area, hotspot.target)}
-            >
-              <span>{hotspot.label[locale].replace(locale === "da" ? "Udforsk " : "Explore ", "")}</span>
-            </button>
-          ))
-        : null}
+    <figure
+      className={`mobility-city ${canUse3d ? "mobility-city--3d" : "mobility-city--fallback"} ${className}`.trim()}
+      data-status={modelStatus}
+      data-active={activeDisplayArea ?? "none"}
+    >
+      <div className="mobility-city__stage">
+        {!canUse3d || modelStatus !== "ready" ? <MobilityCityFallback locale={locale} status={modelStatus} /> : null}
+        {canUse3d ? (
+          <MobilityCityCanvas
+            hoveredArea={hoveredArea}
+            selectedArea={selectedArea}
+            view={view}
+            reducedMotion={reducedMotion}
+            onAreaHover={handleHover}
+            onAreaSelect={handleSelect}
+            onReturnToOverview={handleReturnToOverview}
+            onStatusChange={setModelStatus}
+          />
+        ) : null}
+        <MobilityCityDetails area={activeDisplayArea} locale={locale} selected={Boolean(selectedArea)} onReturnToOverview={handleReturnToOverview} />
+      </div>
+      <MobilityCityControls activeArea={activeDisplayArea} locale={locale} onAreaHover={handleHover} onAreaSelect={handleSelect} />
     </figure>
   );
 }
