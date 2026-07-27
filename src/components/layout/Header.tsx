@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ChevronDown, LogIn, Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import type { CSSProperties } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Locale } from "@/content/types";
 import { company } from "@/content/global/company";
 import { navLabels, primaryNavigation, solutionGroups } from "@/content/global/navigation";
@@ -85,7 +85,7 @@ export function Header({ locale }: HeaderProps) {
     };
   }, []);
 
-  function syncIndicatorFromElement(element: Element | null) {
+  const syncIndicatorFromElement = useCallback((element: Element | null) => {
     if (!dockRef.current || !(element instanceof HTMLElement)) {
       setDockIndicator((indicator) => ({ ...indicator, opacity: 0 }));
       return;
@@ -99,11 +99,11 @@ export function Header({ locale }: HeaderProps) {
       width: itemBox.width,
       opacity: 1
     });
-  }
+  }, []);
 
-  function syncIndicatorToActive() {
+  const syncIndicatorToActive = useCallback(() => {
     syncIndicatorFromElement(dockRef.current?.querySelector('[data-active="true"]') ?? null);
-  }
+  }, [syncIndicatorFromElement]);
 
   useEffect(() => {
     syncIndicatorToActive();
@@ -112,7 +112,7 @@ export function Header({ locale }: HeaderProps) {
     return () => {
       window.removeEventListener("resize", syncIndicatorToActive);
     };
-  }, [pathname]);
+  }, [pathname, syncIndicatorToActive]);
 
   const dockStyle = {
     "--nav-indicator-x": `${dockIndicator.x}px`,
