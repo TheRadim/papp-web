@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Object3D } from "three";
-import { CITY_OBJECT_NAMES, getMobilityAreaFromObject, mobilityProductPath } from "@/config/mobility-city";
+import { CAMERA_VIEWS, CITY_OBJECT_NAMES, getMobilityAreaFromObject, mobilityProductPath } from "@/config/mobility-city";
 import { getMobilityCityProduct } from "@/content/mobility-city/mobility-city";
 
 describe("interactive mobility city config", () => {
@@ -32,6 +32,12 @@ describe("interactive mobility city config", () => {
   it("uses the current locale route shape", () => {
     expect(mobilityProductPath("en", "sensors")).toBe("/en/products/sensors");
     expect(mobilityProductPath("da", "cameras")).toBe("/da/products/cameras");
+  });
+
+  it("keeps selected product camera views tighter than the overview", () => {
+    expect(CAMERA_VIEWS.sensors.fov).toBeLessThan(CAMERA_VIEWS.overview.fov);
+    expect(CAMERA_VIEWS.cameras.fov).toBeLessThan(CAMERA_VIEWS.overview.fov);
+    expect(CAMERA_VIEWS.insights.fov).toBeLessThan(CAMERA_VIEWS.overview.fov);
   });
 
   it("provides Danish and English product text", () => {

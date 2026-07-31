@@ -1,9 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Locale } from "@/content/types";
-import { MobilityCityControls } from "@/components/hero/MobilityCityControls";
 import { MobilityCityDetails } from "@/components/hero/MobilityCityDetails";
 import { MobilityCityFallback } from "@/components/hero/MobilityCityFallback";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -17,11 +16,14 @@ const MobilityCityCanvas = dynamic(() => import("./MobilityCityCanvas"), {
 interface MobilityCityVisualProps {
   activeArea?: MobilityArea | null;
   initialView?: MobilityView;
+  lockedArea?: MobilityArea | null;
   onAreaHover?: (area: MobilityArea | null) => void;
   onAreaSelect?: (area: MobilityArea) => void;
   onReturnToOverview?: () => void;
   interactive?: boolean;
   visualMode?: "image" | "video" | "3d";
+  showDetails?: boolean;
+  showMarkers?: boolean;
   className?: string;
   locale: Locale;
 }
@@ -56,24 +58,59 @@ function useDesktop3dEnabled() {
   return enabled;
 }
 
+function useNearViewport(rootMargin = "420px 0px") {
+  const ref = useRef<HTMLElement | null>(null);
+  const [nearViewport, setNearViewport] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+
+    if (!element) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setNearViewport(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin }
+    );
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [rootMargin]);
+
+  return { ref, nearViewport };
+}
+
 export function MobilityCityVisual({
   activeArea = null,
   initialView = "overview",
+  lockedArea = null,
   onAreaHover,
   onAreaSelect,
   onReturnToOverview,
   interactive = true,
   visualMode = "3d",
+  showDetails = true,
+  showMarkers = true,
   className = "",
   locale
 }: MobilityCityVisualProps) {
   const reducedMotion = useReducedMotion();
   const desktop3dEnabled = useDesktop3dEnabled();
+  const { ref, nearViewport } = useNearViewport(lockedArea ? "24px 0px" : "420px 0px");
   const [hoveredArea, setHoveredArea] = useState<MobilityArea | null>(activeArea);
-  const [selectedArea, setSelectedArea] = useState<MobilityArea | null>(initialView === "overview" ? null : initialView);
+  const [selectedArea, setSelectedArea] = useState<MobilityArea | null>(lockedArea ?? (initialView === "overview" ? null : initialView));
   const [modelStatus, setModelStatus] = useState<MobilityModelStatus>("idle");
 
-  const canUse3d = interactive && visualMode === "3d" && desktop3dEnabled;
+  const canUse3d = interactive && visualMode === "3d" && desktop3dEnabled && nearViewport;
   const activeDisplayArea = selectedArea ?? activeArea ?? hoveredArea;
   const view: MobilityView = selectedArea ?? "overview";
 
@@ -93,21 +130,26 @@ export function MobilityCityVisual({
 
   const handleSelect = useCallback(
     (area: MobilityArea) => {
+      if (lockedArea) {
+        return;
+      }
+
       setSelectedArea(area);
       setHoveredArea(area);
       onAreaSelect?.(area);
     },
-    [onAreaSelect]
+    [lockedArea, onAreaSelect]
   );
 
   const handleReturnToOverview = useCallback(() => {
-    setSelectedArea(null);
+    setSelectedArea(lockedArea ?? null);
     setHoveredArea(null);
     onReturnToOverview?.();
-  }, [onReturnToOverview]);
+  }, [lockedArea, onReturnToOverview]);
 
   return (
     <figure
+      ref={ref}
       className={`mobility-city ${canUse3d ? "mobility-city--3d" : "mobility-city--fallback"} ${className}`.trim()}
       data-status={modelStatus}
       data-active={activeDisplayArea ?? "none"}
@@ -124,11 +166,12 @@ export function MobilityCityVisual({
             onAreaSelect={handleSelect}
             onReturnToOverview={handleReturnToOverview}
             onStatusChange={setModelStatus}
+            showMarkers={showMarkers}
+            locale={locale}
           />
         ) : null}
-        <MobilityCityDetails area={activeDisplayArea} locale={locale} selected={Boolean(selectedArea)} onReturnToOverview={handleReturnToOverview} />
+        {showDetails && selectedArea ? <MobilityCityDetails area={selectedArea} locale={locale} selected onReturnToOverview={handleReturnToOverview} /> : null}
       </div>
-      <MobilityCityControls activeArea={activeDisplayArea} locale={locale} onAreaHover={handleHover} onAreaSelect={handleSelect} />
     </figure>
   );
 }

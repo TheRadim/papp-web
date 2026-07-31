@@ -2,11 +2,13 @@
 
 /* eslint-disable react-hooks/immutability */
 
-import { OrbitControls } from "@react-three/drei";
+import { Html, OrbitControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import { Vector3 } from "three";
-import { CAMERA_VIEWS } from "@/config/mobility-city";
+import { CAMERA_VIEWS, MOBILITY_AREAS, MOBILITY_MARKERS } from "@/config/mobility-city";
+import type { Locale } from "@/content/types";
+import { getMobilityCityProduct, pickMobilityText } from "@/content/mobility-city/mobility-city";
 import type { MobilityView } from "@/types/mobility-city";
 import { MobilityCityModel } from "@/components/hero/MobilityCityModel";
 import type { MobilityArea, MobilityModelStatus } from "@/types/mobility-city";
@@ -19,14 +21,20 @@ interface MobilityCitySceneProps {
   onAreaHover: (area: MobilityArea | null) => void;
   onAreaSelect: (area: MobilityArea) => void;
   onStatusChange: (status: MobilityModelStatus) => void;
+  showMarkers: boolean;
+  locale: Locale;
 }
 
 function CameraController({ view, reducedMotion }: { view: MobilityView; reducedMotion: boolean }) {
-  const { camera } = useThree();
+  const { camera, invalidate } = useThree();
   const target = useRef(new Vector3(...CAMERA_VIEWS.overview.target));
   const targetPosition = useMemo(() => new Vector3(...CAMERA_VIEWS[view].position), [view]);
   const targetLookAt = useMemo(() => new Vector3(...CAMERA_VIEWS[view].target), [view]);
   const targetFov = CAMERA_VIEWS[view].fov;
+
+  useEffect(() => {
+    invalidate();
+  }, [invalidate, targetFov, targetLookAt, targetPosition]);
 
   useEffect(() => {
     if (reducedMotion) {
@@ -38,25 +46,89 @@ function CameraController({ view, reducedMotion }: { view: MobilityView; reduced
         camera.fov = targetFov;
         camera.updateProjectionMatrix();
       }
+
+      invalidate();
     }
-  }, [camera, reducedMotion, targetFov, targetLookAt, targetPosition]);
+  }, [camera, invalidate, reducedMotion, targetFov, targetLookAt, targetPosition]);
 
   useFrame(() => {
     if (reducedMotion) {
       return;
     }
 
-    camera.position.lerp(targetPosition, 0.075);
-    target.current.lerp(targetLookAt, 0.085);
+    const positionDistance = camera.position.distanceTo(targetPosition);
+    const targetDistance = target.current.distanceTo(targetLookAt);
+    const fovDistance = "fov" in camera ? Math.abs(camera.fov - targetFov) : 0;
+
+    if (positionDistance < 0.004 && targetDistance < 0.004 && fovDistance < 0.02) {
+      return;
+    }
+
+    camera.position.lerp(targetPosition, 0.09);
+    target.current.lerp(targetLookAt, 0.1);
     camera.lookAt(target.current);
 
     if ("fov" in camera) {
       camera.fov += (targetFov - camera.fov) * 0.08;
       camera.updateProjectionMatrix();
     }
+
+    invalidate();
   });
 
   return null;
+}
+
+function MobilityCityMarkers({
+  hoveredArea,
+  selectedArea,
+  locale,
+  onAreaHover,
+  onAreaSelect
+}: {
+  hoveredArea: MobilityArea | null;
+  selectedArea: MobilityArea | null;
+  locale: Locale;
+  onAreaHover: (area: MobilityArea | null) => void;
+  onAreaSelect: (area: MobilityArea) => void;
+}) {
+  if (selectedArea) {
+    return null;
+  }
+
+  return (
+    <>
+      {MOBILITY_AREAS.map((area) => {
+        const product = getMobilityCityProduct(area);
+        const active = hoveredArea === area;
+
+        return (
+          <Html key={area} position={MOBILITY_MARKERS[area].position} center zIndexRange={[6, 0]} className="mobility-city-marker-host">
+            <button
+              type="button"
+              className={`mobility-city-marker mobility-city-marker--${area} ${active ? "is-active" : ""}`}
+              aria-label={pickMobilityText(locale, product.name)}
+              onPointerEnter={() => onAreaHover(area)}
+              onPointerLeave={() => onAreaHover(null)}
+              onFocus={() => onAreaHover(area)}
+              onBlur={() => onAreaHover(null)}
+              onPointerDown={(event) => {
+                event.stopPropagation();
+                onAreaSelect(area);
+              }}
+              onClick={(event) => {
+                event.stopPropagation();
+                onAreaSelect(area);
+              }}
+            >
+              <span className="mobility-city-marker__dot" aria-hidden="true" />
+              <span className="mobility-city-marker__label">{pickMobilityText(locale, product.name)}</span>
+            </button>
+          </Html>
+        );
+      })}
+    </>
+  );
 }
 
 export function MobilityCityScene({
@@ -66,7 +138,9 @@ export function MobilityCityScene({
   reducedMotion,
   onAreaHover,
   onAreaSelect,
-  onStatusChange
+  onStatusChange,
+  showMarkers,
+  locale
 }: MobilityCitySceneProps) {
   const debug = process.env.NEXT_PUBLIC_DEBUG_MOBILITY_CITY === "true";
 
@@ -83,6 +157,15 @@ export function MobilityCityScene({
         onAreaSelect={onAreaSelect}
         onStatusChange={onStatusChange}
       />
+      {showMarkers ? (
+        <MobilityCityMarkers
+          hoveredArea={hoveredArea}
+          selectedArea={selectedArea}
+          locale={locale}
+          onAreaHover={onAreaHover}
+          onAreaSelect={onAreaSelect}
+        />
+      ) : null}
       {debug ? <OrbitControls enablePan={false} makeDefault /> : null}
     </>
   );

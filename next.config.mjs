@@ -2,11 +2,17 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
+const githubPages = process.env.GITHUB_PAGES === "1";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: githubPages ? "export" : undefined,
+  trailingSlash: githubPages,
+  basePath: githubPages ? "/papp-web" : undefined,
+  assetPrefix: githubPages ? "/papp-web/" : undefined,
   reactStrictMode: true,
   images: {
+    unoptimized: githubPages,
     formats: ["image/avif", "image/webp"]
   },
   sassOptions: {

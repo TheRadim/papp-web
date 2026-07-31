@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { getProjects } from "@/lib/content/accessors";
 
+export const dynamic = "force-static";
+
 const baseUrl = "https://www.pappmobility.com";
 const staticPaths = [
   "",

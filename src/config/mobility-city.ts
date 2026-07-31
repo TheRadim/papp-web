@@ -13,24 +13,42 @@ export const CITY_OBJECT_NAMES = {
 
 export const MOBILITY_AREAS: MobilityArea[] = ["sensors", "cameras", "insights"];
 
-export const CAMERA_VIEWS: Record<MobilityView, { position: [number, number, number]; target: [number, number, number]; fov: number }> = {
-  overview: {
-    position: [3.4, 2.6, 4.6],
-    target: [0, 0.45, 0.55],
-    fov: 34
-  },
+export const MOBILITY_AREA_ANCHORS: Record<MobilityArea, string> = {
+  sensors: "solution-sensors",
+  cameras: "solution-cameras",
+  insights: "solution-insights"
+};
+
+export const MOBILITY_MARKERS: Record<MobilityArea, { position: [number, number, number] }> = {
   sensors: {
-    position: [1.6, 1.45, 3.35],
-    target: [0, 0.15, 1.7],
-    fov: 28
+    position: [-0.25, 0.32, 1.62]
   },
   cameras: {
-    position: [1.55, 1.7, 2.6],
-    target: [0, 0.95, 1.05],
-    fov: 27
+    position: [0.08, 1.18, 0.92]
   },
   insights: {
-    position: [1.9, 1.7, 1.1],
+    position: [0.36, 1.45, -0.6]
+  }
+};
+
+export const CAMERA_VIEWS: Record<MobilityView, { position: [number, number, number]; target: [number, number, number]; fov: number }> = {
+  overview: {
+    position: [4.35, 3.05, 5.75],
+    target: [0, 0.45, 0.55],
+    fov: 37
+  },
+  sensors: {
+    position: [1.55, 1.42, 3.08],
+    target: [0, 0.15, 1.7],
+    fov: 27
+  },
+  cameras: {
+    position: [1.62, 1.74, 2.75],
+    target: [0, 0.95, 1.05],
+    fov: 28
+  },
+  insights: {
+    position: [1.78, 1.62, 1.1],
     target: [0, 0.85, -0.58],
     fov: 27
   }

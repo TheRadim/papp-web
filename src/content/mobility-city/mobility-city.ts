@@ -58,6 +58,14 @@ export const mobilityCityLabels = {
   productArea: {
     en: "Product area",
     da: "Produktområde"
+  },
+  learnMore: {
+    en: "Learn more",
+    da: "Læs mere"
+  },
+  close: {
+    en: "Close product focus",
+    da: "Luk produktfokus"
   }
 } satisfies Record<string, LocalisedText>;
 

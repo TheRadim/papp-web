@@ -1,7 +1,7 @@
 "use client";
 
 import { useGLTF } from "@react-three/drei";
-import { ThreeEvent, useFrame } from "@react-three/fiber";
+import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
 import { Color, Group, Material, Mesh, MeshStandardMaterial, Object3D } from "three";
 import { CITY_OBJECT_NAMES, getMobilityAreaFromObject, MOBILITY_AREAS, MOBILITY_CITY_MODEL_URL } from "@/config/mobility-city";
@@ -24,7 +24,11 @@ interface MaterialSnapshot {
   transparent?: boolean;
 }
 
-const ACTIVE_COLOR = new Color("#0786c5");
+const AREA_COLORS: Record<MobilityArea, Color> = {
+  sensors: new Color("#0786c5"),
+  cameras: new Color("#ff7f7b"),
+  insights: new Color("#0b5f8f")
+};
 
 function cloneMaterial(material: Material | Material[]) {
   return Array.isArray(material) ? material.map((item) => item.clone()) : material.clone();
@@ -58,7 +62,7 @@ function rememberMaterial(material: Material) {
   return snapshot;
 }
 
-function applyMaterialState(material: Material, active: boolean, muted: boolean) {
+function applyMaterialState(material: Material, active: boolean, muted: boolean, activeColor: Color, mutedOpacity = 0.5) {
   const standard = material as MeshStandardMaterial;
   const snapshot = rememberMaterial(standard);
 
@@ -66,7 +70,7 @@ function applyMaterialState(material: Material, active: boolean, muted: boolean)
     standard.color.copy(snapshot.color);
 
     if (active) {
-      standard.color.lerp(ACTIVE_COLOR, 0.32);
+      standard.color.lerp(activeColor, 0.58);
     }
   }
 
@@ -74,23 +78,23 @@ function applyMaterialState(material: Material, active: boolean, muted: boolean)
     standard.emissive.copy(snapshot.emissive);
 
     if (active) {
-      standard.emissive.set(active ? "#168cc5" : "#000000");
-      standard.emissiveIntensity = 0.22;
+      standard.emissive.copy(activeColor);
+      standard.emissiveIntensity = 0.36;
     } else {
       standard.emissiveIntensity = snapshot.emissiveIntensity ?? 0;
     }
   }
 
   if (typeof snapshot.opacity === "number") {
-    standard.opacity = muted ? Math.max(0.42, snapshot.opacity * 0.58) : snapshot.opacity;
+    standard.opacity = muted ? Math.max(mutedOpacity, snapshot.opacity * mutedOpacity) : snapshot.opacity;
     standard.transparent = muted || Boolean(snapshot.transparent);
   }
 
   standard.needsUpdate = true;
 }
 
-function areaObject(scene: Object3D, area: MobilityArea) {
-  return scene.getObjectByName(CITY_OBJECT_NAMES[area]) ?? null;
+function namedObject(scene: Object3D, objectName: string) {
+  return scene.getObjectByName(objectName) ?? null;
 }
 
 export function MobilityCityModel({
@@ -102,6 +106,7 @@ export function MobilityCityModel({
   onStatusChange
 }: MobilityCityModelProps) {
   const gltf = useGLTF(MOBILITY_CITY_MODEL_URL);
+  const { invalidate } = useThree();
 
   const model = useMemo(() => {
     const clone = gltf.scene.clone(true) as Group;
@@ -120,12 +125,14 @@ export function MobilityCityModel({
   const roots = useMemo(() => {
     return MOBILITY_AREAS.reduce<Record<MobilityArea, Object3D | null>>(
       (accumulator, area) => {
-        accumulator[area] = areaObject(model, area);
+        accumulator[area] = namedObject(model, CITY_OBJECT_NAMES[area]);
         return accumulator;
       },
       { sensors: null, cameras: null, insights: null }
     );
   }, [model]);
+
+  const baseRoot = useMemo(() => namedObject(model, CITY_OBJECT_NAMES.base), [model]);
 
   useEffect(() => {
     onStatusChange("ready");
@@ -148,6 +155,14 @@ export function MobilityCityModel({
   useEffect(() => {
     const activeArea = selectedArea ?? hoveredArea;
 
+    if (baseRoot) {
+      baseRoot.traverse((child) => {
+        if (child instanceof Mesh) {
+          eachMaterial(child.material, (material) => applyMaterialState(material, false, Boolean(selectedArea), AREA_COLORS[selectedArea ?? "sensors"], 0.2));
+        }
+      });
+    }
+
     MOBILITY_AREAS.forEach((area) => {
       const object = roots[area];
       if (!object) {
@@ -159,14 +174,16 @@ export function MobilityCityModel({
 
       object.traverse((child) => {
         if (child instanceof Mesh) {
-          eachMaterial(child.material, (material) => applyMaterialState(material, active, muted));
+          eachMaterial(child.material, (material) => applyMaterialState(material, active, muted, AREA_COLORS[area]));
         }
       });
     });
-  }, [hoveredArea, roots, selectedArea]);
+    invalidate();
+  }, [baseRoot, hoveredArea, invalidate, roots, selectedArea]);
 
   useFrame(() => {
     const activeArea = selectedArea ?? hoveredArea;
+    let needsAnotherFrame = false;
 
     MOBILITY_AREAS.forEach((area) => {
       const object = roots[area];
@@ -174,18 +191,39 @@ export function MobilityCityModel({
         return;
       }
 
-      const targetScale = activeArea === area ? 1.06 : 1;
+      const targetScale = selectedArea === area ? 1.07 : activeArea === area ? 1.08 : 1;
       const factor = reducedMotion ? 1 : 0.14;
+      const delta = Math.abs(object.scale.x - targetScale);
       object.scale.x += (targetScale - object.scale.x) * factor;
       object.scale.y += (targetScale - object.scale.y) * factor;
       object.scale.z += (targetScale - object.scale.z) * factor;
+
+      if (delta > 0.002) {
+        needsAnotherFrame = true;
+      }
     });
+
+    if (needsAnotherFrame) {
+      invalidate();
+    }
   });
 
   function handlePointerEnter(event: ThreeEvent<PointerEvent>) {
     const area = getMobilityAreaFromObject(event.object);
 
     if (!area) {
+      return;
+    }
+
+    event.stopPropagation();
+    document.body.style.cursor = "pointer";
+    onAreaHover(area);
+  }
+
+  function handlePointerMove(event: ThreeEvent<PointerEvent>) {
+    const area = getMobilityAreaFromObject(event.object);
+
+    if (!area || area === hoveredArea) {
       return;
     }
 
@@ -217,7 +255,7 @@ export function MobilityCityModel({
     onAreaSelect(area);
   }
 
-  return <primitive object={model} onPointerOver={handlePointerEnter} onPointerOut={handlePointerLeave} onClick={handleClick} />;
+  return <primitive object={model} onPointerOver={handlePointerEnter} onPointerMove={handlePointerMove} onPointerOut={handlePointerLeave} onClick={handleClick} />;
 }
 
 useGLTF.preload(MOBILITY_CITY_MODEL_URL);

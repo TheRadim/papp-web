@@ -443,8 +443,8 @@ img {
 
 .hero-visual-panel {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: max(-4.5rem, -4vw);
+  bottom: -7rem;
   z-index: 1;
   width: min(72vw, 62rem);
   max-width: 100%;
@@ -546,6 +546,179 @@ img {
   margin-bottom: 0.4rem;
   color: var(--text-primary);
   font-size: clamp(1.1rem, 1.45vw, 1.35rem);
+}
+
+.mobility-city__panel--selected {
+  top: auto;
+  right: clamp(1rem, 2.4vw, 1.8rem);
+  bottom: clamp(4.8rem, 7vw, 5.8rem);
+  width: min(21.5rem, calc(100% - 2rem));
+  overflow: hidden;
+  border-color: rgba(255, 255, 255, 0.86);
+  border-radius: 20px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.48), rgba(238, 243, 246, 0.88) 42%, rgba(232, 240, 244, 0.94)),
+    var(--surface-neo);
+  box-shadow:
+    18px 22px 42px rgba(80, 101, 111, 0.18),
+    -12px -12px 30px rgba(255, 255, 255, 0.9),
+    inset 1px 1px 0 rgba(255, 255, 255, 0.86);
+  padding: 1.25rem;
+}
+
+.mobility-city__panel--selected::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.34rem;
+  background: linear-gradient(180deg, var(--papp-blue), var(--papp-salmon));
+  content: "";
+}
+
+.mobility-city__panel--selected h2 {
+  margin: 0 2.45rem 0.5rem 0;
+  color: var(--text-primary);
+  font-size: clamp(1.16rem, 1.45vw, 1.45rem);
+  line-height: 1.05;
+}
+
+.mobility-city__panel--selected p {
+  max-width: 16.8rem;
+  margin: 0 0 1.1rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.mobility-city__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-grid;
+  width: 2.15rem;
+  height: 2.15rem;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 11px;
+  background: var(--surface-neo);
+  box-shadow: var(--shadow-neo-small);
+  color: var(--papp-blue-deep);
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: 950;
+  line-height: 1;
+  transition: box-shadow 0.22s ease, transform 0.22s ease;
+}
+
+.mobility-city__close:hover,
+.mobility-city__close:focus-visible {
+  box-shadow: var(--shadow-neo-inset);
+  color: var(--papp-salmon);
+  transform: translateY(1px);
+}
+
+.mobility-city__learn--selected {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.36), rgba(238, 243, 246, 0.96)),
+    var(--surface-neo);
+}
+
+.mobility-city-marker-host {
+  pointer-events: auto !important;
+}
+
+.mobility-city-marker {
+  position: relative;
+  display: inline-grid;
+  width: 2.35rem;
+  height: 2.35rem;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  filter: drop-shadow(0 14px 20px rgba(13, 96, 142, 0.2));
+}
+
+.mobility-city-marker::before {
+  position: absolute;
+  inset: -0.24rem;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--marker-color, var(--papp-blue)) 20%, transparent);
+  content: "";
+  animation: marker-pulse 1.8s ease-out infinite;
+}
+
+.mobility-city-marker__dot {
+  position: relative;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 3px solid rgba(255, 255, 255, 0.96);
+  border-radius: 50%;
+  background: var(--marker-color, var(--papp-blue));
+  box-shadow:
+    0 9px 18px rgba(12, 93, 139, 0.2),
+    0 0 0 0.34rem color-mix(in srgb, var(--marker-color, var(--papp-blue)) 18%, transparent),
+    inset 0 0 0 0.14rem color-mix(in srgb, white 40%, transparent);
+}
+
+.mobility-city-marker__label {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.42rem);
+  min-width: max-content;
+  transform: translate(-50%, 0.25rem);
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  border-radius: 12px;
+  background: rgba(238, 243, 246, 0.94);
+  box-shadow: var(--shadow-neo-small);
+  padding: 0.48rem 0.62rem;
+  color: var(--papp-blue-deep);
+  font-size: 0.78rem;
+  font-weight: 950;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  white-space: nowrap;
+}
+
+.mobility-city-marker:hover .mobility-city-marker__label,
+.mobility-city-marker:focus-visible .mobility-city-marker__label,
+.mobility-city-marker.is-active .mobility-city-marker__label {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+
+.mobility-city-marker--sensors {
+  --marker-color: #0786c5;
+}
+
+.mobility-city-marker--cameras {
+  --marker-color: #ff7f7b;
+}
+
+.mobility-city-marker--insights {
+  --marker-color: #0b5f8f;
+}
+
+@keyframes marker-pulse {
+  0% {
+    transform: scale(0.72);
+    opacity: 0.78;
+  }
+
+  100% {
+    transform: scale(1.95);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobility-city-marker::before {
+    animation: none;
+  }
 }
 
 .mobility-city__eyebrow {
@@ -890,6 +1063,13 @@ img {
   box-shadow: var(--shadow-soft);
 }
 
+.offering-feature__visual--model {
+  overflow: visible;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
 .offering-feature__visual img,
 .subpage-hero img,
 .project-card img {
@@ -901,6 +1081,21 @@ img {
 
 .offering-feature__copy {
   max-width: 560px;
+}
+
+.mobility-city--section-model {
+  min-height: clamp(330px, 38vw, 520px);
+  aspect-ratio: 1.15 / 1;
+}
+
+.mobility-city--section-model .mobility-city__stage {
+  min-height: inherit;
+  aspect-ratio: inherit;
+}
+
+.mobility-city--section-model .mobility-city__fallback {
+  position: relative;
+  min-height: inherit;
 }
 
 .partner-strip {

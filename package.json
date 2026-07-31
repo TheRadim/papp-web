@@ -3,12 +3,16 @@
   "private": true,
   "type": "module",
   "version": "0.1.0",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "pages:build": "GITHUB_PAGES=1 next build"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
@@ -38,5 +42,6 @@
     "minimatch": "10.2.5",
     "postcss": "8.5.20",
     "sharp": "0.35.3"
-  }
+  },
+  "packageManager": "yarn@4.5.0+sha256.cc00dce5de4f68d11450519a0f69eadf2a1cbe5cc0d8e740bfac817a31d76874"
 }

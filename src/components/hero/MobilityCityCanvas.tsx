@@ -4,6 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { Component, ReactNode, Suspense, useEffect } from "react";
 import { CAMERA_VIEWS } from "@/config/mobility-city";
 import { MobilityCityScene } from "@/components/hero/MobilityCityScene";
+import type { Locale } from "@/content/types";
 import type { MobilityArea, MobilityModelStatus, MobilityView } from "@/types/mobility-city";
 
 interface MobilityCityCanvasProps {
@@ -15,6 +16,8 @@ interface MobilityCityCanvasProps {
   onAreaSelect: (area: MobilityArea) => void;
   onReturnToOverview: () => void;
   onStatusChange: (status: MobilityModelStatus) => void;
+  showMarkers: boolean;
+  locale: Locale;
 }
 
 interface MobilityCityErrorBoundaryProps {
@@ -62,15 +65,18 @@ export default function MobilityCityCanvas({
   onAreaHover,
   onAreaSelect,
   onReturnToOverview,
-  onStatusChange
+  onStatusChange,
+  showMarkers,
+  locale
 }: MobilityCityCanvasProps) {
   return (
     <MobilityCityErrorBoundary onError={() => onStatusChange("error")}>
       <Canvas
         className="mobility-city__canvas"
         camera={{ position: CAMERA_VIEWS.overview.position, fov: CAMERA_VIEWS.overview.fov }}
-        dpr={[1, 1.75]}
-        gl={{ alpha: true, antialias: true }}
+        dpr={[1, 1.25]}
+        frameloop="demand"
+        gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
         onPointerMissed={onReturnToOverview}
       >
         <Suspense fallback={<LoadingStatus onStatusChange={onStatusChange} />}>
@@ -82,6 +88,8 @@ export default function MobilityCityCanvas({
             onAreaHover={onAreaHover}
             onAreaSelect={onAreaSelect}
             onStatusChange={onStatusChange}
+            showMarkers={showMarkers}
+            locale={locale}
           />
         </Suspense>
       </Canvas>
