@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import type { Locale } from "@/content/types";
+import { company } from "@/content/global/company";
+import { siteBasePath } from "@/lib/site/basePath";
 
 interface ContactFormProps {
   locale: Locale;
@@ -24,6 +26,25 @@ export function ContactForm({ locale }: ContactFormProps) {
       message: String(form.get("message") ?? ""),
       privacyAccepted: form.get("privacyAccepted") === "on"
     };
+
+    if (siteBasePath) {
+      const subject = encodeURIComponent(`Website enquiry from ${payload.name}`);
+      const body = encodeURIComponent(
+        [
+          `Name: ${payload.name}`,
+          `Organisation: ${payload.organisation}`,
+          `Email: ${payload.email}`,
+          `Phone: ${payload.phone || "-"}`,
+          `Interest: ${payload.interest}`,
+          "",
+          payload.message
+        ].join("\n")
+      );
+
+      window.location.href = `mailto:${company.email}?subject=${subject}&body=${body}`;
+      setStatus(locale === "da" ? "Din mail-app åbnes med beskeden udfyldt." : "Your email app is opening with the message filled in.");
+      return;
+    }
 
     const response = await fetch("/api/contact", {
       method: "POST",
