@@ -57,7 +57,7 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
   const projects = getProjects(locale);
 
   return (
-    <Section>
+    <Section className="projects-page">
       <SectionHeading
         eyebrow={locale === "da" ? "Projekter" : "Projects"}
         title={locale === "da" ? "Erfaring fra mobilitets- og parkeringsprojekter." : "Experience from mobility and parking projects."}
@@ -68,16 +68,12 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
         }
       />
       <div className="project-category-grid">
-        {categoryCards.map((card) => {
-          const count = projects.filter((project) => project.category === card.category).length;
-          return (
-            <article className={`project-category-card project-category-card--${card.category}`} key={card.category}>
-              <span>{count}</span>
-              <h2>{card.title[locale]}</h2>
-              <p>{card.body[locale]}</p>
-            </article>
-          );
-        })}
+        {categoryCards.map((card) => (
+          <article className={`project-category-card project-category-card--${card.category}`} key={card.category}>
+            <h2>{card.title[locale]}</h2>
+            <p>{card.body[locale]}</p>
+          </article>
+        ))}
       </div>
       <div className="project-grid">
         {projects.map((project) => (

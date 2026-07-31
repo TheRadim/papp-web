@@ -9,6 +9,9 @@ interface HomepageHeroProps {
 }
 
 export function HomepageHero({ locale, content }: HomepageHeroProps) {
+  const kickerLead = locale === "da" ? "Databaserede" : "Data-based";
+  const kickerRest = locale === "da" ? "mobilitetsbeslutninger" : "mobility decisions";
+
   return (
     <section className="hero-section">
       <div className="container">
@@ -18,7 +21,10 @@ export function HomepageHero({ locale, content }: HomepageHeroProps) {
               <span className="hero-title-word hero-title-word--papp">Papp</span>
               <span className="hero-title-word hero-title-word--mobility">Mobility</span>
             </h1>
-            <p className="hero-kicker">{content.eyebrow}</p>
+            <p className="hero-kicker">
+              <span>{kickerLead}</span>
+              <span>{kickerRest}</span>
+            </p>
           </div>
           <div className="hero-visual-panel">
             <MobilityCityVisual locale={locale} />

@@ -119,6 +119,11 @@ export function MobilityCityModel({
       }
     });
 
+    const base = namedObject(clone, CITY_OBJECT_NAMES.base);
+    if (base) {
+      base.visible = false;
+    }
+
     return clone;
   }, [gltf.scene]);
 
@@ -131,8 +136,6 @@ export function MobilityCityModel({
       { sensors: null, cameras: null, insights: null }
     );
   }, [model]);
-
-  const baseRoot = useMemo(() => namedObject(model, CITY_OBJECT_NAMES.base), [model]);
 
   useEffect(() => {
     onStatusChange("ready");
@@ -155,14 +158,6 @@ export function MobilityCityModel({
   useEffect(() => {
     const activeArea = selectedArea ?? hoveredArea;
 
-    if (baseRoot) {
-      baseRoot.traverse((child) => {
-        if (child instanceof Mesh) {
-          eachMaterial(child.material, (material) => applyMaterialState(material, false, Boolean(selectedArea), AREA_COLORS[selectedArea ?? "sensors"], 0.2));
-        }
-      });
-    }
-
     MOBILITY_AREAS.forEach((area) => {
       const object = roots[area];
       if (!object) {
@@ -179,7 +174,7 @@ export function MobilityCityModel({
       });
     });
     invalidate();
-  }, [baseRoot, hoveredArea, invalidate, roots, selectedArea]);
+  }, [hoveredArea, invalidate, roots, selectedArea]);
 
   useFrame(() => {
     const activeArea = selectedArea ?? hoveredArea;
