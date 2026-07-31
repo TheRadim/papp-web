@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Locale } from "@/content/types";
 import { mobilityCityLabels, pickMobilityText } from "@/content/mobility-city/mobility-city";
+import { withBasePath } from "@/lib/site/basePath";
 import type { MobilityModelStatus } from "@/types/mobility-city";
 
 interface MobilityCityFallbackProps {
@@ -14,7 +15,7 @@ export function MobilityCityFallback({ locale, status = "idle" }: MobilityCityFa
   return (
     <div className="mobility-city__fallback">
       <Image
-        src="/images/hero/mobility-city-visual.png"
+        src={withBasePath("/images/hero/mobility-city-visual.png")}
         alt={locale === "da" ? "Miniatureby med parkering, kamera og dataoverblik" : "Miniature city with parking, camera and data overview"}
         width={1672}
         height={941}

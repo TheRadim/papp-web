@@ -10,6 +10,7 @@ import type { Locale } from "@/content/types";
 import { company } from "@/content/global/company";
 import { navLabels, primaryNavigation, solutionGroups } from "@/content/global/navigation";
 import { pick } from "@/lib/i18n/locales";
+import { withBasePath } from "@/lib/site/basePath";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 
 interface HeaderProps {
@@ -128,7 +129,7 @@ export function Header({ locale }: HeaderProps) {
       <div className="container">
         <nav className="nav-shell" ref={navRef} aria-label="Primary">
           <Link className="brand-link" href={`/${locale}`} aria-label="Papp Mobility home">
-            <Image src={company.logo} alt="" width={46} height={46} priority />
+            <Image src={withBasePath(company.logo)} alt="" width={46} height={46} priority />
           </Link>
 
           <div

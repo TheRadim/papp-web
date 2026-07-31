@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { pick } from "@/lib/i18n/locales";
 import { getProjects } from "@/lib/content/accessors";
+import { withBasePath } from "@/lib/site/basePath";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 
 interface OfferingPageProps {
@@ -27,7 +28,7 @@ export function OfferingPage({ locale, offering }: OfferingPageProps) {
               <p>{pick(locale, offering.introduction)}</p>
               <Button href={`/${locale}/contact`}>{locale === "da" ? "Tal med os" : "Talk to us"}</Button>
             </div>
-            <Image src={offering.heroImage} alt="" width={1672} height={941} priority sizes="(max-width: 992px) 100vw, 44vw" />
+            <Image src={withBasePath(offering.heroImage)} alt="" width={1672} height={941} priority sizes="(max-width: 992px) 100vw, 44vw" />
           </div>
         </div>
       </section>

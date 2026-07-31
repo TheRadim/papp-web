@@ -10,6 +10,9 @@ const nextConfig = {
   trailingSlash: githubPages,
   basePath: githubPages ? "/papp-web" : undefined,
   assetPrefix: githubPages ? "/papp-web/" : undefined,
+  env: {
+    NEXT_PUBLIC_SITE_BASE_PATH: githubPages ? "/papp-web" : ""
+  },
   reactStrictMode: true,
   images: {
     unoptimized: githubPages,

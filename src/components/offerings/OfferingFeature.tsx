@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Locale, Offering } from "@/content/types";
 import { pick } from "@/lib/i18n/locales";
+import { withBasePath } from "@/lib/site/basePath";
 import { Button } from "@/components/ui/Button";
 import { MobilityCityVisual } from "@/components/hero/MobilityCityVisual";
 import type { MobilityArea } from "@/types/mobility-city";
@@ -29,7 +30,7 @@ export function OfferingFeature({ offering, locale, index }: OfferingFeatureProp
             className="mobility-city--section-model"
           />
         ) : (
-          <Image src={offering.heroImage} alt="" width={1672} height={941} sizes="(max-width: 992px) 100vw, 44vw" />
+          <Image src={withBasePath(offering.heroImage)} alt="" width={1672} height={941} sizes="(max-width: 992px) 100vw, 44vw" />
         )}
       </div>
       <div className="offering-feature__copy">

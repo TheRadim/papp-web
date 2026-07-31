@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Locale, Project } from "@/content/types";
 import { pick } from "@/lib/i18n/locales";
+import { withBasePath } from "@/lib/site/basePath";
 
 interface ProjectCardProps {
   project: Project;
@@ -18,7 +19,7 @@ export function ProjectCard({ project, locale }: ProjectCardProps) {
 
   return (
     <article className={`project-card project-card--${project.category}`}>
-      <Image src={project.coverImage} alt="" width={1672} height={941} sizes="(max-width: 768px) 100vw, 33vw" />
+      <Image src={withBasePath(project.coverImage)} alt="" width={1672} height={941} sizes="(max-width: 768px) 100vw, 33vw" />
       <div>
         <p className="project-card__category">{pick(locale, categoryLabels[project.category])}</p>
         <h3>{pick(locale, project.title)}</h3>

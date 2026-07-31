@@ -1,8 +1,9 @@
 import type { Object3D } from "three";
 import type { Locale } from "@/content/types";
+import { withBasePath } from "@/lib/site/basePath";
 import type { MobilityArea, MobilityView } from "@/types/mobility-city";
 
-export const MOBILITY_CITY_MODEL_URL = "/models/papp-city-test.glb";
+export const MOBILITY_CITY_MODEL_URL = withBasePath("/models/papp-city-test.glb");
 
 export const CITY_OBJECT_NAMES = {
   base: "City_Base",

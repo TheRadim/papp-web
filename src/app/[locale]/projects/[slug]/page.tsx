@@ -5,6 +5,7 @@ import type { Locale } from "@/content/types";
 import { getProjectBySlug, getProjects } from "@/lib/content/accessors";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { pick } from "@/lib/i18n/locales";
+import { withBasePath } from "@/lib/site/basePath";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
@@ -39,7 +40,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               <p className="hero-lead">{pick(locale, project.summary)}</p>
               <Button href={`/${locale}/contact`}>{locale === "da" ? "Tal om et lignende projekt" : "Discuss a similar project"}</Button>
             </div>
-            <Image src={project.coverImage} alt="" width={1672} height={941} priority sizes="(max-width: 992px) 100vw, 44vw" />
+            <Image src={withBasePath(project.coverImage)} alt="" width={1672} height={941} priority sizes="(max-width: 992px) 100vw, 44vw" />
           </div>
         </div>
       </section>
@@ -87,7 +88,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           <SectionHeading eyebrow={locale === "da" ? "Billeder" : "Images"} title={locale === "da" ? "Fra projektet" : "From the project"} />
           <div className="project-gallery">
             {project.gallery.map((image) => (
-              <Image key={image} src={image} alt="" width={1400} height={950} sizes="(max-width: 768px) 100vw, 50vw" />
+              <Image key={image} src={withBasePath(image)} alt="" width={1400} height={950} sizes="(max-width: 768px) 100vw, 50vw" />
             ))}
           </div>
         </Section>
