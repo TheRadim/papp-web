@@ -17,12 +17,13 @@ interface AboutTimelineProps {
 
 export function AboutTimeline({ items, locale }: AboutTimelineProps) {
   const timelineRef = useRef<HTMLDivElement>(null);
+  const targetProgressRef = useRef(0);
+  const visualProgressRef = useRef(0);
+  const frameRef = useRef(0);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    let frame = 0;
-
-    function updateProgress() {
+    function measureProgress() {
       const element = timelineRef.current;
       if (!element) {
         return;
@@ -30,21 +31,38 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
 
       const rect = element.getBoundingClientRect();
       const viewportMiddle = window.innerHeight * 0.5;
-      const nextProgress = Math.min(Math.max((viewportMiddle - rect.top) / rect.height, 0), 1);
-      setProgress(nextProgress);
+      targetProgressRef.current = Math.min(Math.max((viewportMiddle - rect.top) / rect.height, 0), 1);
+    }
+
+    function animateProgress() {
+      const current = visualProgressRef.current;
+      const target = targetProgressRef.current;
+      const next = current + (target - current) * 0.16;
+
+      visualProgressRef.current = Math.abs(target - next) < 0.001 ? target : next;
+      setProgress(visualProgressRef.current);
+
+      if (Math.abs(target - visualProgressRef.current) > 0.001) {
+        frameRef.current = window.requestAnimationFrame(animateProgress);
+      } else {
+        frameRef.current = 0;
+      }
     }
 
     function onScroll() {
-      window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(updateProgress);
+      measureProgress();
+
+      if (!frameRef.current) {
+        frameRef.current = window.requestAnimationFrame(animateProgress);
+      }
     }
 
-    updateProgress();
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
 
     return () => {
-      window.cancelAnimationFrame(frame);
+      window.cancelAnimationFrame(frameRef.current);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };

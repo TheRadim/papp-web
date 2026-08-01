@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import { ArrowDown } from "lucide-react";
 import type { Locale } from "@/content/types";
+import { company } from "@/content/global/company";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { withBasePath } from "@/lib/site/basePath";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AboutTimeline } from "@/components/about/AboutTimeline";
@@ -56,15 +60,58 @@ const timeline = [
   }
 ];
 
+function linkedinSearch(name: string) {
+  return `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(`${name} Papp Mobility`)}`;
+}
+
 const teamMembers = [
-  { name: "Tan Minh Nguyen Tran", role: { en: "CEO", da: "CEO" } },
-  { name: "Martin Holk Rasmussen", role: { en: "Data Specialist", da: "Data Specialist" } },
-  { name: "Alfred Röttger Rydahl", role: { en: "Software Developer", da: "Softwareudvikler" } },
-  { name: "Martine Winther", role: { en: "Development Consultant", da: "Udviklingskonsulent" } },
-  { name: "Carina Von Staffeldt Beck Mejlshede", role: { en: "Mechanical Engineer", da: "Mechanical Engineer" } },
-  { name: "Maxim Zavidei", role: { en: "Backend Software Engineer", da: "Backend-softwareingeniør" } },
-  { name: "Radim Theiner", role: { en: "Product Owner", da: "Product Owner" } },
-  { name: "Henrik Gade Hyldgaard", role: { en: "System Engineer", da: "System engineer" } }
+  {
+    name: "Tan Minh Nguyen Tran",
+    role: { en: "CEO", da: "CEO" },
+    image: "/images/team/tan-profile.png",
+    email: "tan.tran@pappmobility.com"
+  },
+  {
+    name: "Martin Holk Rasmussen",
+    role: { en: "Data Specialist", da: "Data Specialist" },
+    image: "/images/team/martin-profile.png",
+    linkedinUrl: "https://www.linkedin.com/in/martinholk/"
+  },
+  {
+    name: "Alfred Röttger Rydahl",
+    role: { en: "Software Developer", da: "Softwareudvikler" },
+    image: "/images/team/alfred-profile.png",
+    linkedinUrl: "https://www.linkedin.com/in/alfred-r%C3%B6ttger-rydahl-8a6707a2/"
+  },
+  {
+    name: "Martine Winther",
+    role: { en: "Development Consultant", da: "Udviklingskonsulent" },
+    image: "/images/team/martine-profile.png",
+    email: "martine.winther@pappmobility.com"
+  },
+  {
+    name: "Carina Von Staffeldt Beck Mejlshede",
+    role: { en: "Mechanical Engineer", da: "Mechanical Engineer" },
+    image: "/images/team/carina-profile.jpg",
+    linkedinUrl: "https://www.linkedin.com/in/carina-staffeldt-918b732b4/"
+  },
+  {
+    name: "Maxim Zavidei",
+    role: { en: "Backend Software Engineer", da: "Backend-softwareingeniør" },
+    image: "/images/team/max-profile.png",
+    linkedinUrl: "https://www.linkedin.com/in/v1max/"
+  },
+  {
+    name: "Radim Theiner",
+    role: { en: "Product Owner", da: "Product Owner" },
+    image: "/images/team/radim-profile.png",
+    linkedinUrl: "https://www.linkedin.com/in/therad/"
+  },
+  {
+    name: "Henrik Gade Hyldgaard",
+    role: { en: "System Engineer", da: "System engineer" },
+    initials: "HH"
+  }
 ];
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
@@ -118,17 +165,61 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           />
           <div className="team-grid">
             {teamMembers.map((member) => (
-              <article className="team-card" key={member.name}>
-                <h3>{member.name}</h3>
-                <p>{member.role[locale]}</p>
-              </article>
+              <a
+                className="team-card"
+                href={member.linkedinUrl ?? linkedinSearch(member.name)}
+                key={member.name}
+                rel="noreferrer"
+                target="_blank"
+                aria-label={`${member.name} on LinkedIn`}
+              >
+                {member.image ? (
+                  <Image
+                    src={withBasePath(member.image)}
+                    alt=""
+                    fill
+                    sizes="(max-width: 576px) 100vw, (max-width: 992px) 50vw, 25vw"
+                  />
+                ) : (
+                  <span className="team-card__initials" aria-hidden="true">
+                    {member.initials}
+                  </span>
+                )}
+                <span className="team-card__scrim" aria-hidden="true" />
+                <span className="team-card__content">
+                  <h3>{member.name}</h3>
+                  <p>{member.role[locale]}</p>
+                  <span>{member.email ?? company.email}</span>
+                </span>
+              </a>
             ))}
-            <article className="team-card team-card--join">
-              <p>{locale === "da" ? "Slut dig til os!" : "Join us!"}</p>
-              <h3>{locale === "da" ? "Åben ansøgning (m/f/d)" : "Open application (m/f/d)"}</h3>
-              <span>{locale === "da" ? "København/Aarhus/eksternt" : "Copenhagen/Aarhus/remote"}</span>
-            </article>
           </div>
+          <details className="open-application">
+            <summary>
+              <span>{locale === "da" ? "Slut dig til os!" : "Join us!"}</span>
+              <strong>{locale === "da" ? "Åben ansøgning(m/f/d)" : "Open application (m/f/d)"}</strong>
+              <em>{locale === "da" ? "København/Aarhus/eksternt" : "Copenhagen/Aarhus/remote"}</em>
+              <ArrowDown aria-hidden="true" size={34} strokeWidth={2.4} />
+            </summary>
+            <div className="open-application__body">
+              <h3>{locale === "da" ? "Jobbeskrivelse" : "Job description"}</h3>
+              <div>
+                <p>
+                  {locale === "da"
+                    ? "Klar til at være en del af noget større? Hos Papp Mobility er vi altid på udkig efter passionerede, fremsynede personer, der er lige så begejstrede for urban mobilitet, som vi er."
+                    : "Ready to be part of something bigger? At Papp Mobility, we are always looking for passionate, forward-thinking people who are as excited about urban mobility as we are."}
+                </p>
+                <p>
+                  {locale === "da"
+                    ? "Uanset om du er en studerende, der leder efter en praktikplads, en professionel, der overvejer et karriereskift, eller en ekspert, der søger nye udfordringer, vil vi gerne høre fra dig. Dine unikke færdigheder og dit perspektiv kan være den manglende brik i vores stræben efter at omdefinere urban mobilitet."
+                    : "Whether you are a student looking for an internship, a professional considering a career move, or an expert seeking new challenges, we would like to hear from you. Your skills and perspective may be the missing piece in our work to redefine urban mobility."}
+                </p>
+                <a href={company.linkedinUrl} target="_blank" rel="noreferrer">
+                  {locale === "da" ? "Ansøg på Linkedin" : "Apply on LinkedIn"}
+                </a>
+              </div>
+            </div>
+          </details>
         </div>
       </Section>
     </>
