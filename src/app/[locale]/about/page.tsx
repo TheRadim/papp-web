@@ -1,43 +1,70 @@
 import type { Metadata } from "next";
 import type { Locale } from "@/content/types";
-import { getTeam } from "@/lib/content/accessors";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { AboutTimeline } from "@/components/about/AboutTimeline";
 
 const timeline = [
   {
-    label: { en: "Starting point", da: "Udgangspunkt" },
-    title: { en: "Parking questions became data questions.", da: "Parkeringsspørgsmål blev til dataspørgsmål." },
+    date: { en: "August 2019", da: "August 2019" },
+    title: { en: "The idea begins", da: "Idéens oprindelse" },
     body: {
-      en: "Papp began with a practical need: make it easier to understand how parking and mobility spaces are actually used.",
-      da: "Papp tog udgangspunkt i et praktisk behov: at gøre det lettere at forstå, hvordan parkerings- og mobilitetsarealer faktisk bliver brugt."
+      en: "Martin, Alfred and Tan imagine a parking knowledge-sharing platform after parking fines in Aarhus.",
+      da: "Martin, Alfred og Tan udtænker en platform til vidensdeling om parkering som reaktion på p-bøder i Aarhus."
     }
   },
   {
-    label: { en: "Data collection", da: "Dataindsamling" },
-    title: { en: "Sensors and cameras made behaviour measurable.", da: "Sensorer og kameraer gjorde adfærd målbar." },
+    date: { en: "January 2020", da: "Januar 2020" },
+    title: { en: "Prototype and launch", da: "Prototype og lancering" },
     body: {
-      en: "IoT sensors, cameras and connected measurement setups turned occupancy, dwell time and flow into evidence.",
-      da: "IoT-sensorer, kameraer og forbundne måleopsætninger gjorde belægning, opholdstid og flow til dokumentation."
+      en: "Students create the first app prototype, leading to the company's establishment later that year.",
+      da: "Studerende skaber den første app-prototype, hvilket fører til virksomhedens etablering senere samme år."
     }
   },
   {
-    label: { en: "Platform", da: "Platform" },
-    title: { en: "Papp Insights brought the work into one view.", da: "Papp Insights samlede arbejdet i ét overblik." },
+    date: { en: "February 2021", da: "Februar 2021" },
+    title: { en: "Data integration and AI", da: "Dataintegration og AI" },
     body: {
-      en: "Live and historical views made it easier for teams to read, compare and share mobility patterns.",
-      da: "Live og historiske visninger gjorde det lettere for teams at læse, sammenligne og dele mobilitetsmønstre."
+      en: "Aarhus collaboration integrates live data; AI-powered occupancy forecasting begins with grant support and the GTC Accelerate programme.",
+      da: "Aarhus-samarbejde integrerer live-data; AI-drevet belægningsprognose igangsat med tilskud og GTC Accelerate-program."
     }
   },
   {
-    label: { en: "Today", da: "I dag" },
-    title: { en: "Mobility intelligence, analysis and advice.", da: "Mobilitetsindsigt, analyse og rådgivning." },
+    date: { en: "May 2022", da: "Maj 2022" },
+    title: { en: "IoT research and investment", da: "IoT-undersøgelse og -investering" },
     body: {
-      en: "Papp now helps cities, operators and partners turn measurement into practical next steps.",
-      da: "Papp hjælper i dag byer, operatører og partnere med at omsætte målinger til praktiske næste skridt."
+      en: "Discussions about the potential of IoT data collection begin; investment is secured; IoT testing starts with Aarhus Kommune.",
+      da: "Diskussioner om IoT-dataindsamlingens potentiale begyndte; investering sikret; IoT-test indledt med Aarhus Kommune."
+    }
+  },
+  {
+    date: { en: "March 2023", da: "Marts 2023" },
+    title: { en: "Papp Insights debuts", da: "Debut for Insights-værktøj" },
+    body: {
+      en: "Papp Insights launches, collecting data from parking garages, connected IoT sensors and external data sources.",
+      da: "Lancering af værktøjet Papp Insights, der indsamler data fra parkeringshuse, tilsluttede IoT-sensorer og ekstern data."
+    }
+  },
+  {
+    date: { en: "Today", da: "I dag" },
+    title: { en: "Intelligent mobility", da: "Intelligent mobilitet" },
+    body: {
+      en: "Papp's mission is to make city traffic smarter and more sustainable, respond to increasing urbanisation and support a more collaborative future.",
+      da: "Papps mission, der fokuserer på intelligent mobilitet, er at gøre bytrafikken smartere og mere bæredygtig, imødekomme den stigende urbanisering og fremme en fremtid med samarbejde."
     }
   }
+];
+
+const teamMembers = [
+  { name: "Tan Minh Nguyen Tran", role: { en: "CEO", da: "CEO" } },
+  { name: "Martin Holk Rasmussen", role: { en: "Data Specialist", da: "Data Specialist" } },
+  { name: "Alfred Röttger Rydahl", role: { en: "Software Developer", da: "Softwareudvikler" } },
+  { name: "Martine Winther", role: { en: "Development Consultant", da: "Udviklingskonsulent" } },
+  { name: "Carina Von Staffeldt Beck Mejlshede", role: { en: "Mechanical Engineer", da: "Mechanical Engineer" } },
+  { name: "Maxim Zavidei", role: { en: "Backend Software Engineer", da: "Backend-softwareingeniør" } },
+  { name: "Radim Theiner", role: { en: "Product Owner", da: "Product Owner" } },
+  { name: "Henrik Gade Hyldgaard", role: { en: "System Engineer", da: "System engineer" } }
 ];
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
@@ -57,7 +84,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
-  const team = getTeam(locale);
 
   return (
     <>
@@ -65,8 +91,12 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         <div className="about-hero-block">
           <SectionHeading
             eyebrow={locale === "da" ? "Om Papp" : "About Papp"}
-            title={locale === "da" ? "Vi gør fysisk mobilitet lettere at forstå." : "We make physical mobility easier to understand."}
-            body={locale === "da" ? "Papp kombinerer sensorer, kameraer, Papp Insights, analyse og rådgivning, så byer og operatører kan træffe bedre beslutninger." : "Papp combines sensors, cameras, Papp Insights, analysis and consultancy so cities and operators can make better decisions."}
+            title={locale === "da" ? "Historien om Papp Mobility" : "The Story of Papp Mobility"}
+            body={
+              locale === "da"
+                ? "Oplev vores historie. En dynamisk fortælling, der følger vores ydmyge begyndelse, banebrydende innovationer og urokkelige engagement i at revolutionere den måde, verden tilgår parkeringsløsninger på."
+                : "Explore our story. A dynamic journey through our humble beginnings, breakthrough innovations and steady commitment to changing how the world approaches parking solutions."
+            }
           />
         </div>
       </Section>
@@ -74,26 +104,32 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         <div className="about-timeline-layout">
           <SectionHeading
             eyebrow={locale === "da" ? "Historie" : "History"}
-            title={locale === "da" ? "Fra parkeringsdata til mobilitetsindsigt." : "From parking data to mobility intelligence."}
-            body={locale === "da" ? "En enkel fortælling om, hvordan Papps arbejde har udviklet sig. Konkrete årstal og offentlige milepæle kan tilføjes, når de er bekræftet." : "A simple story of how Papp's work has developed. Specific dates and public milestones can be added once confirmed."}
+            title={locale === "da" ? "Fra idé til intelligent mobilitet." : "From idea to intelligent mobility."}
+            body={locale === "da" ? "Følg punkterne gennem Papps udvikling fra parkeringsapp til data, IoT og Insights." : "Follow the milestones as Papp moves from parking app to data, IoT and Insights."}
           />
-          <div className="history-timeline">
-            {timeline.map((item) => (
-              <article key={item.label.en}>
-                <p>{item.label[locale]}</p>
-                <h3>{item.title[locale]}</h3>
-                <span>{item.body[locale]}</span>
-              </article>
-            ))}
-          </div>
+          <AboutTimeline items={timeline} locale={locale} />
         </div>
       </Section>
-      <Section tone="soft">
-        <SectionHeading
-          eyebrow={locale === "da" ? "Team" : "Team"}
-          title={team.length ? (locale === "da" ? "Mød teamet" : "Meet the team") : locale === "da" ? "Teamindhold mangler" : "Team content needed"}
-          body={locale === "da" ? "Navne, roller, biografier, billeder og LinkedIn-links skal leveres eller bekræftes." : "Names, roles, biographies, images and LinkedIn links should be supplied or confirmed."}
-        />
+      <Section>
+        <div className="about-team-layout">
+          <SectionHeading
+            eyebrow={locale === "da" ? "Hvem er vi?" : "Who are we?"}
+            title={locale === "da" ? "Mød de hjerner, der former fremtiden inden for parkeringsteknologi." : "Meet the minds shaping the future of parking technology."}
+          />
+          <div className="team-grid">
+            {teamMembers.map((member) => (
+              <article className="team-card" key={member.name}>
+                <h3>{member.name}</h3>
+                <p>{member.role[locale]}</p>
+              </article>
+            ))}
+            <article className="team-card team-card--join">
+              <p>{locale === "da" ? "Slut dig til os!" : "Join us!"}</p>
+              <h3>{locale === "da" ? "Åben ansøgning (m/f/d)" : "Open application (m/f/d)"}</h3>
+              <span>{locale === "da" ? "København/Aarhus/eksternt" : "Copenhagen/Aarhus/remote"}</span>
+            </article>
+          </div>
+        </div>
       </Section>
     </>
   );
