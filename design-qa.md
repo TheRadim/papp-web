@@ -2,21 +2,21 @@
 - No actionable P0/P1/P2 findings remain.
 
 **Source Visual Truth**
-- Path: `/Users/radimtheiner/Downloads/IMG_3244.heic`
-- Converted reference: `/tmp/papp-ref/IMG_3244.png`
+- Path: `/Users/radimtheiner/Desktop/Screenshot 2026-08-01 at 11.44.17.png`
 
 **Implementation Evidence**
-- URL: `http://127.0.0.1:3000/en`
-- Latest checked state: English homepage after extending the top-bar hover treatment to DK/Login, changing the hero kicker to `Data-based mobility decisions`, making the hero title more logo-like with heavier `Mobility`, increasing hotspot saturation, spacing/smoothing the solutions dropdown, applying neumorphic treatment to the process/project cards, keeping filled contact fields pressed, and restoring stronger mobile hero image opacity.
-- Viewports checked: desktop `1440x1200`, mobile `390x900`
-- State: homepage hero, mobile layout, hotspot links, solutions dropdown, contact form filled/focus state, process cards, footer.
+- URL: `http://localhost:3001/en`
+- Latest checked state: English homepage after applying Papp brand colors to the hero H1, keeping the `Data-based mobility decisions` kicker black, lowering the intro paragraph/actions beneath the 3D render, and replacing the desktop 3D preload image with a soft loading plate.
+- Viewport checked: desktop in-app browser viewport.
+- State: homepage hero after 3D canvas reached `ready`.
 
 **Full-View Comparison Evidence**
-- The current implementation follows the requested revised composition: one continuous floating header over the hero background, logo-like one-line top-left `Papp Mobility` title, right-side contained illustration, three more saturated clickable desktop points with pulsing rings and neumorphic info bubbles, then paragraph and two soft raised actions below the image.
+- The current implementation follows the attached homepage feedback: `Papp` uses the deep Papp blue, `Mobility` uses the salmon/coral brand color, the subheading is black, and the intro copy/actions sit below the render instead of overlapping it.
 
 - Header: fixed/frosted nav sits over the hero background as one merged surface instead of separate islands, so page elements do not pass through visible gaps.
 - Hero points: `Sensors`, `Cameras`, and `Intelligence` link to their respective product pages on desktop, pulse gently, show larger title/description bubbles, and are hidden on mobile so the image behaves as a static picture.
-- Hero copy: the small line now reads `Data-based mobility decisions`; Danish uses `Databaserede mobilitetsbeslutninger`.
+- Hero copy: the small line reads `Data-based mobility decisions` in black; Danish keeps `Databaserede mobilitetsbeslutninger`.
+- Render loading: the server-rendered hero no longer includes the static `mobility-city-visual.png` fallback inside the hero section. Desktop loading starts with `.mobility-city__loading-plate`, while mobile/unsupported/error states can still use the image fallback.
 - Buttons: hero actions no longer have the vertical color bars or inner outline lines; hover movement is reduced to a small neumorphic pressure shift.
 - Process/projects: cards use the neumorphic raised surface treatment, and process card numbers now sit smaller on the same line as the card title.
 - Partners: collaborations section uses the light surface treatment.

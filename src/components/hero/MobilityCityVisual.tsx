@@ -38,13 +38,13 @@ function browserSupportsWebGL() {
 }
 
 function useDesktop3dEnabled() {
-  const [enabled, setEnabled] = useState(false);
+  const [state, setState] = useState({ enabled: false, resolved: false });
 
   useEffect(() => {
     const query = window.matchMedia("(min-width: 992px)");
 
     function update() {
-      setEnabled(query.matches && browserSupportsWebGL());
+      setState({ enabled: query.matches && browserSupportsWebGL(), resolved: true });
     }
 
     update();
@@ -55,7 +55,7 @@ function useDesktop3dEnabled() {
     };
   }, []);
 
-  return enabled;
+  return state;
 }
 
 function useNearViewport(rootMargin = "420px 0px") {
@@ -104,13 +104,16 @@ export function MobilityCityVisual({
   locale
 }: MobilityCityVisualProps) {
   const reducedMotion = useReducedMotion();
-  const desktop3dEnabled = useDesktop3dEnabled();
+  const desktop3d = useDesktop3dEnabled();
   const { ref, nearViewport } = useNearViewport(lockedArea ? "24px 0px" : "420px 0px");
   const [hoveredArea, setHoveredArea] = useState<MobilityArea | null>(activeArea);
   const [selectedArea, setSelectedArea] = useState<MobilityArea | null>(lockedArea ?? (initialView === "overview" ? null : initialView));
   const [modelStatus, setModelStatus] = useState<MobilityModelStatus>("idle");
 
-  const canUse3d = interactive && visualMode === "3d" && desktop3dEnabled && nearViewport;
+  const wants3d = interactive && visualMode === "3d";
+  const canUse3d = wants3d && desktop3d.enabled && nearViewport;
+  const showImageFallback = !wants3d || (desktop3d.resolved && !desktop3d.enabled) || modelStatus === "error";
+  const showLoadingPlate = wants3d && !showImageFallback && modelStatus !== "ready";
   const activeDisplayArea = selectedArea ?? activeArea ?? hoveredArea;
   const view: MobilityView = selectedArea ?? "overview";
 
@@ -155,7 +158,8 @@ export function MobilityCityVisual({
       data-active={activeDisplayArea ?? "none"}
     >
       <div className="mobility-city__stage">
-        {!canUse3d || modelStatus !== "ready" ? <MobilityCityFallback locale={locale} status={modelStatus} /> : null}
+        {showLoadingPlate ? <div className="mobility-city__loading-plate" aria-hidden="true" /> : null}
+        {showImageFallback ? <MobilityCityFallback locale={locale} status={modelStatus} /> : null}
         {canUse3d ? (
           <MobilityCityCanvas
             hoveredArea={hoveredArea}
