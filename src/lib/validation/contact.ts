@@ -9,9 +9,7 @@ export function validateContactPayload(payload: ContactFormPayload): ContactVali
   const errors: ContactValidationResult["errors"] = {};
 
   if (!payload.name.trim()) errors.name = "Name is required.";
-  if (!payload.organisation.trim()) errors.organisation = "Organisation is required.";
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) errors.email = "A valid email is required.";
-  if (!payload.interest.trim()) errors.interest = "Area of interest is required.";
   if (payload.message.trim().length < 10) errors.message = "Message must be at least 10 characters.";
   if (!payload.privacyAccepted) errors.privacyAccepted = "Privacy acknowledgement is required.";
 

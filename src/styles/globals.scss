@@ -22,6 +22,22 @@ main {
   padding-top: 6.25rem;
 }
 
+.page-transition {
+  animation: page-soft-enter 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes page-soft-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -1006,6 +1022,13 @@ img {
   padding: var(--section-space-lg) 0;
 }
 
+.papp-section,
+.contact-band,
+.app-promo {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 760px;
+}
+
 .papp-section--soft,
 .app-promo {
   background: var(--surface-secondary);
@@ -1217,13 +1240,13 @@ img {
 }
 
 .contact-band .container {
-  grid-template-columns: minmax(230px, 0.38fr) minmax(0, 0.82fr);
+  grid-template-columns: minmax(230px, 0.42fr) minmax(420px, 0.62fr);
   align-items: start;
   justify-content: space-between;
 }
 
 .contact-page-grid {
-  grid-template-columns: minmax(250px, 0.38fr) minmax(0, 0.78fr);
+  grid-template-columns: minmax(250px, 0.42fr) minmax(420px, 0.58fr);
   align-items: start;
   justify-content: space-between;
 }
@@ -1243,8 +1266,9 @@ img {
 
 .contact-band__copy h2,
 .contact-page-grid .section-heading h2 {
-  max-width: 9ch;
-  font-size: clamp(2.65rem, 5.2vw, 4.65rem);
+  max-width: 11.5ch;
+  font-size: clamp(1.95rem, 3.25vw, 3rem);
+  line-height: 1;
 }
 
 .contact-band__copy p:not(.eyebrow),
@@ -1871,36 +1895,36 @@ img {
 .contact-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(1.1rem, 2vw, 1.45rem);
+  gap: clamp(0.95rem, 1.7vw, 1.2rem);
   justify-self: end;
   width: 100%;
-  max-width: 760px;
-  border: 1px solid rgba(255, 255, 255, 0.78);
-  border-radius: 24px;
-  background: var(--surface-neo);
-  box-shadow: var(--shadow-neo);
-  padding: clamp(1.7rem, 3.4vw, 2.75rem);
+  max-width: 560px;
+  border: 1px solid rgba(255, 255, 255, 0.54);
+  border-radius: 14px;
+  background: rgba(238, 243, 246, 0.56);
+  box-shadow: 8px 10px 22px rgba(177, 190, 199, 0.22), -8px -8px 20px rgba(255, 255, 255, 0.72);
+  padding: clamp(1.1rem, 2.3vw, 1.75rem);
 }
 
 .contact-form label {
   display: grid;
-  gap: 0.4rem;
+  gap: 0.34rem;
   color: var(--text-primary);
-  font-size: 1rem;
-  font-weight: 900;
+  font-size: 0.94rem;
+  font-weight: 820;
 }
 
 .contact-form input:not([type="checkbox"]),
 .contact-form select,
 .contact-form textarea {
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.72);
-  border-radius: 14px;
-  background: var(--surface-neo);
-  box-shadow: var(--shadow-neo-small);
-  padding: 1.05rem 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  border-radius: 8px;
+  background: rgba(238, 243, 246, 0.62);
+  box-shadow: 4px 5px 11px rgba(177, 190, 199, 0.28), -4px -4px 11px rgba(255, 255, 255, 0.76);
+  padding: 0.9rem 0.95rem;
   color: var(--text-primary);
-  font-size: 1.06rem;
+  font-size: 1rem;
   transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 
@@ -1911,7 +1935,7 @@ img {
 .contact-form textarea:not(:placeholder-shown),
 .contact-form textarea:focus {
   border-color: rgba(255, 255, 255, 0.72);
-  box-shadow: var(--shadow-neo-inset);
+  box-shadow: inset 4px 4px 10px rgba(177, 190, 199, 0.3), inset -4px -4px 10px rgba(255, 255, 255, 0.74);
   transform: translateY(1px);
 }
 
@@ -1922,13 +1946,14 @@ img {
 }
 
 .contact-form textarea {
-  min-height: 13rem;
+  min-height: 11rem;
 }
 
 .contact-form .papp-button {
   width: fit-content;
-  min-width: 15rem;
-  min-height: 58px;
+  min-width: 14rem;
+  min-height: 52px;
+  justify-self: center;
 }
 
 .project-gallery {
@@ -1955,6 +1980,10 @@ img {
   display: flex !important;
   grid-template-columns: auto 1fr;
   align-items: flex-start;
+  justify-content: center;
+  max-width: 42rem;
+  margin-inline: auto;
+  text-align: center;
 }
 
 .checkbox-label input {
@@ -2314,6 +2343,10 @@ img {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .page-transition {
+    transform: none;
   }
 
   .partner-track {

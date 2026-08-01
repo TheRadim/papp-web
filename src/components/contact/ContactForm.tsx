@@ -9,8 +9,6 @@ interface ContactFormProps {
   locale: Locale;
 }
 
-const interests = ["Parking Sensors", "Camera Analytics", "Papp Insights", "Analysis", "Consultancy", "App", "Other"];
-
 export function ContactForm({ locale }: ContactFormProps) {
   const [status, setStatus] = useState<string | null>(null);
 
@@ -19,10 +17,7 @@ export function ContactForm({ locale }: ContactFormProps) {
     const form = new FormData(event.currentTarget);
     const payload = {
       name: String(form.get("name") ?? ""),
-      organisation: String(form.get("organisation") ?? ""),
       email: String(form.get("email") ?? ""),
-      phone: String(form.get("phone") ?? ""),
-      interest: String(form.get("interest") ?? ""),
       message: String(form.get("message") ?? ""),
       privacyAccepted: form.get("privacyAccepted") === "on"
     };
@@ -32,10 +27,7 @@ export function ContactForm({ locale }: ContactFormProps) {
       const body = encodeURIComponent(
         [
           `Name: ${payload.name}`,
-          `Organisation: ${payload.organisation}`,
           `Email: ${payload.email}`,
-          `Phone: ${payload.phone || "-"}`,
-          `Interest: ${payload.interest}`,
           "",
           payload.message
         ].join("\n")
@@ -70,27 +62,8 @@ export function ContactForm({ locale }: ContactFormProps) {
         <input name="name" required autoComplete="name" placeholder=" " />
       </label>
       <label>
-        {locale === "da" ? "Organisation" : "Organisation"}
-        <input name="organisation" required autoComplete="organization" placeholder=" " />
-      </label>
-      <label>
         Email
         <input name="email" type="email" required autoComplete="email" placeholder=" " />
-      </label>
-      <label>
-        {locale === "da" ? "Telefon, valgfri" : "Phone, optional"}
-        <input name="phone" autoComplete="tel" placeholder=" " />
-      </label>
-      <label className="contact-form__wide">
-        {locale === "da" ? "Interesseområde" : "Area of interest"}
-        <select name="interest" required defaultValue="">
-          <option value="" disabled>
-            {locale === "da" ? "Vælg område" : "Choose an area"}
-          </option>
-          {interests.map((interest) => (
-            <option key={interest}>{interest}</option>
-          ))}
-        </select>
       </label>
       <label className="contact-form__wide">
         {locale === "da" ? "Besked" : "Message"}

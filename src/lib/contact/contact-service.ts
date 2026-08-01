@@ -1,9 +1,6 @@
 export interface ContactFormPayload {
   name: string;
-  organisation: string;
   email: string;
-  phone?: string;
-  interest: string;
   message: string;
   privacyAccepted: boolean;
 }
