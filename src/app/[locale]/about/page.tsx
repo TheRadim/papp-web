@@ -14,89 +14,102 @@ const timeline = [
     date: { en: "August 2019", da: "August 2019" },
     title: { en: "The idea begins", da: "Idéens oprindelse" },
     body: {
-      en: "Martin, Alfred and Tan imagine a parking knowledge-sharing platform after parking fines in Aarhus.",
-      da: "Martin, Alfred og Tan udtænker en platform til vidensdeling om parkering som reaktion på p-bøder i Aarhus."
-    }
+      en: "Martin, Alfred and Tan start shaping a parking knowledge platform after parking fines in Aarhus.",
+      da: "Martin, Alfred og Tan begynder at forme en platform til parkeringsviden efter p-bøder i Aarhus."
+    },
+    image: "/images/projects/sensors/sensordata-herning-cover.jpg"
   },
   {
     date: { en: "January 2020", da: "Januar 2020" },
     title: { en: "Prototype and launch", da: "Prototype og lancering" },
     body: {
-      en: "Students create the first app prototype, leading to the company's establishment later that year.",
-      da: "Studerende skaber den første app-prototype, hvilket fører til virksomhedens etablering senere samme år."
-    }
+      en: "The first app prototype is built, setting the foundation for the company later that year.",
+      da: "Den første app-prototype bliver bygget og skaber grundlaget for virksomheden senere samme år."
+    },
+    image: "/images/app/papp-app-phone.png",
+    imageFit: "contain" as const
   },
   {
     date: { en: "February 2021", da: "Februar 2021" },
     title: { en: "Data integration and AI", da: "Dataintegration og AI" },
     body: {
-      en: "Aarhus collaboration integrates live data; AI-powered occupancy forecasting begins with grant support and the GTC Accelerate programme.",
-      da: "Aarhus-samarbejde integrerer live-data; AI-drevet belægningsprognose igangsat med tilskud og GTC Accelerate-program."
-    }
+      en: "Live parking data and AI forecasting move from idea to active development.",
+      da: "Live parkeringsdata og AI-prognoser går fra idé til aktiv udvikling."
+    },
+    image: "/images/projects/consultancy/dataoptimering-faaborg-cover.jpg"
   },
   {
     date: { en: "May 2022", da: "Maj 2022" },
     title: { en: "IoT research and investment", da: "IoT-undersøgelse og -investering" },
     body: {
-      en: "Discussions about the potential of IoT data collection begin; investment is secured; IoT testing starts with Aarhus Kommune.",
-      da: "Diskussioner om IoT-dataindsamlingens potentiale begyndte; investering sikret; IoT-test indledt med Aarhus Kommune."
-    }
+      en: "Investment and early municipal testing turn IoT data collection into a real product track.",
+      da: "Investering og tidlige kommunale tests gør IoT-dataindsamling til et konkret produktspor."
+    },
+    image: "/images/products/sensors/parking-sensor-closeup.jpg"
   },
   {
     date: { en: "March 2023", da: "Marts 2023" },
     title: { en: "Papp Insights debuts", da: "Debut for Insights-værktøj" },
     body: {
-      en: "Papp Insights launches, collecting data from parking garages, connected IoT sensors and external data sources.",
-      da: "Lancering af værktøjet Papp Insights, der indsamler data fra parkeringshuse, tilsluttede IoT-sensorer og ekstern data."
-    }
+      en: "Papp Insights launches as the place where sensor, parking-house and external data meet.",
+      da: "Papp Insights lanceres som stedet, hvor sensor-, parkeringshus- og eksterne data samles."
+    },
+    image: "/images/products/insights/papp-insights-current.png"
   },
   {
     date: { en: "August 2025", da: "August 2025" },
     title: { en: "Vehicle database integration", da: "Integration af bildatabase" },
     body: {
-      en: "A strategic partnership adds deeper vehicle intelligence to Papp's data foundation, making it possible to understand parking users through vehicle type, fuel, location, brand and other mobility signals.",
-      da: "Et strategisk partnerskab styrker Papps datagrundlag med dybere køretøjsindsigt, så parkeringsbrugere kan forstås gennem biltype, drivmiddel, lokation, mærke og andre mobilitetssignaler."
-    }
+      en: "A strategic partnership adds vehicle type, fuel, brand and location intelligence to the data layer.",
+      da: "Et strategisk partnerskab tilføjer biltype, drivmiddel, mærke og lokationsindsigt til datalaget."
+    },
+    image: "/images/projects/cameras/parkeringsmoenstre-ishoej-cover.jpg"
   },
   {
     date: { en: "December 2025", da: "December 2025" },
     title: { en: "Smart camera concept", da: "Smart kamera-koncept" },
     body: {
-      en: "Papp develops a battery-powered camera concept for precise monitoring of parking lots and streets, using images to evaluate traffic patterns and provide richer information about vehicles. The solution is designed to run for more than three weeks on battery power.",
-      da: "Papp udvikler et batteridrevet kamerakoncept til præcis overvågning af parkeringspladser og gader, hvor billeder bruges til at analysere trafikmønstre og give mere detaljeret information om køretøjer. Løsningen er designet til at køre i mere end tre uger på batteri."
-    }
+      en: "A battery-powered camera concept is developed to read parking and street activity with precision.",
+      da: "Et batteridrevet kamerakoncept udvikles til præcist at aflæse aktivitet på parkeringspladser og gader."
+    },
+    image: "/images/products/cameras/camera-street-measurement.jpg"
   },
   {
     date: { en: "March 2026", da: "Marts 2026" },
     title: { en: "Papp AI", da: "Papp AI" },
     body: {
-      en: "AI capabilities and automated workflows are introduced to help users get more value from their data immediately, reducing reliance on consultancy hours and making insights easier to understand and act on.",
-      da: "AI-funktioner og automatiserede arbejdsgange introduceres, så brugere hurtigere kan få mere værdi ud af deres data, reducere behovet for konsulenttimer og gøre indsigter lettere at forstå og handle på."
-    }
+      en: "AI workflows help users understand their data faster and act without waiting for manual analysis.",
+      da: "AI-arbejdsgange hjælper brugere med at forstå deres data hurtigere og handle uden at vente på manuel analyse."
+    },
+    image: "/images/projects/sensors/sensordata-herning-image12.png"
   },
   {
     date: { en: "September 2026", da: "September 2026" },
     title: { en: "Our own sensor", da: "Vores egen sensor" },
     body: {
-      en: "After more than two years of development, Papp launches the first generation of its own in-ground parking sensor.",
-      da: "Efter mere end to års udvikling lancerer Papp første generation af sin egen nedgravede parkeringssensor."
-    }
+      en: "After more than two years of development, Papp launches its first in-ground parking sensor.",
+      da: "Efter mere end to års udvikling lancerer Papp sin første nedgravede parkeringssensor."
+    },
+    image: "/images/projects/sensors/iot-teknologi-varde-image1.jpg"
   },
   {
     date: { en: "November 2026", da: "November 2026" },
     title: { en: "Insights 2.0", da: "Insights 2.0" },
     body: {
-      en: "Papp rebuilds Insights from the ground up as a smarter system for navigating collected mobility data: an intelligent 24/7 platform that gathers Papp's knowledge and helps users work with data more easily.",
-      da: "Papp genopbygger Insights fra bunden som et smartere system til at navigere i indsamlede mobilitetsdata: en intelligent platform, tilgængelig 24/7, der samler Papps viden og gør det lettere for brugere at arbejde med data."
-    }
+      en: "Insights is rebuilt as a smarter 24/7 platform for navigating collected mobility intelligence.",
+      da: "Insights genopbygges som en smartere 24/7-platform til at navigere i indsamlet mobilitetsviden."
+    },
+    image: "/images/products/insights/papp-insights-current.png"
   },
   {
     date: { en: "Today", da: "I dag" },
     title: { en: "Intelligent mobility", da: "Intelligent mobilitet" },
     body: {
-      en: "Papp's mission is to make city traffic smarter and more sustainable, respond to increasing urbanisation and support a more collaborative future.",
-      da: "Papps mission, der fokuserer på intelligent mobilitet, er at gøre bytrafikken smartere og mere bæredygtig, imødekomme den stigende urbanisering og fremme en fremtid med samarbejde."
-    }
+      en: "Papp helps cities and operators make mobility decisions from real behaviour, not assumptions.",
+      da: "Papp hjælper byer og operatører med at træffe mobilitetsbeslutninger ud fra reel adfærd, ikke antagelser."
+    },
+    image: "/images/hero/mobility-city-visual.png",
+    imageFit: "contain" as const
   }
 ];
 

@@ -1,13 +1,17 @@
 "use client";
 
+import Image from "next/image";
 import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/content/types";
+import { withBasePath } from "@/lib/site/basePath";
 
 interface TimelineItem {
   date: Record<Locale, string>;
   title: Record<Locale, string>;
   body: Record<Locale, string>;
+  image?: string;
+  imageFit?: "cover" | "contain";
 }
 
 interface AboutTimelineProps {
@@ -98,9 +102,24 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
       <span className="history-timeline__cursor" aria-hidden="true" />
       {items.map((item, index) => (
         <article className={progress >= (nodeThresholds[index] ?? 1) ? "is-passed" : undefined} key={item.date.da}>
-          <p>{item.date[locale]}</p>
-          <h3>{item.title[locale]}</h3>
-          <span>{item.body[locale]}</span>
+          <div className="history-timeline__date" aria-label={item.date[locale]}>
+            <p>{item.date[locale]}</p>
+          </div>
+          <div className="history-timeline__card">
+            <h3>{item.title[locale]}</h3>
+            <span>{item.body[locale]}</span>
+            {item.image ? (
+              <div className={`history-timeline__media history-timeline__media--${item.imageFit ?? "cover"}`}>
+                <Image
+                  src={withBasePath(item.image)}
+                  alt=""
+                  width={860}
+                  height={520}
+                  sizes="(max-width: 768px) 100vw, 42vw"
+                />
+              </div>
+            ) : null}
+          </div>
         </article>
       ))}
     </div>
