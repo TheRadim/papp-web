@@ -1,13 +1,14 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import type { Locale } from "@/content/types";
 import { getProjectBySlug, getProjects } from "@/lib/content/accessors";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { pick } from "@/lib/i18n/locales";
 import { withBasePath } from "@/lib/site/basePath";
 import { Section } from "@/components/layout/Section";
-import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 
 export function generateStaticParams() {
@@ -29,63 +30,90 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   const project = getProjectBySlug(locale, slug);
   if (!project) notFound();
 
+  const categoryLabels = {
+    sensors: { en: "Sensor project", da: "Sensorprojekt" },
+    cameras: { en: "Camera project", da: "Kameraprojekt" },
+    analysis: { en: "Analysis project", da: "Analyseprojekt" },
+    consultancy: { en: "Advisory project", da: "Rådgivningsprojekt" }
+  };
+
   return (
     <>
-      <section className="subpage-hero">
+      <section className="project-article-hero">
         <div className="container">
-          <div className="subpage-hero__grid">
-            <div>
-              <p className="eyebrow">{project.clientName}</p>
-              <h1>{pick(locale, project.title)}</h1>
-              <p className="hero-lead">{pick(locale, project.summary)}</p>
-              <Button href={`/${locale}/contact`}>{locale === "da" ? "Tal om et lignende projekt" : "Discuss a similar project"}</Button>
+          <div className="project-article-hero__inner">
+            <Link className="project-back-link" href={`/${locale}/projects`}>
+              <ArrowLeft aria-hidden="true" size={16} />
+              {locale === "da" ? "Tilbage til projekter" : "Back to projects"}
+            </Link>
+            <p className="eyebrow">
+              {pick(locale, categoryLabels[project.category])} / {project.clientName}
+            </p>
+            <h1>{pick(locale, project.title)}</h1>
+            <p className="hero-lead">{pick(locale, project.summary)}</p>
+            <div className="project-article-meta">
+              <span>{project.clientName}</span>
+              <span>{pick(locale, categoryLabels[project.category])}</span>
+              {project.technologies?.slice(0, 3).map((technology) => (
+                <span key={technology}>{technology}</span>
+              ))}
             </div>
-            <Image src={withBasePath(project.coverImage)} alt="" width={1672} height={941} priority sizes="(max-width: 992px) 100vw, 44vw" />
           </div>
+          <Image
+            className="project-article-hero__image"
+            src={withBasePath(project.coverImage)}
+            alt=""
+            width={1672}
+            height={941}
+            priority
+            sizes="(max-width: 992px) 100vw, 920px"
+          />
         </div>
       </section>
-      <Section>
-        <div className="detail-grid">
-          <div>
-            {project.challenge ? (
-              <>
-                <p className="eyebrow">{locale === "da" ? "Udfordring" : "Challenge"}</p>
-                <h2>{locale === "da" ? "Hvad skulle forstås" : "What needed to be understood"}</h2>
-                <p>{pick(locale, project.challenge)}</p>
-              </>
-            ) : null}
-          </div>
-          <div>
-            <SectionHeading eyebrow={locale === "da" ? "Teknologier" : "Technologies"} title={locale === "da" ? "Relaterede områder" : "Related areas"} />
+      <Section className="project-article-section">
+        <div className="project-article-layout">
+          <aside className="project-article-aside">
+            <p className="eyebrow">{locale === "da" ? "Overblik" : "Overview"}</p>
             <ul className="tag-list">
               {project.technologies?.map((technology) => (
                 <li key={technology}>{technology}</li>
               ))}
             </ul>
+            <Button href={`/${locale}/contact`} variant="secondary">
+              {locale === "da" ? "Tal om et lignende projekt" : "Discuss a similar project"}
+            </Button>
+          </aside>
+          <div className="project-article-body">
+            {project.challenge ? (
+              <article>
+                <p className="eyebrow">{locale === "da" ? "Udfordring" : "Challenge"}</p>
+                <h2>{locale === "da" ? "Hvad skulle forstås." : "What needed to be understood."}</h2>
+                <p>{pick(locale, project.challenge)}</p>
+              </article>
+            ) : null}
+            {project.approach ? (
+              <article>
+                <p className="eyebrow">{locale === "da" ? "Tilgang" : "Approach"}</p>
+                <h2>{locale === "da" ? "Fra måling til overblik." : "From measurement to clarity."}</h2>
+                <p>{pick(locale, project.approach)}</p>
+              </article>
+            ) : null}
+            {project.result ? (
+              <article>
+                <p className="eyebrow">{locale === "da" ? "Resultat" : "Outcome"}</p>
+                <h2>{locale === "da" ? "Et stærkere beslutningsgrundlag." : "A stronger basis for decisions."}</h2>
+                <p>{pick(locale, project.result)}</p>
+              </article>
+            ) : null}
           </div>
         </div>
       </Section>
-      <Section tone="soft">
-        <div className="detail-grid detail-grid--story">
-          {project.approach ? (
-            <article>
-              <p className="eyebrow">{locale === "da" ? "Tilgang" : "Approach"}</p>
-              <h2>{locale === "da" ? "Fra data til overblik" : "From data to clarity"}</h2>
-              <p>{pick(locale, project.approach)}</p>
-            </article>
-          ) : null}
-          {project.result ? (
-            <article>
-              <p className="eyebrow">{locale === "da" ? "Resultat" : "Outcome"}</p>
-              <h2>{locale === "da" ? "Et bedre beslutningsgrundlag" : "A better decision basis"}</h2>
-              <p>{pick(locale, project.result)}</p>
-            </article>
-          ) : null}
-        </div>
-      </Section>
       {project.gallery?.length ? (
-        <Section>
-          <SectionHeading eyebrow={locale === "da" ? "Billeder" : "Images"} title={locale === "da" ? "Fra projektet" : "From the project"} />
+        <Section tone="soft" className="project-article-gallery-section">
+          <div className="project-group__heading">
+            <p className="eyebrow">{locale === "da" ? "Billeder" : "Images"}</p>
+            <h2>{locale === "da" ? "Fra projektet." : "From the project."}</h2>
+          </div>
           <div className="project-gallery">
             {project.gallery.map((image) => (
               <Image key={image} src={withBasePath(image)} alt="" width={1400} height={950} sizes="(max-width: 768px) 100vw, 50vw" />
