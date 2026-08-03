@@ -14,7 +14,7 @@ export function AppPromotion({ locale, content }: AppPromotionProps) {
   return (
     <section className="app-promo">
       <div className="container app-promo__grid">
-        <Image className="app-phone" src={withBasePath("/images/app/papp-app-phone.png")} alt="" width={580} height={1112} />
+        <Image className="app-phone" src={withBasePath("/images/corporate/app-car-phone.jpg")} alt="" width={1920} height={1080} />
         <div>
           <p className="eyebrow">{content.eyebrow}</p>
           <h2>{content.title}</h2>

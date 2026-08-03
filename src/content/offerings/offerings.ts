@@ -1,10 +1,10 @@
 import type { Locale, Offering } from "@/content/types";
 
-const sensorVisual = "/images/products/sensors/parking-sensor-closeup.jpg";
-const cameraVisual = "/images/products/cameras/camera-street-measurement.jpg";
-const insightVisual = "/images/projects/sensors/sensordata-herning-image12.png";
-const analysisVisual = "/images/projects/consultancy/dataoptimering-faaborg-cover.jpg";
-const consultancyVisual = "/images/projects/consultancy/erhvervsparkering-aalborg-cover.jpg";
+const sensorVisual = "/images/corporate/parking-sensor-ground.jpg";
+const cameraVisual = "/images/corporate/parking-tablet-review.jpg";
+const insightVisual = "/images/corporate/insights-screen.jpg";
+const analysisVisual = "/images/corporate/insights-meeting-city.jpg";
+const consultancyVisual = "/images/corporate/parking-consultation-charger.jpg";
 
 export const offerings: Offering[] = [
   {
