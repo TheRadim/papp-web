@@ -59,7 +59,7 @@ export function HeroMotionField() {
 
     function resize() {
       const rect = parentElement.getBoundingClientRect();
-      pixelRatio = Math.min(window.devicePixelRatio || 1, 1.15);
+      pixelRatio = 1;
       width = Math.max(1, Math.floor(rect.width));
       height = Math.max(1, Math.floor(rect.height));
       canvasElement.width = Math.floor(width * pixelRatio);
@@ -70,7 +70,7 @@ export function HeroMotionField() {
     }
 
     function draw(timestamp: number) {
-      if (!isVisible || timestamp - lastRender < 33) {
+      if (!isVisible || timestamp - lastRender < 66) {
         frame = window.requestAnimationFrame(draw);
         return;
       }
@@ -89,12 +89,12 @@ export function HeroMotionField() {
       pointer.strength += (pointer.targetStrength - pointer.strength) * 0.035;
 
       const gradient = drawingContext.createLinearGradient(width * 0.08, 0, width * 0.92, height);
-      gradient.addColorStop(0, "rgba(0, 126, 181, 0.38)");
-      gradient.addColorStop(0.52, "rgba(105, 185, 223, 0.2)");
-      gradient.addColorStop(1, "rgba(251, 134, 127, 0.34)");
+      gradient.addColorStop(0, "rgba(0, 126, 181, 0.34)");
+      gradient.addColorStop(0.52, "rgba(105, 185, 223, 0.18)");
+      gradient.addColorStop(1, "rgba(251, 134, 127, 0.3)");
 
-      const rowCount = width < 760 ? 34 : 48;
-      const points = width < 760 ? 42 : 64;
+      const rowCount = width < 760 ? 18 : 26;
+      const points = width < 760 ? 28 : 42;
       const left = -42;
       const right = width + 42;
       const verticalPad = Math.max(70, height * 0.16);
@@ -128,15 +128,9 @@ export function HeroMotionField() {
           }
         }
 
-        drawingContext.globalAlpha = 0.07 + Math.sin(rowT * Math.PI) * 0.05;
-        drawingContext.filter = "blur(4px)";
-        drawingContext.lineWidth = 4;
-        drawingContext.strokeStyle = gradient;
-        drawingContext.stroke();
-
-        drawingContext.globalAlpha = 0.34 + Math.sin(rowT * Math.PI) * 0.1;
+        drawingContext.globalAlpha = 0.28 + Math.sin(rowT * Math.PI) * 0.09;
         drawingContext.filter = "none";
-        drawingContext.lineWidth = 1.2;
+        drawingContext.lineWidth = 1.15;
         drawingContext.strokeStyle = row % 3 === 0 ? "rgba(0, 126, 181, 0.42)" : "rgba(251, 134, 127, 0.34)";
         drawingContext.stroke();
       }

@@ -7,7 +7,7 @@ interface ProcessSectionProps {
 
 export function ProcessSection({ content }: ProcessSectionProps) {
   return (
-    <section id="movement-meaning" className="process-section" aria-label={content.title}>
+    <section id="movement-meaning" className="process-section" aria-label={content.title} role="region" tabIndex={0}>
       <div className="process-section__intro">
         <SectionHeading eyebrow={content.eyebrow} title={content.title} align="center" />
       </div>

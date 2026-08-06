@@ -48,9 +48,11 @@ export function getHomepageContent(locale: Locale): HomeContent {
         eyebrow: "From movement to meaning",
         title: "A clearer path from data collection to decisions.",
         steps: [
+          { title: "Frame the question", body: "We start with the practical decision: capacity, flow, dwell time, user behaviour or a future investment." },
           { title: "Collect", body: "Sensors and cameras measure real-world activity across parking areas, streets and selected mobility environments." },
+          { title: "Validate", body: "Data is checked, structured and connected so the picture is trustworthy enough to support planning." },
           { title: "Understand", body: "Papp Insights reveals utilisation, duration, occupancy and patterns through live and historical views." },
-          { title: "Act", body: "Analysis and consultancy help teams interpret findings and decide what should happen next." }
+          { title: "Recommend", body: "Analysis and advisory turn the findings into clear next steps for cities, operators and partners." }
         ]
       },
       featured: {
@@ -84,9 +86,11 @@ export function getHomepageContent(locale: Locale): HomeContent {
         eyebrow: "Fra bevægelse til mening",
         title: "En tydelig vej fra dataindsamling til beslutninger.",
         steps: [
+          { title: "Definer spørgsmålet", body: "Vi starter med den praktiske beslutning: kapacitet, flow, opholdstid, brugeradfærd eller en fremtidig investering." },
           { title: "Indsaml", body: "Sensorer og kameraer måler aktivitet på parkeringsarealer, gader og udvalgte mobilitetsmiljøer." },
+          { title: "Valider", body: "Data kontrolleres, struktureres og kobles sammen, så billedet er solidt nok til planlægning." },
           { title: "Forstå", body: "Papp Insights viser udnyttelse, varighed, belægning og mønstre gennem live og historiske visninger." },
-          { title: "Handl", body: "Analyse og rådgivning hjælper teams med at fortolke resultater og beslutte næste skridt." }
+          { title: "Anbefal", body: "Analyse og rådgivning omsætter resultaterne til tydelige næste skridt for byer, operatører og partnere." }
         ]
       },
       featured: {

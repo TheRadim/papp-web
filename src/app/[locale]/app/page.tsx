@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import type { Locale } from "@/content/types";
-import { getHomepageContent } from "@/lib/content/accessors";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { AppPromotion } from "@/components/app/AppPromotion";
 import { AppFeatureSelector } from "@/components/app/AppFeatureSelector";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -28,6 +26,27 @@ const appFeatures = [
       en: "View location context, pricing information and special parking types where the data is available.",
       da: "Se lokation, prisinformation og særlige parkeringstyper, hvor data er tilgængelig."
     }
+  },
+  {
+    title: { en: "Plan before arrival", da: "Planlæg før ankomst" },
+    body: {
+      en: "Check your options before you leave, so the parking part of the trip feels less uncertain.",
+      da: "Tjek dine muligheder, før du kører, så parkeringsdelen af turen føles mindre usikker."
+    }
+  },
+  {
+    title: { en: "Find relevant parking types", da: "Find relevante parkeringstyper" },
+    body: {
+      en: "Look for the parking information that matters to the situation, from public spaces to selected special locations.",
+      da: "Find den parkeringsinformation, der passer til situationen, fra offentlige pladser til udvalgte særlige lokationer."
+    }
+  },
+  {
+    title: { en: "Stay updated on the move", da: "Hold dig opdateret undervejs" },
+    body: {
+      en: "Use live availability signals where they exist and keep the journey moving toward a practical choice.",
+      da: "Brug live tilgængelighed, hvor data findes, og hold turen rettet mod et praktisk valg."
+    }
   }
 ];
 
@@ -45,24 +64,20 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 
 export default async function AppPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
-  const content = getHomepageContent(locale);
 
   return (
-    <>
-      <AppPromotion locale={locale} content={content.app} showCta={false} />
-      <Section className="app-feature-section">
-        <SectionHeading
-          eyebrow={locale === "da" ? "Parkeringsapp" : "Parking app"}
-          title={locale === "da" ? "Et enkelt værktøj til parkeringsbrugere." : "A simple tool for parking users."}
-          body={
-            locale === "da"
-              ? "Papp-appen er bygget til hverdagsparkering: find relevante parkeringsmuligheder, se praktisk information og kom videre til destinationen."
-              : "The Papp app is built for everyday parking: find relevant parking options, see practical information and move on to your destination."
-          }
-          align="center"
-        />
-        <AppFeatureSelector features={appFeatures} locale={locale} />
-      </Section>
-    </>
+    <Section className="app-feature-section app-feature-page">
+      <SectionHeading
+        eyebrow={locale === "da" ? "Gratis app" : "Free app"}
+        title={locale === "da" ? "Et enkelt værktøj til parkeringsbrugere." : "A simple tool for parking users."}
+        body={
+          locale === "da"
+            ? "Papp-appen hjælper brugere med at finde relevante parkeringsmuligheder, se praktisk information og komme videre til destinationen."
+            : "The Papp app helps users find relevant parking options, see practical information and move on to their destination."
+        }
+        align="center"
+      />
+      <AppFeatureSelector features={appFeatures} locale={locale} />
+    </Section>
   );
 }

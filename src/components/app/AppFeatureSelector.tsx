@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Info, MapPinned, Navigation } from "lucide-react";
+import { Bell, Clock, Info, MapPinned, Navigation, Search } from "lucide-react";
+import { company } from "@/content/global/company";
 import type { Locale } from "@/content/types";
 import { withBasePath } from "@/lib/site/basePath";
 
@@ -16,7 +17,7 @@ interface AppFeatureSelectorProps {
   locale: Locale;
 }
 
-const icons = [MapPinned, Navigation, Info];
+const icons = [MapPinned, Navigation, Search, Clock, Info, Bell];
 
 export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -38,6 +39,14 @@ export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps
           <span>{String(activeIndex + 1).padStart(2, "0")}</span>
           <h2>{activeFeature.title[locale]}</h2>
           <p>{activeFeature.body[locale]}</p>
+          <div className="store-badges app-feature-selector__badges" aria-label={locale === "da" ? "Download appen" : "Download the app"}>
+            <a href={company.appStoreUrl} target="_blank" rel="noreferrer">
+              <Image src={withBasePath("/images/app/appstore-badge.png")} alt="Download on the App Store" width={193} height={66} />
+            </a>
+            <a href={company.googlePlayUrl} target="_blank" rel="noreferrer">
+              <Image src={withBasePath("/images/app/googleplay-badge.png")} alt="Get it on Google Play" width={193} height={65} />
+            </a>
+          </div>
         </article>
       </div>
       <div className="app-feature-selector__buttons" role="tablist" aria-label={locale === "da" ? "Appfunktioner" : "App features"}>
