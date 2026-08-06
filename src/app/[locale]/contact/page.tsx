@@ -5,6 +5,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ContactForm } from "@/components/contact/ContactForm";
+import { ContactFloatingBalls } from "@/components/contact/ContactFloatingBalls";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -24,6 +25,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
   return (
     <Section className="contact-page-section">
+      <ContactFloatingBalls />
       <div className="contact-page-grid">
         <div>
           <SectionHeading
@@ -36,10 +38,6 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
               <strong>{locale === "da" ? "Adresse" : "Address"}</strong>
               <span>Rytoften 5, 2 sal<br />8210 Aarhus</span>
             </p>
-            <p>
-              <strong>CVR</strong>
-              <span>{company.cvr}</span>
-            </p>
           </div>
           <div className="contact-map" aria-label={locale === "da" ? "Kort til Papp Mobility" : "Map to Papp Mobility"}>
             <iframe
@@ -49,6 +47,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
               referrerPolicy="no-referrer-when-downgrade"
             />
           </div>
+          <p className="contact-map-cvr"><strong>CVR</strong><span>{company.cvr}</span></p>
         </div>
         <ContactForm locale={locale} />
       </div>

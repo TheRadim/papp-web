@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/content/types";
 import { company } from "@/content/global/company";
-import { siteBasePath, withBasePath } from "@/lib/site/basePath";
+import { siteBasePath } from "@/lib/site/basePath";
 
 interface ContactFormProps {
   locale: Locale;
@@ -32,7 +31,7 @@ export function ContactForm({ locale }: ContactFormProps) {
     timerRef.current = window.setTimeout(() => {
       setIsSentVisual(false);
       timerRef.current = null;
-    }, 3000);
+    }, 2500);
   }
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
@@ -92,12 +91,11 @@ export function ContactForm({ locale }: ContactFormProps) {
         <input name="privacyAccepted" type="checkbox" required />
         <span>{locale === "da" ? "Jeg accepterer, at Papp kontakter mig om min henvendelse." : "I accept that Papp may contact me about this enquiry."}</span>
       </label>
-      <button className="papp-button papp-button--primary contact-form__submit" type="submit" disabled={isSentVisual}>
-        {isSentVisual ? (
-          <Image className="contact-form__done-icon" src={withBasePath("/images/ui/done.svg")} alt="" width={42} height={42} unoptimized />
-        ) : (
-          <span>{locale === "da" ? "Send henvendelse" : "Send enquiry"}</span>
-        )}
+      <button className={`papp-button papp-button--primary contact-form__submit ${isSentVisual ? "is-success" : ""}`} type="submit" disabled={isSentVisual}>
+        <span className="contact-form__submit-text">{locale === "da" ? "Send henvendelse" : "Send enquiry"}</span>
+        <svg className="contact-form__submit-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <polyline points="20 6 9 17 4 12" pathLength="30" />
+        </svg>
       </button>
     </form>
   );

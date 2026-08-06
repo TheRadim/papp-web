@@ -144,26 +144,25 @@ export function Header({ locale }: HeaderProps) {
             onBlur={syncIndicatorToActive}
           >
             <span className="nav-indicator" aria-hidden="true" />
-            <div className="solutions-menu">
-              <div
-                className={`nav-combo ${solutionsOpen || isSolutionsActive() ? "is-active" : ""}`}
+            <div
+              className="solutions-menu"
+              onMouseEnter={() => setSolutionsOpen(true)}
+              onMouseLeave={() => setSolutionsOpen(false)}
+              onFocus={() => setSolutionsOpen(true)}
+            >
+              <Link
+                className={`nav-item nav-item--solutions-combined ${solutionsOpen || isSolutionsActive() ? "is-active" : ""}`}
+                href={`/${locale}/solutions`}
                 data-nav-target
                 data-active={isSolutionsActive() ? "true" : undefined}
+                aria-expanded={solutionsOpen}
+                aria-controls="solutions-dropdown"
               >
-                <Link className="nav-item nav-item--solutions-link" href={`/${locale}/solutions`}>
+                <span>
                   {navLabels.solutions[locale]}
-                </Link>
-                <button
-                  className="nav-item nav-item--button nav-item--chevron"
-                  type="button"
-                  aria-label={locale === "da" ? "Vis løsninger" : "Show solutions"}
-                  aria-expanded={solutionsOpen}
-                  aria-controls="solutions-dropdown"
-                  onClick={() => setSolutionsOpen((open) => !open)}
-                >
-                  <ChevronDown size={16} aria-hidden="true" />
-                </button>
-              </div>
+                </span>
+                <ChevronDown size={16} aria-hidden="true" />
+              </Link>
               {solutionsOpen ? (
                 <div className="solutions-dropdown" id="solutions-dropdown">
                   {solutionGroups.map((group) => (

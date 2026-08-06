@@ -1,105 +1,175 @@
 "use client";
 
-import type { CSSProperties } from "react";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 
-interface Filing {
+type PointerState = {
   x: number;
   y: number;
-  phase: number;
-  length: number;
-  tone: "blue" | "coral";
-}
+  targetX: number;
+  targetY: number;
+  strength: number;
+  targetStrength: number;
+  lastMove: number;
+};
 
-const filingCount = 864;
-
-function createFilings() {
-  return Array.from({ length: filingCount }, (_, index) => {
-    const column = index % 48;
-    const row = Math.floor(index / 48);
-    const staggerX = row % 2 === 0 ? 0 : 1.05;
-
-    return {
-      x: column * 2.1 + 0.35 + staggerX,
-      y: row * 5.55 + 2.4,
-      phase: ((index * 29) % 360) - 180,
-      length: 8 + ((index * 7) % 9),
-      tone: index % 4 === 0 ? "coral" : "blue"
-    } satisfies Filing;
-  });
+function noise(x: number, y: number, time: number) {
+  return (
+    Math.sin(x * 0.014 + time * 1.6) * 0.42 +
+    Math.sin(y * 0.022 - time * 1.15) * 0.28 +
+    Math.sin((x + y) * 0.011 + time * 0.85) * 0.3
+  );
 }
 
 export function HeroMotionField() {
-  const fieldRef = useRef<HTMLDivElement>(null);
-  const frameRef = useRef<number | null>(null);
-  const filings = useMemo(() => createFilings(), []);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const updatePointer = useCallback((clientX: number, clientY: number) => {
-    const field = fieldRef.current;
-    if (!field) {
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const parent = canvas?.parentElement;
+
+    if (!canvas || !parent) {
       return;
     }
 
-    const rect = field.getBoundingClientRect();
-    const x = ((clientX - rect.left) / rect.width) * 100;
-    const y = ((clientY - rect.top) / rect.height) * 100;
+    const parentElement = parent;
+    const canvasElement = canvas;
+    const context = canvasElement.getContext("2d", { alpha: true });
 
-    if (frameRef.current) {
-      window.cancelAnimationFrame(frameRef.current);
+    if (!context) {
+      return;
     }
 
-    frameRef.current = window.requestAnimationFrame(() => {
-      const nextX = Math.min(Math.max(x, 0), 100);
-      const nextY = Math.min(Math.max(y, 0), 100);
+    const drawingContext = context;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const pointer: PointerState = {
+      x: 0.5,
+      y: 0.5,
+      targetX: 0.5,
+      targetY: 0.5,
+      strength: 0,
+      targetStrength: 0,
+      lastMove: 0
+    };
+    let frame = 0;
+    let width = 0;
+    let height = 0;
+    let pixelRatio = 1;
 
-      field.style.setProperty("--field-x", `${nextX}`);
-      field.style.setProperty("--field-y", `${nextY}`);
-      field.style.setProperty("--field-drift-x", `${(nextX - 50) * 0.16}px`);
-      field.style.setProperty("--field-drift-y", `${(nextY - 50) * 0.12}px`);
-      field.style.setProperty("--field-angle", `${(nextX - 50) * 1.45 + (nextY - 50) * -1.05}deg`);
-      frameRef.current = null;
-    });
-  }, []);
+    function resize() {
+      const rect = parentElement.getBoundingClientRect();
+      pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      width = Math.max(1, Math.floor(rect.width));
+      height = Math.max(1, Math.floor(rect.height));
+      canvasElement.width = Math.floor(width * pixelRatio);
+      canvasElement.height = Math.floor(height * pixelRatio);
+      canvasElement.style.width = `${width}px`;
+      canvasElement.style.height = `${height}px`;
+      drawingContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    }
 
-  useEffect(() => {
+    function draw(timestamp: number) {
+      const time = timestamp * 0.00042;
+      drawingContext.clearRect(0, 0, width, height);
+
+      pointer.x += (pointer.targetX - pointer.x) * 0.06;
+      pointer.y += (pointer.targetY - pointer.y) * 0.06;
+
+      if (timestamp - pointer.lastMove > 520) {
+        pointer.targetStrength = 0;
+      }
+
+      pointer.strength += (pointer.targetStrength - pointer.strength) * 0.035;
+
+      const gradient = drawingContext.createLinearGradient(width * 0.08, 0, width * 0.92, height);
+      gradient.addColorStop(0, "rgba(0, 126, 181, 0.38)");
+      gradient.addColorStop(0.52, "rgba(105, 185, 223, 0.2)");
+      gradient.addColorStop(1, "rgba(251, 134, 127, 0.34)");
+
+      const rowCount = width < 760 ? 42 : 64;
+      const points = width < 760 ? 50 : 82;
+      const left = -42;
+      const right = width + 42;
+      const verticalPad = Math.max(70, height * 0.16);
+      const usableHeight = Math.max(1, height - verticalPad * 2);
+
+      drawingContext.lineCap = "round";
+      drawingContext.lineJoin = "round";
+      drawingContext.globalCompositeOperation = "lighter";
+
+      for (let row = 0; row < rowCount; row += 1) {
+        const rowT = row / Math.max(rowCount - 1, 1);
+        const baseY = verticalPad + rowT * usableHeight;
+        drawingContext.beginPath();
+
+        for (let column = 0; column < points; column += 1) {
+          const columnT = column / Math.max(points - 1, 1);
+          const x = left + columnT * (right - left);
+          const wave = noise(x, baseY, time + row * 0.018);
+          const secondWave = Math.sin(columnT * Math.PI * 4.5 + time * 2 + rowT * 5.4);
+          const pointerX = pointer.x * width;
+          const pointerY = pointer.y * height;
+          const distance = Math.hypot(x - pointerX, baseY - pointerY);
+          const influence = Math.exp(-(distance * distance) / (Math.max(width, height) * 0.23) ** 2) * pointer.strength;
+          const y = baseY + wave * 26 + secondWave * 8 + Math.sin(distance * 0.032 - time * 5) * 46 * influence;
+          const pulledX = x + Math.cos(distance * 0.018 + time * 3) * 24 * influence;
+
+          if (column === 0) {
+            drawingContext.moveTo(pulledX, y);
+          } else {
+            drawingContext.lineTo(pulledX, y);
+          }
+        }
+
+        drawingContext.globalAlpha = 0.1 + Math.sin(rowT * Math.PI) * 0.08;
+        drawingContext.filter = "blur(6px)";
+        drawingContext.lineWidth = 5;
+        drawingContext.strokeStyle = gradient;
+        drawingContext.stroke();
+
+        drawingContext.globalAlpha = 0.3 + Math.sin(rowT * Math.PI) * 0.12;
+        drawingContext.filter = "none";
+        drawingContext.lineWidth = 1.2;
+        drawingContext.strokeStyle = row % 3 === 0 ? "rgba(0, 126, 181, 0.42)" : "rgba(251, 134, 127, 0.34)";
+        drawingContext.stroke();
+      }
+
+      drawingContext.globalAlpha = 1;
+      drawingContext.globalCompositeOperation = "source-over";
+      drawingContext.filter = "none";
+
+      if (!reducedMotion.matches) {
+        frame = window.requestAnimationFrame(draw);
+      }
+    }
+
     function onPointerMove(event: PointerEvent) {
-      updatePointer(event.clientX, event.clientY);
+      const rect = parentElement.getBoundingClientRect();
+
+      if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) {
+        return;
+      }
+
+      pointer.targetX = (event.clientX - rect.left) / Math.max(rect.width, 1);
+      pointer.targetY = (event.clientY - rect.top) / Math.max(rect.height, 1);
+      pointer.targetStrength = 1;
+      pointer.lastMove = performance.now();
     }
 
+    resize();
+    frame = window.requestAnimationFrame(draw);
+    window.addEventListener("resize", resize);
     window.addEventListener("pointermove", onPointerMove, { passive: true });
 
     return () => {
-      if (frameRef.current) {
-        window.cancelAnimationFrame(frameRef.current);
-      }
-
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onPointerMove);
     };
-  }, [updatePointer]);
+  }, []);
 
   return (
-    <div
-      className="hero-motion-field"
-      ref={fieldRef}
-      aria-hidden="true"
-      onPointerLeave={() => {
-        fieldRef.current?.style.setProperty("--field-x", "62");
-        fieldRef.current?.style.setProperty("--field-y", "42");
-        fieldRef.current?.style.setProperty("--field-drift-x", "1.9px");
-        fieldRef.current?.style.setProperty("--field-drift-y", "-1px");
-        fieldRef.current?.style.setProperty("--field-angle", "12deg");
-      }}
-    >
-      {filings.map((filing, index) => {
-        const style = {
-          "--filing-x": `${filing.x}%`,
-          "--filing-y": `${filing.y}%`,
-          "--filing-phase": `${filing.phase}deg`,
-          "--filing-length": `${filing.length}px`
-        } as CSSProperties;
-
-        return <span className={`hero-filing hero-filing--${filing.tone}`} key={index} style={style} />;
-      })}
+    <div className="hero-motion-field" aria-hidden="true">
+      <canvas className="hero-wave-canvas" ref={canvasRef} />
     </div>
   );
 }

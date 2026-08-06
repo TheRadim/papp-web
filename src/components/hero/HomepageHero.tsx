@@ -1,6 +1,5 @@
 import type { Locale } from "@/content/types";
 import type { HomeContent } from "@/content/home/home";
-import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { HeroMotionField } from "@/components/hero/HeroMotionField";
 
@@ -29,7 +28,9 @@ export function HomepageHero({ locale, content }: HomepageHeroProps) {
               </Button>
             </div>
             <a className="hero-scroll-cue" href="#movement-meaning" aria-label={locale === "da" ? "Gå til næste sektion" : "Scroll to next section"}>
-              <ArrowDown aria-hidden="true" size={18} />
+              <svg viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polyline points="10 15 20 25 30 15" />
+              </svg>
             </a>
           </div>
         </div>

@@ -57,11 +57,6 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
                 : "We help cities, operators and partners use sensors, cameras and analysis to understand parking and movement in practice."
             }
           />
-          <p>
-            {locale === "da"
-              ? "Hvert projekt starter med et konkret spørgsmål: hvor bliver kapacitet overset, hvordan bevæger brugerne sig, og hvilke beslutninger kan data gøre mere trygge?"
-              : "Every project starts with a practical question: where is capacity overlooked, how do users move, and which decisions can data make easier to trust?"}
-          </p>
         </div>
       </Section>
       <Section className="project-work-section">

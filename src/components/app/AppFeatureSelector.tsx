@@ -36,8 +36,10 @@ export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps
               role="tab"
               type="button"
             >
-              <Icon aria-hidden="true" size={24} />
-              <span>{feature.title[locale]}</span>
+              <span className="app-feature-selector__icon">
+                <Icon aria-hidden="true" size={24} />
+              </span>
+              <span className="app-feature-selector__label">{feature.title[locale]}</span>
             </button>
           );
         })}

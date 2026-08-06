@@ -5,6 +5,7 @@ import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/content/types";
 import { withBasePath } from "@/lib/site/basePath";
+import { TimelineGlowField } from "@/components/about/TimelineGlowField";
 
 interface TimelineItem {
   date: Record<Locale, string>;
@@ -118,6 +119,7 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
 
   return (
     <div className="history-timeline" ref={timelineRef} style={style}>
+      <TimelineGlowField />
       <nav className="history-timeline__nav" aria-label={locale === "da" ? "Historie år" : "Timeline years"}>
         <span className="history-timeline__rail" aria-hidden="true" />
         <ol>
