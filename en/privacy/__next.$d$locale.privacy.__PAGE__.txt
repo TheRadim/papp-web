@@ -1,0 +1,5 @@
+1:"$Sreact.fragment"
+2:I[97367,["/papp-web/_next/static/chunks/05-c3ty_6dwfk.js","/papp-web/_next/static/chunks/14mrh2-p_w84d.js"],"OutletBoundary"]
+3:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","section",null,{"className":"papp-section papp-section--default","children":["$","div",null,{"className":"container","children":["$","div",null,{"className":"section-heading section-heading--start","children":[["$","p",null,{"className":"eyebrow","children":"Legal review required"}],["$","h2",null,{"children":"Privacy Policy"}],["$","p",null,{"children":"This page is a migration placeholder. Existing privacy content should be migrated and legally approved before launch."}]]}]}]}],null,["$","$L2",null,{"children":["$","$3",null,{"name":"Next.MetadataOutlet","children":"$@4"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"XqHSoWx82XZ3vBoA8f1ze"}
+4:null
