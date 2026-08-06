@@ -1,5 +1,6 @@
 import type { Locale } from "@/content/types";
 import type { HomeContent } from "@/content/home/home";
+import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { HeroMotionField } from "@/components/hero/HeroMotionField";
 
@@ -27,6 +28,9 @@ export function HomepageHero({ locale, content }: HomepageHeroProps) {
                 {content.secondaryCta}
               </Button>
             </div>
+            <a className="hero-scroll-cue" href="#movement-meaning" aria-label={locale === "da" ? "Gå til næste sektion" : "Scroll to next section"}>
+              <ArrowDown aria-hidden="true" size={18} />
+            </a>
           </div>
         </div>
       </div>

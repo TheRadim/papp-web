@@ -11,19 +11,19 @@ interface Filing {
   tone: "blue" | "coral";
 }
 
-const filingCount = 432;
+const filingCount = 864;
 
 function createFilings() {
   return Array.from({ length: filingCount }, (_, index) => {
-    const column = index % 36;
-    const row = Math.floor(index / 36);
-    const staggerX = row % 2 === 0 ? 0 : 1.25;
+    const column = index % 48;
+    const row = Math.floor(index / 48);
+    const staggerX = row % 2 === 0 ? 0 : 1.05;
 
     return {
-      x: column * 2.78 + 0.7 + staggerX,
-      y: row * 7.9 + 2.2,
+      x: column * 2.1 + 0.35 + staggerX,
+      y: row * 5.55 + 2.4,
       phase: ((index * 29) % 360) - 180,
-      length: 7 + ((index * 7) % 8),
+      length: 8 + ((index * 7) % 9),
       tone: index % 4 === 0 ? "coral" : "blue"
     } satisfies Filing;
   });
@@ -49,9 +49,14 @@ export function HeroMotionField() {
     }
 
     frameRef.current = window.requestAnimationFrame(() => {
-      field.style.setProperty("--field-x", `${Math.min(Math.max(x, 0), 100)}`);
-      field.style.setProperty("--field-y", `${Math.min(Math.max(y, 0), 100)}`);
-      field.style.setProperty("--field-angle", `${(x - 50) * 0.7 + (y - 50) * -0.45}deg`);
+      const nextX = Math.min(Math.max(x, 0), 100);
+      const nextY = Math.min(Math.max(y, 0), 100);
+
+      field.style.setProperty("--field-x", `${nextX}`);
+      field.style.setProperty("--field-y", `${nextY}`);
+      field.style.setProperty("--field-drift-x", `${(nextX - 50) * 0.16}px`);
+      field.style.setProperty("--field-drift-y", `${(nextY - 50) * 0.12}px`);
+      field.style.setProperty("--field-angle", `${(nextX - 50) * 1.45 + (nextY - 50) * -1.05}deg`);
       frameRef.current = null;
     });
   }, []);
@@ -80,6 +85,8 @@ export function HeroMotionField() {
       onPointerLeave={() => {
         fieldRef.current?.style.setProperty("--field-x", "62");
         fieldRef.current?.style.setProperty("--field-y", "42");
+        fieldRef.current?.style.setProperty("--field-drift-x", "1.9px");
+        fieldRef.current?.style.setProperty("--field-drift-y", "-1px");
         fieldRef.current?.style.setProperty("--field-angle", "12deg");
       }}
     >

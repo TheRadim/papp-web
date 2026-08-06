@@ -5,6 +5,7 @@ import { getHomepageContent } from "@/lib/content/accessors";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { withBasePath } from "@/lib/site/basePath";
 import { AppPromotion } from "@/components/app/AppPromotion";
+import { AppFeatureSelector } from "@/components/app/AppFeatureSelector";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
@@ -75,7 +76,7 @@ export default async function AppPage({ params }: { params: Promise<{ locale: Lo
   return (
     <>
       <AppPromotion locale={locale} content={content.app} showCta={false} />
-      <Section>
+      <Section className="app-feature-section">
         <SectionHeading
           eyebrow={locale === "da" ? "Parkeringsapp" : "Parking app"}
           title={locale === "da" ? "Et enkelt værktøj til parkeringsbrugere." : "A simple tool for parking users."}
@@ -86,15 +87,7 @@ export default async function AppPage({ params }: { params: Promise<{ locale: Lo
           }
           align="center"
         />
-        <div className="app-feature-grid">
-          {appFeatures.map((feature) => (
-            <article className="app-feature-card" key={feature.title.en}>
-              <span aria-hidden="true" />
-              <h2>{feature.title[locale]}</h2>
-              <p>{feature.body[locale]}</p>
-            </article>
-          ))}
-        </div>
+        <AppFeatureSelector features={appFeatures} locale={locale} />
       </Section>
       <Section tone="soft" className="app-screens-section">
         <SectionHeading

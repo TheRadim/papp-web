@@ -8,7 +8,7 @@ interface ProcessSectionProps {
 
 export function ProcessSection({ content }: ProcessSectionProps) {
   return (
-    <Section tone="soft" className="process-section">
+    <Section id="movement-meaning" tone="soft" className="process-section">
       <SectionHeading eyebrow={content.eyebrow} title={content.title} align="center" />
       <div className="process-flow" aria-label={content.title}>
         <svg className="process-flow__line" viewBox="0 0 1000 210" aria-hidden="true" preserveAspectRatio="none">

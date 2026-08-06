@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import type { Locale } from "@/content/types";
-import { getHomepageContent, getOfferings } from "@/lib/content/accessors";
+import { getHomepageContent } from "@/lib/content/accessors";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { HomepageHero } from "@/components/hero/HomepageHero";
 import { ProcessSection } from "@/components/positioning/ProcessSection";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { OfferingFeature } from "@/components/offerings/OfferingFeature";
+import { HomeCategoryCards } from "@/components/home/HomeCategoryCards";
 import { PartnerLogoLoop } from "@/components/social-proof/PartnerLogoLoop";
 import { Button } from "@/components/ui/Button";
 import { TestimonialsSection } from "@/components/social-proof/TestimonialsSection";
@@ -31,7 +31,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   const content = getHomepageContent(locale);
-  const offerings = getOfferings();
 
   return (
     <>
@@ -42,12 +41,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
           eyebrow={locale === "da" ? "Løsninger" : "Solutions"}
           title={locale === "da" ? "Teknologi og ekspertise i et samlet system." : "Technology and expertise in one connected system."}
           body={locale === "da" ? "Sensorer, kameraer, platform, analyse og rådgivning er bygget til at understøtte hinanden." : "Sensors, cameras, platform, analysis and consultancy are designed to support each other."}
+          align="center"
         />
-        <div className="offerings-stack">
-          {offerings.map((offering, index) => (
-            <OfferingFeature key={offering.slug} offering={offering} locale={locale} index={index} />
-          ))}
-        </div>
+        <HomeCategoryCards locale={locale} />
       </Section>
       <Section tone="soft" className="partners-section">
         <SectionHeading

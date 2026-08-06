@@ -65,7 +65,7 @@ export function getHomepageContent(locale: Locale): HomeContent {
         cta: "Start the conversation"
       },
       app: {
-        eyebrow: "Public app",
+        eyebrow: "Free app",
         title: "A related app experience for parking users.",
         body: "The Papp app remains a public-facing part of the ecosystem, while this website positions Papp's broader mobility-intelligence work.",
         cta: "Explore the app"
@@ -101,7 +101,7 @@ export function getHomepageContent(locale: Locale): HomeContent {
         cta: "Start dialogen"
       },
       app: {
-        eyebrow: "Offentlig app",
+        eyebrow: "Gratis app",
         title: "En relateret appoplevelse for parkeringsbrugere.",
         body: "Papp-appen er fortsat en offentlig del af økosystemet, mens websitet løfter Papps bredere arbejde med mobilitetsindsigt.",
         cta: "Udforsk appen"

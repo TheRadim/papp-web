@@ -13,7 +13,7 @@ interface AppPromotionProps {
 
 export function AppPromotion({ locale, content, showCta = true }: AppPromotionProps) {
   return (
-    <section className="app-promo">
+    <section className={`app-promo ${showCta ? "app-promo--homepage" : "app-promo--page"}`}>
       <div className="container app-promo__grid">
         <div className="app-phone-stage">
           <Image className="app-phone" src={withBasePath("/images/app/papp-app-phone.png")} alt="" width={580} height={1112} />
@@ -22,6 +22,7 @@ export function AppPromotion({ locale, content, showCta = true }: AppPromotionPr
           <p className="eyebrow">{content.eyebrow}</p>
           <h2>{content.title}</h2>
           <p>{content.body}</p>
+          {showCta ? <Button href={`/${locale}/app`} variant="secondary">{content.cta}</Button> : null}
           <div className="store-badges" aria-label={locale === "da" ? "Download appen" : "Download the app"}>
             <a href={company.appStoreUrl} target="_blank" rel="noreferrer">
               <Image src={withBasePath("/images/app/appstore-badge.png")} alt="Download on the App Store" width={193} height={66} />
@@ -30,7 +31,6 @@ export function AppPromotion({ locale, content, showCta = true }: AppPromotionPr
               <Image src={withBasePath("/images/app/googleplay-badge.png")} alt="Get it on Google Play" width={193} height={65} />
             </a>
           </div>
-          {showCta ? <Button href={`/${locale}/app`} variant="secondary">{content.cta}</Button> : null}
         </div>
       </div>
     </section>
