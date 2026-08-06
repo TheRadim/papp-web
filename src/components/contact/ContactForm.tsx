@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/content/types";
 import { company } from "@/content/global/company";
 import { siteBasePath, withBasePath } from "@/lib/site/basePath";
@@ -11,7 +11,29 @@ interface ContactFormProps {
 }
 
 export function ContactForm({ locale }: ContactFormProps) {
-  const [status, setStatus] = useState<string | null>(null);
+  const [isSentVisual, setIsSentVisual] = useState(false);
+  const timerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        window.clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
+
+  function playSentVisual() {
+    setIsSentVisual(true);
+
+    if (timerRef.current) {
+      window.clearTimeout(timerRef.current);
+    }
+
+    timerRef.current = window.setTimeout(() => {
+      setIsSentVisual(false);
+      timerRef.current = null;
+    }, 3000);
+  }
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -34,7 +56,7 @@ export function ContactForm({ locale }: ContactFormProps) {
         ].join("\n")
       );
 
-      setStatus(locale === "da" ? "Din mail-app åbnes med beskeden udfyldt." : "Your email app is opening with the message filled in.");
+      playSentVisual();
       window.location.href = `mailto:${company.email}?subject=${subject}&body=${body}`;
       return;
     }
@@ -45,15 +67,11 @@ export function ContactForm({ locale }: ContactFormProps) {
       body: JSON.stringify(payload)
     });
 
-    setStatus(
-      response.ok
-        ? locale === "da"
-          ? "Tak. Beskeden er registreret."
-          : "Thanks. Your message has been received."
-        : locale === "da"
-          ? "Levering er ikke konfigureret endnu. Skriv til hey@pappmobility.com."
-          : "Delivery is not configured yet. Please email hey@pappmobility.com."
-    );
+    playSentVisual();
+
+    if (response.ok) {
+      event.currentTarget.reset();
+    }
   }
 
   return (
@@ -74,15 +92,13 @@ export function ContactForm({ locale }: ContactFormProps) {
         <input name="privacyAccepted" type="checkbox" required />
         <span>{locale === "da" ? "Jeg accepterer, at Papp kontakter mig om min henvendelse." : "I accept that Papp may contact me about this enquiry."}</span>
       </label>
-      <button className="papp-button papp-button--primary" type="submit">
-        <span>{locale === "da" ? "Send henvendelse" : "Send enquiry"}</span>
+      <button className="papp-button papp-button--primary contact-form__submit" type="submit" disabled={isSentVisual}>
+        {isSentVisual ? (
+          <Image className="contact-form__done-icon" src={withBasePath("/images/ui/done.svg")} alt="" width={42} height={42} unoptimized />
+        ) : (
+          <span>{locale === "da" ? "Send henvendelse" : "Send enquiry"}</span>
+        )}
       </button>
-      {status ? (
-        <div className="contact-form__success" role="status">
-          <Image src={withBasePath("/images/ui/done.svg")} alt="" width={54} height={54} unoptimized />
-          <p>{status}</p>
-        </div>
-      ) : null}
     </form>
   );
 }

@@ -83,13 +83,13 @@ export function ProjectPortfolioFilter({ locale, projects }: ProjectPortfolioFil
               className={`project-category-card project-category-card--${card.category} ${activeFilter === card.category ? "is-active" : ""}`}
               key={card.category}
               type="button"
+              aria-pressed={activeFilter === card.category}
               onClick={() => setActiveFilter(card.category)}
             >
               <Icon aria-hidden="true" size={38} />
               <span>{String(index + 1).padStart(2, "0")}</span>
               <h2>{card.title[locale]}</h2>
               <p>{card.body[locale]}</p>
-              <strong>{locale === "da" ? "Filtrer kategori" : "Filter category"}</strong>
             </button>
           );
         })}

@@ -1,15 +1,12 @@
 import type { HomeContent } from "@/content/home/home";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { BarChart3, Camera, MousePointer2 } from "lucide-react";
 
 interface ProcessSectionProps {
   content: HomeContent["process"];
 }
 
 export function ProcessSection({ content }: ProcessSectionProps) {
-  const icons = [Camera, BarChart3, MousePointer2];
-
   return (
     <Section tone="soft" className="process-section">
       <SectionHeading eyebrow={content.eyebrow} title={content.title} align="center" />
@@ -19,12 +16,6 @@ export function ProcessSection({ content }: ProcessSectionProps) {
         </svg>
         {content.steps.map((step, index) => (
           <article className={`process-flow__step process-flow__step--${index + 1}`} key={step.title}>
-            <div className="process-flow__marker">
-              {(() => {
-                const Icon = icons[index] ?? MousePointer2;
-                return <Icon aria-hidden="true" size={22} />;
-              })()}
-            </div>
             <div>
               <span>{String(index + 1).padStart(2, "0")}</span>
               <h3>{step.title}</h3>

@@ -116,8 +116,8 @@ textarea:focus-visible {
 }
 
 .section-heading h2::after {
-  width: 42px;
-  height: 3px;
+  width: 120px;
+  height: 2px;
   background: var(--papp-blue-light);
 }
 
@@ -168,11 +168,12 @@ textarea:focus-visible {
 }
 
 .tag-list li {
-  border: 1px solid color-mix(in srgb, var(--papp-heading), transparent 82%);
-  border-radius: 50px;
-  background: #fff;
-  padding: 0.48rem 0.8rem;
-  color: var(--papp-muted);
-  font-size: 0.9rem;
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--papp-heading), transparent 84%);
+  border-radius: 0;
+  background: transparent;
+  padding: 0.75rem 0 0;
+  color: var(--papp-heading);
+  font-size: 0.94rem;
   font-weight: 600;
 }

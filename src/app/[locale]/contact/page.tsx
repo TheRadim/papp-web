@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import type { Locale } from "@/content/types";
 import { company } from "@/content/global/company";
 import { pageMetadata } from "@/lib/seo/metadata";
@@ -21,8 +20,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
+  const mapQuery = encodeURIComponent("Rytoften 5, 2 sal, 8210 Aarhus, Denmark");
+
   return (
-    <Section>
+    <Section className="contact-page-section">
       <div className="contact-page-grid">
         <div>
           <SectionHeading
@@ -30,12 +31,24 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             title={locale === "da" ? "Fortæl os, hvad I har brug for at forstå." : "Tell us what you need to understand."}
             body={locale === "da" ? "Del området, spørgsmålet eller beslutningen, I arbejder med. Så finder vi den rigtige måde at måle og analysere på." : "Share the site, question or decision you are working on. We will help shape the right way to measure and analyse it."}
           />
-          <p>
-            <a href={`mailto:${company.email}`}>{company.email}</a>
-          </p>
-          <p className="contact-privacy-link">
-            <Link href={`/${locale}/privacy`}>{locale === "da" ? "Privatlivspolitik" : "Privacy Policy"}</Link>
-          </p>
+          <div className="contact-page-details" aria-label={locale === "da" ? "Virksomhedsoplysninger" : "Company details"}>
+            <p>
+              <strong>{locale === "da" ? "Adresse" : "Address"}</strong>
+              <span>Rytoften 5, 2 sal<br />8210 Aarhus</span>
+            </p>
+            <p>
+              <strong>CVR</strong>
+              <span>{company.cvr}</span>
+            </p>
+          </div>
+          <div className="contact-map" aria-label={locale === "da" ? "Kort til Papp Mobility" : "Map to Papp Mobility"}>
+            <iframe
+              src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
+              title={locale === "da" ? "Papp Mobility adresse" : "Papp Mobility address"}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
         </div>
         <ContactForm locale={locale} />
       </div>

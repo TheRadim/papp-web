@@ -11,20 +11,20 @@ interface Filing {
   tone: "blue" | "coral";
 }
 
-const filingCount = 180;
+const filingCount = 432;
 
 function createFilings() {
   return Array.from({ length: filingCount }, (_, index) => {
-    const column = index % 18;
-    const row = Math.floor(index / 18);
-    const staggerX = row % 2 === 0 ? 0 : 2.2;
+    const column = index % 36;
+    const row = Math.floor(index / 36);
+    const staggerX = row % 2 === 0 ? 0 : 1.25;
 
     return {
-      x: column * 5.65 + 1.8 + staggerX,
-      y: row * 9.7 + 3.5,
+      x: column * 2.78 + 0.7 + staggerX,
+      y: row * 7.9 + 2.2,
       phase: ((index * 29) % 360) - 180,
-      length: 12 + ((index * 7) % 7),
-      tone: index % 5 === 0 ? "coral" : "blue"
+      length: 7 + ((index * 7) % 8),
+      tone: index % 4 === 0 ? "coral" : "blue"
     } satisfies Filing;
   });
 }
@@ -83,7 +83,6 @@ export function HeroMotionField() {
         fieldRef.current?.style.setProperty("--field-angle", "12deg");
       }}
     >
-      <div className="hero-motion-field__wash" />
       {filings.map((filing, index) => {
         const style = {
           "--filing-x": `${filing.x}%`,

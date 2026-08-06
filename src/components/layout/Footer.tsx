@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Facebook, Linkedin, Mail } from "lucide-react";
 import type { Locale } from "@/content/types";
 import { company } from "@/content/global/company";
@@ -20,10 +21,16 @@ export function Footer({ locale }: FooterProps) {
             </a>
           </div>
           <a className="footer-email" href={`mailto:${company.email}`} aria-label={company.email}>
-            <Mail size={18} aria-hidden="true" />
+            <span className="footer-envelope" aria-hidden="true">
+              <Mail size={18} />
+              <span className="footer-envelope__letter" />
+            </span>
             <span>{company.email}</span>
           </a>
-          <p className="footer-legal">© {company.copyrightYear} {company.legalName}. CVR {company.cvr}.</p>
+          <div className="footer-legal">
+            <Link href={`/${locale}/privacy`}>{locale === "da" ? "Privatlivspolitik" : "Privacy Policy"}</Link>
+            <span>© {company.copyrightYear} {company.legalName}.</span>
+          </div>
         </div>
       </div>
     </footer>

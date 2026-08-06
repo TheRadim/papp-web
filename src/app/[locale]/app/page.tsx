@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import type { Locale } from "@/content/types";
 import { getHomepageContent } from "@/lib/content/accessors";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { withBasePath } from "@/lib/site/basePath";
 import { AppPromotion } from "@/components/app/AppPromotion";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -26,6 +28,30 @@ const appFeatures = [
     body: {
       en: "View location context, pricing information and special parking types where the data is available.",
       da: "Se lokation, prisinformation og særlige parkeringstyper, hvor data er tilgængelig."
+    }
+  }
+];
+
+const appScreens = [
+  {
+    title: { en: "Live map context", da: "Live kortoverblik" },
+    body: {
+      en: "Give drivers a quick read on nearby parking options before they commit to a route.",
+      da: "Giv bilister et hurtigt overblik over parkeringsmuligheder i nærheden, før de vælger rute."
+    }
+  },
+  {
+    title: { en: "Space details", da: "Detaljer om pladsen" },
+    body: {
+      en: "Surface practical context such as price, location and availability signals in one place.",
+      da: "Vis praktisk kontekst som pris, placering og ledighedssignaler samlet ét sted."
+    }
+  },
+  {
+    title: { en: "Navigation handoff", da: "Direkte navigation" },
+    body: {
+      en: "Move from insight to action quickly with direct navigation from the selected location.",
+      da: "Gå hurtigt fra information til handling med direkte navigation fra den valgte lokation."
     }
   }
 ];
@@ -66,6 +92,38 @@ export default async function AppPage({ params }: { params: Promise<{ locale: Lo
               <span aria-hidden="true" />
               <h2>{feature.title[locale]}</h2>
               <p>{feature.body[locale]}</p>
+            </article>
+          ))}
+        </div>
+      </Section>
+      <Section tone="soft" className="app-screens-section">
+        <SectionHeading
+          eyebrow={locale === "da" ? "Skærmbilleder" : "Screens"}
+          title={locale === "da" ? "Plads til appens vigtigste brugerflow." : "Room for the app's core user flow."}
+          body={
+            locale === "da"
+              ? "Når de endelige skærmbilleder er klar, kan de sættes ind her uden at ændre sidens struktur."
+              : "When the final screenshots are ready, they can be dropped into this structure without changing the page."
+          }
+          align="center"
+        />
+        <div className="app-screens-list">
+          {appScreens.map((screen, index) => (
+            <article className={`app-screen-row ${index % 2 ? "app-screen-row--reverse" : ""}`} key={screen.title.en}>
+              <div>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <h2>{screen.title[locale]}</h2>
+                <p>{screen.body[locale]}</p>
+              </div>
+              <div className="app-screen-row__media">
+                <Image
+                  src={withBasePath("/images/app/papp-app-phone.png")}
+                  alt=""
+                  width={580}
+                  height={1112}
+                  sizes="(max-width: 768px) 65vw, 260px"
+                />
+              </div>
             </article>
           ))}
         </div>

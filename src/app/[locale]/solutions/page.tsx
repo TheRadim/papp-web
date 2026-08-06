@@ -38,12 +38,8 @@ export default async function SolutionsPage({ params }: { params: Promise<{ loca
                 ? "Papp kombinerer sensorer, kameraer, Papp Insights, analyse og rådgivning, så mobilitetsdata bliver lette at forstå og handle på."
                 : "Papp combines sensors, cameras, Papp Insights, analysis and advisory so mobility data becomes easier to understand and act on."
             }
+            align="center"
           />
-          <p className="solutions-hero-note">
-            {locale === "da"
-              ? "Klik på byen for at udforske, hvordan de enkelte produktområder arbejder sammen."
-              : "Click the city to explore how each product area works together."}
-          </p>
         </div>
         <div className="solutions-city-panel">
           <MobilityCityVisual locale={locale} className="mobility-city--solutions" />
