@@ -12,7 +12,7 @@ This sets `GITHUB_PAGES=1`, exports the Next.js app to `out/`, and uses `/papp-w
 
 ## Deployment
 
-The workflow at `.github/workflows/pages.yml` builds and deploys `out/` whenever `main` is pushed.
+The workflow at `.github/workflows/pages.yml` builds `out/` whenever `main` is pushed, uploads it as a Pages artifact and deploys it with GitHub's Pages deployment action.
 
 Expected URL:
 
