@@ -1,35 +1,51 @@
-import { BarChart3, Handshake, RadioTower } from "lucide-react";
+import Image from "next/image";
 import type { Locale } from "@/content/types";
 import { Button } from "@/components/ui/Button";
+import { withBasePath } from "@/lib/site/basePath";
 
 const categories = [
   {
-    icon: RadioTower,
     title: { en: "Technology", da: "Teknologi" },
+    eyebrow: { en: "Sensors and cameras", da: "Sensorer og kameraer" },
     body: {
       en: "Sensors and camera analytics that measure real behaviour in parking areas, streets and mobility environments.",
       da: "Sensorer og kameraanalyse, der måler reel adfærd på parkeringsarealer, gader og mobilitetsmiljøer."
     },
+    benefits: {
+      en: ["Live occupancy signals", "Area and street measurement", "Temporary or permanent deployments"],
+      da: ["Live belægningssignaler", "Måling af arealer og gader", "Midlertidige eller permanente opsætninger"]
+    },
+    image: "/images/corporate/parking-sensor-ground.jpg",
     href: "/solutions",
     cta: { en: "Explore technology", da: "Udforsk teknologi" }
   },
   {
-    icon: BarChart3,
     title: { en: "Insights technical hub", da: "Insights teknisk hub" },
+    eyebrow: { en: "Platform", da: "Platform" },
     body: {
       en: "Papp Insights brings measurements together in live views, historical comparisons and reporting workflows.",
       da: "Papp Insights samler målinger i livevisninger, historiske sammenligninger og rapporteringsflow."
     },
+    benefits: {
+      en: ["Maps, charts and live views", "Historical comparisons", "One place for mobility data"],
+      da: ["Kort, grafer og livevisninger", "Historiske sammenligninger", "Ét sted til mobilitetsdata"]
+    },
+    image: "/images/corporate/insights-screen.jpg",
     href: "/products/insights",
     cta: { en: "Open Insights", da: "Åbn Insights" }
   },
   {
-    icon: Handshake,
     title: { en: "Consultancy and guidance", da: "Rådgivning og ekspertise" },
+    eyebrow: { en: "Expertise", da: "Ekspertise" },
     body: {
       en: "Measurement design, analysis and practical recommendations when decisions need a clearer data basis.",
       da: "Måledesign, analyse og praktiske anbefalinger, når beslutninger kræver et tydeligere datagrundlag."
     },
+    benefits: {
+      en: ["Measurement design", "Interpretation and reporting", "Practical next-step recommendations"],
+      da: ["Måledesign", "Fortolkning og rapportering", "Praktiske anbefalinger til næste skridt"]
+    },
+    image: "/images/corporate/insights-meeting-city.jpg",
     href: "/services/consultancy",
     cta: { en: "See expertise", da: "Se ekspertise" }
   }
@@ -41,21 +57,33 @@ interface HomeCategoryCardsProps {
 
 export function HomeCategoryCards({ locale }: HomeCategoryCardsProps) {
   return (
-    <div className="home-category-grid">
-      {categories.map((category) => {
-        const Icon = category.icon;
-
-        return (
-          <article className="home-category-card" key={category.title.en}>
-            <Icon aria-hidden="true" size={28} />
+    <div className="home-solution-list">
+      {categories.map((category, index) => (
+        <article className={`home-solution-row ${index % 2 ? "home-solution-row--reverse" : ""}`} key={category.title.en}>
+          <div className="home-solution-row__visual">
+            <Image
+              src={withBasePath(category.image)}
+              alt=""
+              width={1672}
+              height={941}
+              sizes="(max-width: 992px) 100vw, 42vw"
+            />
+          </div>
+          <div className="home-solution-row__copy">
+            <p className="eyebrow">{category.eyebrow[locale]}</p>
             <h3>{category.title[locale]}</h3>
             <p>{category.body[locale]}</p>
+            <ul className="check-list">
+              {category.benefits[locale].map((benefit) => (
+                <li key={benefit}>{benefit}</li>
+              ))}
+            </ul>
             <Button href={`/${locale}${category.href}`} variant="text">
               {category.cta[locale]}
             </Button>
-          </article>
-        );
-      })}
+          </div>
+        </article>
+      ))}
     </div>
   );
 }

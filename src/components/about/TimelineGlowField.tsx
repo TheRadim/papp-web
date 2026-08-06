@@ -62,21 +62,21 @@ const fragmentShader = `
     vec2 mouse = u_mouse * scale;
 
     vec2 ps = vec2(1.0) / u_resolution.xy;
-    vec2 sample = gl_FragCoord.xy / u_resolution.xy;
+    vec2 bufferUv = gl_FragCoord.xy / u_resolution.xy;
     vec2 o = mouse * .2 + vec2(.65, .5);
     float d = .98;
-    sample = d * (sample - o);
-    sample += o;
-    sample += vec2(sin((u_time + uv.y * .5) * 10.) * .001, -.00);
+    bufferUv = d * (bufferUv - o);
+    bufferUv += o;
+    bufferUv += vec2(sin((u_time + uv.y * .5) * 10.) * .001, -.00);
 
     vec3 fragcolour;
     vec4 tex;
     if (u_renderpass) {
-      tex = vec4(blur(u_buffer, sample, ps * blurStrength) * blurMultiplier, 1.);
+      tex = vec4(blur(u_buffer, bufferUv, ps * blurStrength) * blurMultiplier, 1.);
       float df = length(mouse - uv);
       fragcolour = vec3(0.64, 0.87, 1.0) * smoothstep(circleSize, 0., df);
     } else {
-      tex = texture2D(u_buffer, sample, 2.) * .98;
+      tex = texture2D(u_buffer, bufferUv, 2.) * .98;
       tex = vec4(
         smoothstep(0.0, threshold - fwidth(tex.x), tex.x),
         smoothstep(0.2, threshold - fwidth(tex.y) + .2, tex.y),
@@ -184,6 +184,8 @@ export function TimelineGlowField() {
     }
 
     let frame = 0;
+    let lastRender = 0;
+    let isVisible = true;
 
     function renderTexture() {
       const originalResolution = uniforms.u_resolution.value.clone();
@@ -205,6 +207,17 @@ export function TimelineGlowField() {
     }
 
     function animate(timestamp: number) {
+      if (!isVisible) {
+        frame = window.requestAnimationFrame(animate);
+        return;
+      }
+
+      if (timestamp - lastRender < 33) {
+        frame = window.requestAnimationFrame(animate);
+        return;
+      }
+
+      lastRender = timestamp;
       uniforms.u_mouse.value.x += (mouse.x - uniforms.u_mouse.value.x) * 0.1;
       uniforms.u_mouse.value.y += (mouse.y - uniforms.u_mouse.value.y) * 0.1;
       uniforms.u_time.value = timestamp * 0.0005;
@@ -214,12 +227,18 @@ export function TimelineGlowField() {
     }
 
     resize();
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible = entry?.isIntersecting ?? true;
+    }, { rootMargin: "240px" });
+
+    observer.observe(hostElement);
     frame = window.requestAnimationFrame(animate);
     window.addEventListener("resize", resize);
     hostElement.addEventListener("pointermove", onPointerMove, { passive: true });
 
     return () => {
       window.cancelAnimationFrame(frame);
+      observer.disconnect();
       window.removeEventListener("resize", resize);
       hostElement.removeEventListener("pointermove", onPointerMove);
       geometry.dispose();

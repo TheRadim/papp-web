@@ -54,10 +54,12 @@ export function HeroMotionField() {
     let width = 0;
     let height = 0;
     let pixelRatio = 1;
+    let isVisible = true;
+    let lastRender = 0;
 
     function resize() {
       const rect = parentElement.getBoundingClientRect();
-      pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      pixelRatio = Math.min(window.devicePixelRatio || 1, 1.15);
       width = Math.max(1, Math.floor(rect.width));
       height = Math.max(1, Math.floor(rect.height));
       canvasElement.width = Math.floor(width * pixelRatio);
@@ -68,6 +70,12 @@ export function HeroMotionField() {
     }
 
     function draw(timestamp: number) {
+      if (!isVisible || timestamp - lastRender < 33) {
+        frame = window.requestAnimationFrame(draw);
+        return;
+      }
+
+      lastRender = timestamp;
       const time = timestamp * 0.00042;
       drawingContext.clearRect(0, 0, width, height);
 
@@ -85,8 +93,8 @@ export function HeroMotionField() {
       gradient.addColorStop(0.52, "rgba(105, 185, 223, 0.2)");
       gradient.addColorStop(1, "rgba(251, 134, 127, 0.34)");
 
-      const rowCount = width < 760 ? 42 : 64;
-      const points = width < 760 ? 50 : 82;
+      const rowCount = width < 760 ? 34 : 48;
+      const points = width < 760 ? 42 : 64;
       const left = -42;
       const right = width + 42;
       const verticalPad = Math.max(70, height * 0.16);
@@ -120,13 +128,13 @@ export function HeroMotionField() {
           }
         }
 
-        drawingContext.globalAlpha = 0.1 + Math.sin(rowT * Math.PI) * 0.08;
-        drawingContext.filter = "blur(6px)";
-        drawingContext.lineWidth = 5;
+        drawingContext.globalAlpha = 0.07 + Math.sin(rowT * Math.PI) * 0.05;
+        drawingContext.filter = "blur(4px)";
+        drawingContext.lineWidth = 4;
         drawingContext.strokeStyle = gradient;
         drawingContext.stroke();
 
-        drawingContext.globalAlpha = 0.3 + Math.sin(rowT * Math.PI) * 0.12;
+        drawingContext.globalAlpha = 0.34 + Math.sin(rowT * Math.PI) * 0.1;
         drawingContext.filter = "none";
         drawingContext.lineWidth = 1.2;
         drawingContext.strokeStyle = row % 3 === 0 ? "rgba(0, 126, 181, 0.42)" : "rgba(251, 134, 127, 0.34)";
@@ -156,12 +164,18 @@ export function HeroMotionField() {
     }
 
     resize();
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible = entry?.isIntersecting ?? true;
+    }, { rootMargin: "180px" });
+
+    observer.observe(parentElement);
     frame = window.requestAnimationFrame(draw);
     window.addEventListener("resize", resize);
     window.addEventListener("pointermove", onPointerMove, { passive: true });
 
     return () => {
       window.cancelAnimationFrame(frame);
+      observer.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onPointerMove);
     };

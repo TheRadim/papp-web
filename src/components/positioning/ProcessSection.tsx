@@ -1,5 +1,4 @@
 import type { HomeContent } from "@/content/home/home";
-import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 interface ProcessSectionProps {
@@ -8,8 +7,10 @@ interface ProcessSectionProps {
 
 export function ProcessSection({ content }: ProcessSectionProps) {
   return (
-    <Section id="movement-meaning" tone="soft" className="process-section">
-      <SectionHeading eyebrow={content.eyebrow} title={content.title} align="center" />
+    <section id="movement-meaning" className="process-section" aria-label={content.title}>
+      <div className="process-section__intro">
+        <SectionHeading eyebrow={content.eyebrow} title={content.title} align="center" />
+      </div>
       <div className="process-scroll-wrap">
         <div className="process-scroll-pin">
           <div className="process-flow" aria-label={content.title}>
@@ -28,6 +29,7 @@ export function ProcessSection({ content }: ProcessSectionProps) {
           </div>
         </div>
       </div>
-    </Section>
+      <div className="process-section__outro" aria-hidden="true" />
+    </section>
   );
 }

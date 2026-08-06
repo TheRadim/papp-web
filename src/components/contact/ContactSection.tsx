@@ -1,7 +1,6 @@
 import type { Locale } from "@/content/types";
 import type { HomeContent } from "@/content/home/home";
 import { ContactForm } from "@/components/contact/ContactForm";
-import { ContactFloatingBalls } from "@/components/contact/ContactFloatingBalls";
 
 interface ContactSectionProps {
   locale: Locale;
@@ -11,7 +10,6 @@ interface ContactSectionProps {
 export function ContactSection({ locale, content }: ContactSectionProps) {
   return (
     <section className="contact-band">
-      <ContactFloatingBalls />
       <div className="container">
         <div className="contact-band__copy">
           <p className="eyebrow">{locale === "da" ? "Kontakt" : "Contact"}</p>
