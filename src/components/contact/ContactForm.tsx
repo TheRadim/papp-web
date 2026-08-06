@@ -1,9 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import type { Locale } from "@/content/types";
 import { company } from "@/content/global/company";
-import { siteBasePath } from "@/lib/site/basePath";
+import { siteBasePath, withBasePath } from "@/lib/site/basePath";
 
 interface ContactFormProps {
   locale: Locale;
@@ -33,8 +34,8 @@ export function ContactForm({ locale }: ContactFormProps) {
         ].join("\n")
       );
 
-      window.location.href = `mailto:${company.email}?subject=${subject}&body=${body}`;
       setStatus(locale === "da" ? "Din mail-app åbnes med beskeden udfyldt." : "Your email app is opening with the message filled in.");
+      window.location.href = `mailto:${company.email}?subject=${subject}&body=${body}`;
       return;
     }
 
@@ -76,7 +77,12 @@ export function ContactForm({ locale }: ContactFormProps) {
       <button className="papp-button papp-button--primary" type="submit">
         <span>{locale === "da" ? "Send henvendelse" : "Send enquiry"}</span>
       </button>
-      {status ? <p role="status">{status}</p> : null}
+      {status ? (
+        <div className="contact-form__success" role="status">
+          <Image src={withBasePath("/images/ui/done.svg")} alt="" width={54} height={54} unoptimized />
+          <p>{status}</p>
+        </div>
+      ) : null}
     </form>
   );
 }

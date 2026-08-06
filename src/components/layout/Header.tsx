@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown, LogIn, Menu, X } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import type { CSSProperties } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -196,11 +196,10 @@ export function Header({ locale }: HeaderProps) {
           <div className="nav-actions">
             <LanguageSwitcher locale={locale} pathname={pathname} />
             <a className="login-link" href={company.insightsUrl} target="_blank" rel="noreferrer">
-              <LogIn size={16} aria-hidden="true" />
               {navLabels.login[locale]}
             </a>
             <button
-              className="mobile-menu-button"
+              className={`mobile-menu-button ${menuOpen ? "is-open" : ""}`}
               type="button"
               aria-label={menuOpen ? navLabels.close[locale] : navLabels.menu[locale]}
               aria-expanded={menuOpen}
@@ -214,7 +213,11 @@ export function Header({ locale }: HeaderProps) {
                 });
               }}
             >
-              {menuOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
+              <span className="hamburger-icon" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </span>
             </button>
           </div>
         </nav>
@@ -263,7 +266,6 @@ export function Header({ locale }: HeaderProps) {
                 </Link>
               ))}
               <a className="mobile-login-link" href={company.insightsUrl} target="_blank" rel="noreferrer">
-                <LogIn size={18} aria-hidden="true" />
                 {navLabels.login[locale]}
               </a>
             </div>

@@ -36,17 +36,38 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
 
       const rect = element.getBoundingClientRect();
       const cards = Array.from(element.querySelectorAll<HTMLElement>("[data-timeline-card]"));
-      const viewportTarget = window.innerHeight * 0.48;
-      const trackStart = rect.top + window.scrollY;
-      const trackEnd = trackStart + rect.height - window.innerHeight * 0.35;
+      const viewportTarget = window.innerHeight * 0.5;
       const current = window.scrollY + viewportTarget;
+      const centers = cards.map((card) => {
+        const cardRect = card.getBoundingClientRect();
+        return window.scrollY + cardRect.top + cardRect.height * 0.36;
+      });
 
-      targetProgressRef.current = Math.min(Math.max((current - trackStart) / Math.max(trackEnd - trackStart, 1), 0), 1);
+      if (centers.length > 1) {
+        let segmentIndex = 0;
+
+        for (let index = 0; index < centers.length - 1; index += 1) {
+          if (current >= centers[index]) {
+            segmentIndex = index;
+          }
+        }
+
+        const segmentStart = centers[segmentIndex];
+        const segmentEnd = centers[Math.min(segmentIndex + 1, centers.length - 1)];
+        const segmentProgress = Math.min(Math.max((current - segmentStart) / Math.max(segmentEnd - segmentStart, 1), 0), 1);
+        const timelineProgress = (segmentIndex + segmentProgress) / (centers.length - 1);
+
+        targetProgressRef.current = current <= centers[0] ? 0 : Math.min(Math.max(timelineProgress, 0), 1);
+      } else {
+        const trackStart = rect.top + window.scrollY;
+        const trackEnd = trackStart + rect.height;
+        targetProgressRef.current = Math.min(Math.max((current - trackStart) / Math.max(trackEnd - trackStart, 1), 0), 1);
+      }
 
       const nextActive = cards.reduce(
         (closest, card, index) => {
           const cardRect = card.getBoundingClientRect();
-          const distance = Math.abs(cardRect.top + cardRect.height * 0.45 - viewportTarget);
+          const distance = Math.abs(cardRect.top + cardRect.height * 0.36 - viewportTarget);
 
           return distance < closest.distance ? { index, distance } : closest;
         },

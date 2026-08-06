@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import type { Locale } from "@/content/types";
 import { company } from "@/content/global/company";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { withBasePath } from "@/lib/site/basePath";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AboutTimeline } from "@/components/about/AboutTimeline";
@@ -121,48 +119,41 @@ const teamMembers = [
   {
     name: "Tan Minh Nguyen Tran",
     role: { en: "CEO", da: "CEO" },
-    image: "/images/team/tan-profile.png",
     email: "tan.tran@pappmobility.com",
     linkedinUrl: "https://www.linkedin.com/in/tanminhnguyentran/"
   },
   {
     name: "Martin Holk Rasmussen",
     role: { en: "Data Specialist", da: "Data Specialist" },
-    image: "/images/team/martin-profile.png",
     email: "martin.rasmussen@pappmobility.com",
     linkedinUrl: "https://www.linkedin.com/in/martinholk/"
   },
   {
     name: "Alfred Röttger Rydahl",
     role: { en: "Software Developer", da: "Softwareudvikler" },
-    image: "/images/team/alfred-profile.png",
     email: "alfred.rydahl@pappmobility.com",
     linkedinUrl: "https://www.linkedin.com/in/alfred-r%C3%B6ttger-rydahl-8a6707a2/"
   },
   {
     name: "Martine Winther",
     role: { en: "Development Consultant", da: "Udviklingskonsulent" },
-    image: "/images/team/martine-profile.png",
     email: "martine.winther@pappmobility.com",
     linkedinUrl: "https://www.linkedin.com/in/martine-winther-54b29696/"
   },
   {
     name: "Carina Von Staffeldt Beck Mejlshede",
     role: { en: "Mechanical Engineer", da: "Mechanical Engineer" },
-    image: "/images/team/carina-profile.jpg",
     linkedinUrl: "https://www.linkedin.com/in/carina-staffeldt-918b732b4/"
   },
   {
     name: "Maxim Zavidei",
     role: { en: "Backend Software Engineer", da: "Backend-softwareingeniør" },
-    image: "/images/team/max-profile.png",
     email: "maxim.zavidei@pappmobility.com",
     linkedinUrl: "https://www.linkedin.com/in/v1max/"
   },
   {
     name: "Radim Theiner",
     role: { en: "Product Owner", da: "Product Owner" },
-    image: "/images/team/radim-profile.png",
     email: "radim.theiner@pappmobility.com",
     linkedinUrl: "https://www.linkedin.com/in/therad/"
   },
@@ -246,19 +237,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 target="_blank"
                 aria-label={`${member.name} on LinkedIn`}
               >
-                {member.image ? (
-                  <Image
-                    src={withBasePath(member.image)}
-                    alt=""
-                    fill
-                    sizes="(max-width: 576px) 100vw, (max-width: 992px) 50vw, 25vw"
-                  />
-                ) : (
-                  <span className="team-card__initials" aria-hidden="true">
-                    {member.initials}
-                  </span>
-                )}
-                <span className="team-card__scrim" aria-hidden="true" />
+                <span className="team-card__portrait" aria-hidden="true">
+                  <span>{member.initials ?? member.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}</span>
+                </span>
                 <span className="team-card__content">
                   <h3>{member.name}</h3>
                   <p>{member.role[locale]}</p>

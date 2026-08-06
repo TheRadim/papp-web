@@ -4,7 +4,6 @@ import { getProjects } from "@/lib/content/accessors";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { ProjectStatsOrb } from "@/components/projects/ProjectStatsOrb";
 import { ProjectPortfolioFilter } from "@/components/projects/ProjectPortfolioFilter";
 
 const workSteps = [
@@ -63,20 +62,6 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
               ? "Hvert projekt starter med et konkret spørgsmål: hvor bliver kapacitet overset, hvordan bevæger brugerne sig, og hvilke beslutninger kan data gøre mere trygge?"
               : "Every project starts with a practical question: where is capacity overlooked, how do users move, and which decisions can data make easier to trust?"}
           </p>
-        </div>
-      </Section>
-      <Section tone="soft" className="project-intelligence-section">
-        <div className="project-intelligence">
-          <div>
-            <p className="eyebrow">{locale === "da" ? "Projektbevis" : "Project proof"}</p>
-            <h2>{locale === "da" ? "Målinger, der kan bruges i virkelige beslutninger." : "Measurements that hold up in real decisions."}</h2>
-            <p>
-              {locale === "da"
-                ? "Hver case føjer mere kontekst til Papps mobilitetsviden: hvordan områder bruges, hvor kapacitet bliver overset, og hvilke tiltag der faktisk kan prioriteres."
-                : "Each case adds context to Papp's mobility intelligence: how places are used, where capacity is overlooked and which actions are worth prioritising."}
-            </p>
-          </div>
-          <ProjectStatsOrb locale={locale} />
         </div>
       </Section>
       <Section className="project-work-section">
