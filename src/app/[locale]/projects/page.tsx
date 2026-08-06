@@ -1,51 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { BarChart3, Camera, CircleDot, Workflow } from "lucide-react";
-import type { Locale, ProjectCategory } from "@/content/types";
+import type { Locale } from "@/content/types";
 import { getProjects } from "@/lib/content/accessors";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { pick } from "@/lib/i18n/locales";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { ProjectCard } from "@/components/projects/ProjectCard";
 import { ProjectStatsOrb } from "@/components/projects/ProjectStatsOrb";
-
-const categoryCards: Array<{
-  category: ProjectCategory;
-  title: Record<Locale, string>;
-  body: Record<Locale, string>;
-}> = [
-  {
-    category: "sensors",
-    title: { en: "Sensor projects", da: "Sensorprojekter" },
-    body: {
-      en: "Ground-level measurement of occupancy, duration and charging-space utilisation.",
-      da: "Belægning, varighed og udnyttelse på parkerings- og ladepladsniveau."
-    }
-  },
-  {
-    category: "cameras",
-    title: { en: "Camera projects", da: "Kameraprojekter" },
-    body: {
-      en: "Camera-based area measurement, flow and parking behaviour across larger environments.",
-      da: "Områdemåling, flow og parkeringsadfærd på større arealer."
-    }
-  },
-  {
-    category: "analysis",
-    title: { en: "Analysis projects", da: "Analyseprojekter" },
-    body: {
-      en: "Interpretation, reporting and practical next-step recommendations from collected data.",
-      da: "Datafortolkning, rapportering og praktiske anbefalinger til næste skridt."
-    }
-  }
-];
-
-const categoryIcons = {
-  sensors: CircleDot,
-  cameras: Camera,
-  analysis: BarChart3
-};
+import { ProjectPortfolioFilter } from "@/components/projects/ProjectPortfolioFilter";
 
 const workSteps = [
   {
@@ -84,11 +44,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 export default async function ProjectsPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   const projects = getProjects(locale);
-  const groupedProjects = {
-    sensors: projects.filter((project) => project.category === "sensors"),
-    cameras: projects.filter((project) => project.category === "cameras"),
-    analysis: projects.filter((project) => project.category === "analysis" || project.category === "consultancy")
-  };
 
   return (
     <>
@@ -108,20 +63,6 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
               ? "Hvert projekt starter med et konkret spørgsmål: hvor bliver kapacitet overset, hvordan bevæger brugerne sig, og hvilke beslutninger kan data gøre mere trygge?"
               : "Every project starts with a practical question: where is capacity overlooked, how do users move, and which decisions can data make easier to trust?"}
           </p>
-        </div>
-        <div className="project-category-grid">
-          {categoryCards.map((card, index) => {
-            const Icon = categoryIcons[card.category as keyof typeof categoryIcons] ?? Workflow;
-            return (
-              <Link className={`project-category-card project-category-card--${card.category}`} href={`#${card.category}-projects`} key={card.category}>
-                <Icon aria-hidden="true" size={38} />
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                <h2>{card.title[locale]}</h2>
-                <p>{card.body[locale]}</p>
-                <strong>{locale === "da" ? "Se kategori" : "View category"}</strong>
-              </Link>
-            );
-          })}
         </div>
       </Section>
       <Section tone="soft" className="project-intelligence-section">
@@ -162,20 +103,17 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
         </div>
       </Section>
       <Section tone="soft" className="project-listing-section">
-        {categoryCards.map((card) => (
-          <div className="project-group" id={`${card.category}-projects`} key={card.category}>
-            <div className="project-group__heading">
-              <p className="eyebrow">{locale === "da" ? "Kategori" : "Category"}</p>
-              <h2>{card.title[locale]}</h2>
-              <p>{card.body[locale]}</p>
-            </div>
-            <div className="project-grid project-grid--featured">
-              {groupedProjects[card.category as keyof typeof groupedProjects].map((project) => (
-                <ProjectCard key={project.slug} project={project} locale={locale} />
-              ))}
-            </div>
-          </div>
-        ))}
+        <SectionHeading
+          eyebrow={locale === "da" ? "Portfolio" : "Portfolio"}
+          title={locale === "da" ? "Udvalgte projekter." : "Selected projects."}
+          body={
+            locale === "da"
+              ? "Filtrer projekterne efter teknologi og projektform, og gå videre til de enkelte cases."
+              : "Filter the projects by technology and project type, then open the individual cases."
+          }
+          align="center"
+        />
+        <ProjectPortfolioFilter locale={locale} projects={projects} />
       </Section>
     </>
   );

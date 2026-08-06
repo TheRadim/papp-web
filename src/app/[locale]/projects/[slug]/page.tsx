@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import type { Locale } from "@/content/types";
-import { getProjectBySlug, getProjects } from "@/lib/content/accessors";
+import { getProjectBySlug, getProjects, getTestimonialBySlug } from "@/lib/content/accessors";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { pick } from "@/lib/i18n/locales";
 import { withBasePath } from "@/lib/site/basePath";
@@ -29,6 +29,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   const { locale, slug } = await params;
   const project = getProjectBySlug(locale, slug);
   if (!project) notFound();
+  const testimonial = project.testimonialSlug ? getTestimonialBySlug(project.testimonialSlug) : undefined;
 
   const categoryLabels = {
     sensors: { en: "Sensor project", da: "Sensorprojekt" },
@@ -104,6 +105,12 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                 <h2>{locale === "da" ? "Et stærkere beslutningsgrundlag." : "A stronger basis for decisions."}</h2>
                 <p>{pick(locale, project.result)}</p>
               </article>
+            ) : null}
+            {testimonial ? (
+              <blockquote className="project-quote-card">
+                <p>{pick(locale, testimonial.quote)}</p>
+                <cite>{testimonial.organisation}</cite>
+              </blockquote>
             ) : null}
           </div>
         </div>

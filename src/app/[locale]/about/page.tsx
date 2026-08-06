@@ -192,6 +192,19 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
+  const timelineItems = timeline.map((item, index) =>
+    index === 1
+      ? {
+          ...item,
+          image: "/images/app/papp-app-phone.png",
+          imageFit: "contain" as const
+        }
+      : {
+          date: item.date,
+          title: item.title,
+          body: item.body
+        }
+  );
 
   return (
     <>
@@ -215,7 +228,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             title={locale === "da" ? "Fra idé til intelligent mobilitet." : "From idea to intelligent mobility."}
             body={locale === "da" ? "Følg punkterne gennem Papps udvikling fra parkeringsapp til data, IoT og Insights." : "Follow the milestones as Papp moves from parking app to data, IoT and Insights."}
           />
-          <AboutTimeline items={timeline} locale={locale} />
+          <AboutTimeline items={timelineItems} locale={locale} />
         </div>
       </Section>
       <Section>

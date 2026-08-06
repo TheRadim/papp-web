@@ -14,10 +14,10 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const locale = rawLocale as Locale;
 
   return (
-    <>
+    <div className="site-shell">
       <Header locale={locale} />
       <main id="main">{children}</main>
       <Footer locale={locale} />
-    </>
+    </div>
   );
 }

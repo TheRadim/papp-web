@@ -37,10 +37,10 @@ export function getHomepageContent(locale: Locale): HomeContent {
   const content: Record<Locale, HomeContent> = {
     en: {
       hero: {
-        eyebrow: "Data-based mobility decisions",
+        eyebrow: "Reliable mobility monitoring",
         title: "Papp Mobility",
-        lead: "Papp Mobility transforms mobility data into insight, analysis and advisory that helps cities and operators plan with confidence.",
-        body: "We collect data with IoT sensors and cameras, visualise it in Papp Insights and help you turn real behaviour, flow and dwell time into practical next steps.",
+        lead: "Reliable data gathering for parking, streets and mobility decisions.",
+        body: "Papp combines IoT sensors, camera analytics and Papp Insights to show how places are used, where capacity is hidden and what action should come next.",
         primaryCta: "Explore our solutions",
         secondaryCta: "View projects"
       },
@@ -73,10 +73,10 @@ export function getHomepageContent(locale: Locale): HomeContent {
     },
     da: {
       hero: {
-        eyebrow: "Databaserede mobilitetsbeslutninger",
+        eyebrow: "Pålidelig mobilitetsmonitorering",
         title: "Papp Mobility",
-        lead: "Papp Mobility forvandler mobilitetsdata til indsigter, analyser og rådgivning, der gør det lettere at planlægge fremtidens byer.",
-        body: "Vi indsamler data med IoT-sensorer og kameraer, visualiserer dem i Papp Insights og hjælper jer med at bruge viden om adfærd, flow og opholdstid i praksis.",
+        lead: "Pålidelig dataindsamling til parkering, gader og mobilitetsbeslutninger.",
+        body: "Papp kombinerer IoT-sensorer, kameraanalyse og Papp Insights, så I kan se, hvordan steder bruges, hvor kapacitet er skjult, og hvad der bør ske bagefter.",
         primaryCta: "Udforsk løsninger",
         secondaryCta: "Se projekter"
       },

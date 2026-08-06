@@ -94,7 +94,10 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
     };
   }, []);
 
-  const style = { "--timeline-progress": progress } as CSSProperties;
+  const style = {
+    "--timeline-progress": `${progress}`,
+    "--timeline-progress-percent": `${progress * 100}%`
+  } as CSSProperties;
 
   return (
     <div className="history-timeline" ref={timelineRef} style={style}>

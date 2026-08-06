@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Activity, Database, ShieldCheck } from "lucide-react";
 import type { Locale } from "@/content/types";
 import type { HomeContent } from "@/content/home/home";
 import { Button } from "@/components/ui/Button";
@@ -38,9 +39,20 @@ export function HomepageHero({ locale, content }: HomepageHeroProps) {
               loading="eager"
               sizes="(max-width: 992px) 100vw, 48vw"
             />
-            <span className="hero-image-label hero-image-label--one">{locale === "da" ? "Indsigt" : "Insights"}</span>
-            <span className="hero-image-label hero-image-label--two">{locale === "da" ? "Analyse" : "Analysis"}</span>
-            <span className="hero-image-label hero-image-label--three">{locale === "da" ? "Beslutninger" : "Decisions"}</span>
+            <div className="hero-data-card" aria-label={locale === "da" ? "Papp datalag" : "Papp data layer"}>
+              <div>
+                <Database aria-hidden="true" size={18} />
+                <span>{locale === "da" ? "Sensorer" : "Sensors"}</span>
+              </div>
+              <div>
+                <Activity aria-hidden="true" size={18} />
+                <span>{locale === "da" ? "Live monitorering" : "Live monitoring"}</span>
+              </div>
+              <div>
+                <ShieldCheck aria-hidden="true" size={18} />
+                <span>{locale === "da" ? "Beslutningsklar data" : "Decision-ready data"}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

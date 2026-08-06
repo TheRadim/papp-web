@@ -20,6 +20,7 @@ interface HeaderProps {
 export function Header({ locale }: HeaderProps) {
   const [solutionsOpen, setSolutionsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileGroupsOpen, setMobileGroupsOpen] = useState<Record<string, boolean>>({});
   const [scrolled, setScrolled] = useState(false);
   const [dockIndicator, setDockIndicator] = useState({ x: 0, width: 0, opacity: 0 });
   const navRef = useRef<HTMLDivElement>(null);
@@ -45,6 +46,7 @@ export function Header({ locale }: HeaderProps) {
       if (event.key === "Escape") {
         setSolutionsOpen(false);
         setMenuOpen(false);
+        setMobileGroupsOpen({});
       }
     }
 
@@ -202,7 +204,15 @@ export function Header({ locale }: HeaderProps) {
               type="button"
               aria-label={menuOpen ? navLabels.close[locale] : navLabels.menu[locale]}
               aria-expanded={menuOpen}
-              onClick={() => setMenuOpen((open) => !open)}
+              onClick={() => {
+                setMenuOpen((open) => {
+                  if (open) {
+                    setMobileGroupsOpen({});
+                  }
+
+                  return !open;
+                });
+              }}
             >
               {menuOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
             </button>
@@ -214,25 +224,46 @@ export function Header({ locale }: HeaderProps) {
         <div className="mobile-panel">
           <div className="container">
             <div className="mobile-panel__inner">
-              <Link href={`/${locale}/solutions`} onClick={() => setMenuOpen(false)}>
+              <Link href={`/${locale}/solutions`} onClick={() => {
+                setMenuOpen(false);
+                setMobileGroupsOpen({});
+              }}>
                 {navLabels.solutions[locale]}
               </Link>
               {solutionGroups.map((group) => (
                 <div key={group.id} className="mobile-group">
-                  <p>{pick(locale, group.label)}</p>
-                  {group.items.map((item) => (
-                    <Link key={pick(locale, item.label)} href={item.href[locale]} onClick={() => setMenuOpen(false)}>
-                      {pick(locale, item.label)}
-                    </Link>
-                  ))}
+                  <button
+                    type="button"
+                    aria-expanded={Boolean(mobileGroupsOpen[group.id])}
+                    onClick={() => setMobileGroupsOpen((current) => ({ ...current, [group.id]: !current[group.id] }))}
+                  >
+                    <span>{pick(locale, group.label)}</span>
+                    <ChevronDown aria-hidden="true" size={17} />
+                  </button>
+                  {mobileGroupsOpen[group.id] ? (
+                    <div className="mobile-group__links">
+                      {group.items.map((item) => (
+                        <Link key={pick(locale, item.label)} href={item.href[locale]} onClick={() => {
+                          setMenuOpen(false);
+                          setMobileGroupsOpen({});
+                        }}>
+                          {pick(locale, item.label)}
+                        </Link>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
               ))}
               {primaryNavigation(locale).map((item) => (
-                <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
+                <Link key={item.href} href={item.href} onClick={() => {
+                  setMenuOpen(false);
+                  setMobileGroupsOpen({});
+                }}>
                   {item.label}
                 </Link>
               ))}
-              <a href={company.insightsUrl} target="_blank" rel="noreferrer">
+              <a className="mobile-login-link" href={company.insightsUrl} target="_blank" rel="noreferrer">
+                <LogIn size={18} aria-hidden="true" />
                 {navLabels.login[locale]}
               </a>
             </div>

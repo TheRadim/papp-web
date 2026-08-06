@@ -296,6 +296,44 @@ export const projects: Project[] = [
       title: { en: "Business parking in Aalborg | Papp Mobility", da: "Erhvervsparkering i Aalborg | Papp Mobility" },
       description: { en: "Flexible business parking supported by data in Aalborg.", da: "Fleksibel erhvervsparkering understøttet af data i Aalborg." }
     }
+  },
+  {
+    slug: "damhustorvet-camera-monitoring",
+    category: "cameras",
+    clientName: "Damhustorvet",
+    title: {
+      en: "Battery-powered camera monitoring at Damhustorvet",
+      da: "Batteridrevet kameramonitorering på Damhustorvet"
+    },
+    summary: {
+      en: "A temporary camera project documented parking behaviour and traffic patterns, creating a stronger data basis for future decisions at Damhustorvet.",
+      da: "Et midlertidigt kameraprojekt dokumenterede parkeringsadfærd og trafikmønstre og skabte et stærkere datagrundlag for fremtidige tiltag på Damhustorvet."
+    },
+    challenge: {
+      en: "The site needed a clearer view of how the parking area was actually used without a heavy installation.",
+      da: "Området havde brug for et klarere billede af, hvordan parkeringsarealet faktisk blev brugt, uden en tung installation."
+    },
+    approach: {
+      en: "Papp deployed a battery-powered camera setup to monitor parking activity and traffic patterns with minimal installation work.",
+      da: "Papp opsatte en batteridrevet kameraløsning, der målte parkeringsaktivitet og trafikmønstre med minimal implementering."
+    },
+    result: {
+      en: "The project created detailed insight into real behaviour and a solid data basis for evaluating future initiatives.",
+      da: "Projektet skabte detaljeret indsigt i reel adfærd og et solidt datagrundlag for at vurdere fremtidige tiltag."
+    },
+    coverImage: "/images/corporate/parking-tablet-review.jpg",
+    gallery: [
+      "/images/corporate/parking-sensor-ground.jpg",
+      "/images/corporate/insights-screen.jpg"
+    ],
+    published: true,
+    contentStatus: "approved",
+    technologies: ["cameras", "insights", "analysis"],
+    testimonialSlug: "damhustorvet-camera-insight",
+    seo: {
+      title: { en: "Damhustorvet camera monitoring | Papp Mobility", da: "Damhustorvet kameramonitorering | Papp Mobility" },
+      description: { en: "Battery-powered camera monitoring for parking behaviour at Damhustorvet.", da: "Batteridrevet kameramonitorering af parkeringsadfærd på Damhustorvet." }
+    }
   }
 ];
 
