@@ -33,8 +33,9 @@ function CameraController({ view, reducedMotion }: { view: MobilityView; reduced
   const targetFov = CAMERA_VIEWS[view].fov;
 
   useEffect(() => {
+    camera.lookAt(target.current);
     invalidate();
-  }, [invalidate, targetFov, targetLookAt, targetPosition]);
+  }, [camera, invalidate, targetFov, targetLookAt, targetPosition]);
 
   useEffect(() => {
     if (reducedMotion) {

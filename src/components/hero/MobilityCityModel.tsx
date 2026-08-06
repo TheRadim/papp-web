@@ -119,11 +119,6 @@ export function MobilityCityModel({
       }
     });
 
-    const base = namedObject(clone, CITY_OBJECT_NAMES.base);
-    if (base) {
-      base.visible = false;
-    }
-
     return clone;
   }, [gltf.scene]);
 
