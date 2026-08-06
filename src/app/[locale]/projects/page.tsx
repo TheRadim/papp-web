@@ -68,12 +68,12 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
       <Section tone="soft" className="project-intelligence-section">
         <div className="project-intelligence">
           <div>
-            <p className="eyebrow">{locale === "da" ? "Datagrundlag" : "Data basis"}</p>
-            <h2>{locale === "da" ? "A growing base of mobility intelligence." : "A growing base of mobility intelligence."}</h2>
+            <p className="eyebrow">{locale === "da" ? "Projektbevis" : "Project proof"}</p>
+            <h2>{locale === "da" ? "Målinger, der kan bruges i virkelige beslutninger." : "Measurements that hold up in real decisions."}</h2>
             <p>
               {locale === "da"
-                ? "Projekterne bygger videre på et voksende datagrundlag fra parkeringsarealer, gader og mobilitetsmiljøer, så nye spørgsmål kan besvares hurtigere og mere præcist."
-                : "Projects build on a growing data basis from parking areas, streets and mobility environments, so new questions can be answered faster and with more precision."}
+                ? "Hver case føjer mere kontekst til Papps mobilitetsviden: hvordan områder bruges, hvor kapacitet bliver overset, og hvilke tiltag der faktisk kan prioriteres."
+                : "Each case adds context to Papp's mobility intelligence: how places are used, where capacity is overlooked and which actions are worth prioritising."}
             </p>
           </div>
           <ProjectStatsOrb locale={locale} />

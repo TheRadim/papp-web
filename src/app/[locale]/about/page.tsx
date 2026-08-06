@@ -193,11 +193,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   const timelineItems = timeline.map((item, index) =>
-    index === 1
+    index === 0
       ? {
           ...item,
-          image: "/images/app/papp-app-phone.png",
-          imageFit: "contain" as const
+          image: "/images/corporate/insights-meeting-city.jpg"
         }
       : {
           date: item.date,

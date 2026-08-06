@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Activity, Database, ShieldCheck } from "lucide-react";
 import type { Locale } from "@/content/types";
 import type { HomeContent } from "@/content/home/home";
 import { Button } from "@/components/ui/Button";
@@ -31,7 +30,7 @@ export function HomepageHero({ locale, content }: HomepageHeroProps) {
           </div>
           <div className="hero-image-stage">
             <Image
-              src={withBasePath("/images/corporate/insights-meeting-city.jpg")}
+              src={withBasePath("/images/corporate/insights-screen.jpg")}
               alt=""
               width={1920}
               height={1080}
@@ -39,20 +38,23 @@ export function HomepageHero({ locale, content }: HomepageHeroProps) {
               loading="eager"
               sizes="(max-width: 992px) 100vw, 48vw"
             />
-            <div className="hero-data-card" aria-label={locale === "da" ? "Papp datalag" : "Papp data layer"}>
-              <div>
-                <Database aria-hidden="true" size={18} />
-                <span>{locale === "da" ? "Sensorer" : "Sensors"}</span>
+            <div className="hero-system" aria-label={locale === "da" ? "Live mobilitetsdata" : "Live mobility data"}>
+              <div className="hero-system__header">
+                <span>{locale === "da" ? "Live datalag" : "Live data layer"}</span>
+                <strong>98.4%</strong>
               </div>
-              <div>
-                <Activity aria-hidden="true" size={18} />
-                <span>{locale === "da" ? "Live monitorering" : "Live monitoring"}</span>
+              <div className="hero-system__map">
+                <span />
+                <span />
+                <span />
               </div>
-              <div>
-                <ShieldCheck aria-hidden="true" size={18} />
-                <span>{locale === "da" ? "Beslutningsklar data" : "Decision-ready data"}</span>
+              <div className="hero-system__rows">
+                <span>{locale === "da" ? "Belægning" : "Occupancy"}<strong>Live</strong></span>
+                <span>{locale === "da" ? "Flow" : "Flow"}<strong>+12%</strong></span>
+                <span>{locale === "da" ? "Opholdstid" : "Dwell"}<strong>24m</strong></span>
               </div>
             </div>
+            <div className="hero-scanline" aria-hidden="true" />
           </div>
         </div>
       </div>

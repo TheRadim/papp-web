@@ -8,9 +8,10 @@ import { Button } from "@/components/ui/Button";
 interface AppPromotionProps {
   locale: Locale;
   content: HomeContent["app"];
+  showCta?: boolean;
 }
 
-export function AppPromotion({ locale, content }: AppPromotionProps) {
+export function AppPromotion({ locale, content, showCta = true }: AppPromotionProps) {
   return (
     <section className="app-promo">
       <div className="container app-promo__grid">
@@ -29,7 +30,7 @@ export function AppPromotion({ locale, content }: AppPromotionProps) {
               <Image src={withBasePath("/images/app/googleplay-badge.png")} alt="Get it on Google Play" width={193} height={65} />
             </a>
           </div>
-          <Button href={`/${locale}/app`} variant="secondary">{content.cta}</Button>
+          {showCta ? <Button href={`/${locale}/app`} variant="secondary">{content.cta}</Button> : null}
         </div>
       </div>
     </section>

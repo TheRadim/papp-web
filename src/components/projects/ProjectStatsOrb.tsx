@@ -6,19 +6,35 @@ import type { Locale } from "@/content/types";
 const stats = [
   {
     value: "32",
-    label: { en: "projects completed", da: "projekter gennemført" }
+    label: { en: "projects completed", da: "projekter gennemført" },
+    body: {
+      en: "Field work across parking areas, streets and city-centre environments.",
+      da: "Feltarbejde på parkeringsarealer, gader og bymidtemiljøer."
+    }
   },
   {
     value: "24m",
-    label: { en: "mobility datapoints", da: "mobilitetsdatapunkter" }
+    label: { en: "mobility datapoints", da: "mobilitetsdatapunkter" },
+    body: {
+      en: "A growing data basis for comparing utilisation, flow and dwell time.",
+      da: "Et voksende datagrundlag til at sammenligne udnyttelse, flow og opholdstid."
+    }
   },
   {
     value: "18k",
-    label: { en: "cars detected daily", da: "biler registreret dagligt" }
+    label: { en: "cars detected daily", da: "biler registreret dagligt" },
+    body: {
+      en: "Live camera and sensor observations converted into usable insight.",
+      da: "Live kamera- og sensorobservationer omsat til brugbar indsigt."
+    }
   },
   {
     value: "12%",
-    label: { en: "less search traffic potential", da: "potentiel reduktion i søgetrafik" }
+    label: { en: "search traffic potential", da: "potentiale i søgetrafik" },
+    body: {
+      en: "Project recommendations focus on reducing unnecessary circulation.",
+      da: "Projektanbefalinger fokuserer på at reducere unødvendig cirkulation."
+    }
   }
 ];
 
@@ -38,13 +54,13 @@ export function ProjectStatsOrb({ locale }: ProjectStatsOrbProps) {
   }, []);
 
   return (
-    <div className="project-stats-orb" aria-label={locale === "da" ? "Projektstatistik" : "Project statistics"}>
-      <div className="project-stats-orb__rings" aria-hidden="true" />
-      <div className="project-stats-orb__center">
+    <div className="project-proof" aria-label={locale === "da" ? "Projektstatistik" : "Project statistics"}>
+      <div className="project-proof__featured">
+        <p>{locale === "da" ? "Aktivt signal" : "Active signal"}</p>
         <strong>{stats[active].value}</strong>
         <span>{stats[active].label[locale]}</span>
       </div>
-      <div className="project-stats-orb__items">
+      <div className="project-proof__grid">
         {stats.map((stat, index) => (
           <button
             type="button"
@@ -53,7 +69,8 @@ export function ProjectStatsOrb({ locale }: ProjectStatsOrbProps) {
             onClick={() => setActive(index)}
           >
             <span>{stat.value}</span>
-            {stat.label[locale]}
+            <strong>{stat.label[locale]}</strong>
+            <em>{stat.body[locale]}</em>
           </button>
         ))}
       </div>

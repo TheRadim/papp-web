@@ -158,7 +158,13 @@ export function MobilityCityVisual({
       data-active={activeDisplayArea ?? "none"}
     >
       <div className="mobility-city__stage">
-        {showLoadingPlate || showImageFallback ? <MobilityCityFallback locale={locale} status={modelStatus} /> : null}
+        {showLoadingPlate ? (
+          <div className="mobility-city__loading" aria-label={locale === "da" ? "Indlæser 3D-model" : "Loading 3D model"}>
+            <span />
+            <p>{locale === "da" ? "Indlæser mobilitetsmodel" : "Loading mobility model"}</p>
+          </div>
+        ) : null}
+        {showImageFallback ? <MobilityCityFallback locale={locale} status={modelStatus} /> : null}
         {canUse3d ? (
           <MobilityCityCanvas
             hoveredArea={hoveredArea}

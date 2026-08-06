@@ -25,39 +25,35 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
   const visualProgressRef = useRef(0);
   const frameRef = useRef(0);
   const [progress, setProgress] = useState(0);
-  const [nodeThresholds, setNodeThresholds] = useState<number[]>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    function measureNodeThresholds(element: HTMLDivElement) {
-      const articles = Array.from(element.querySelectorAll("article"));
-      const nextThresholds = articles.map((article) => {
-        const dotStyle = window.getComputedStyle(article, "::before");
-        const dotTop = Number.parseFloat(dotStyle.top) || 0;
-        const dotHeight = Number.parseFloat(dotStyle.height) || 0;
-        const dotCenter = article.offsetTop + dotTop + dotHeight / 2;
-
-        return Math.min(Math.max(dotCenter / element.scrollHeight, 0), 1);
-      });
-
-      setNodeThresholds((currentThresholds) => {
-        const changed =
-          currentThresholds.length !== nextThresholds.length ||
-          currentThresholds.some((threshold, index) => Math.abs(threshold - nextThresholds[index]) > 0.002);
-
-        return changed ? nextThresholds : currentThresholds;
-      });
-    }
-
     function measureProgress() {
       const element = timelineRef.current;
       if (!element) {
         return;
       }
 
-      measureNodeThresholds(element);
       const rect = element.getBoundingClientRect();
-      const viewportMiddle = window.innerHeight * 0.5;
-      targetProgressRef.current = Math.min(Math.max((viewportMiddle - rect.top) / rect.height, 0), 1);
+      const cards = Array.from(element.querySelectorAll<HTMLElement>("[data-timeline-card]"));
+      const viewportTarget = window.innerHeight * 0.48;
+      const trackStart = rect.top + window.scrollY;
+      const trackEnd = trackStart + rect.height - window.innerHeight * 0.35;
+      const current = window.scrollY + viewportTarget;
+
+      targetProgressRef.current = Math.min(Math.max((current - trackStart) / Math.max(trackEnd - trackStart, 1), 0), 1);
+
+      const nextActive = cards.reduce(
+        (closest, card, index) => {
+          const cardRect = card.getBoundingClientRect();
+          const distance = Math.abs(cardRect.top + cardRect.height * 0.45 - viewportTarget);
+
+          return distance < closest.distance ? { index, distance } : closest;
+        },
+        { index: 0, distance: Number.POSITIVE_INFINITY }
+      ).index;
+
+      setActiveIndex(nextActive);
     }
 
     function animateProgress() {
@@ -101,30 +97,48 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
 
   return (
     <div className="history-timeline" ref={timelineRef} style={style}>
-      <span className="history-timeline__rail" aria-hidden="true" />
-      <span className="history-timeline__cursor" aria-hidden="true" />
-      {items.map((item, index) => (
-        <article className={progress >= (nodeThresholds[index] ?? 1) ? "is-passed" : undefined} key={item.date.da}>
-          <div className="history-timeline__date" aria-label={item.date[locale]}>
-            <p>{item.date[locale]}</p>
-          </div>
-          <div className="history-timeline__card">
-            <h3>{item.title[locale]}</h3>
-            <span>{item.body[locale]}</span>
-            {item.image ? (
-              <div className={`history-timeline__media history-timeline__media--${item.imageFit ?? "cover"}`}>
-                <Image
-                  src={withBasePath(item.image)}
-                  alt=""
-                  width={860}
-                  height={520}
-                  sizes="(max-width: 768px) 100vw, 42vw"
-                />
-              </div>
-            ) : null}
-          </div>
-        </article>
-      ))}
+      <nav className="history-timeline__nav" aria-label={locale === "da" ? "Historie år" : "Timeline years"}>
+        <span className="history-timeline__rail" aria-hidden="true" />
+        <ol>
+          {items.map((item, index) => (
+            <li className={index <= activeIndex ? "is-passed" : undefined} key={item.date.da}>
+              <a className={index === activeIndex ? "is-active" : undefined} href={`#timeline-${index}`}>
+                <span aria-hidden="true" />
+                {item.date[locale]}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <div className="history-timeline__stream">
+        {items.map((item, index) => (
+          <article
+            className={index <= activeIndex ? "is-passed" : undefined}
+            data-timeline-card
+            id={`timeline-${index}`}
+            key={item.date.da}
+          >
+            <div className="history-timeline__date" aria-label={item.date[locale]}>
+              <p>{item.date[locale]}</p>
+            </div>
+            <div className="history-timeline__card">
+              <h3>{item.title[locale]}</h3>
+              <span>{item.body[locale]}</span>
+              {item.image ? (
+                <div className={`history-timeline__media history-timeline__media--${item.imageFit ?? "cover"}`}>
+                  <Image
+                    src={withBasePath(item.image)}
+                    alt=""
+                    width={860}
+                    height={520}
+                    sizes="(max-width: 768px) 100vw, 42vw"
+                  />
+                </div>
+              ) : null}
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
   );
 }

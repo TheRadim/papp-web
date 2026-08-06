@@ -48,7 +48,7 @@ export default async function AppPage({ params }: { params: Promise<{ locale: Lo
 
   return (
     <>
-      <AppPromotion locale={locale} content={content.app} />
+      <AppPromotion locale={locale} content={content.app} showCta={false} />
       <Section>
         <SectionHeading
           eyebrow={locale === "da" ? "Parkeringsapp" : "Parking app"}
