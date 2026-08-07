@@ -9,6 +9,9 @@ interface HomepageHeroProps {
 }
 
 export function HomepageHero({ locale, content }: HomepageHeroProps) {
+  const [brandFirstWord, ...brandRestWords] = content.title.split(" ");
+  const brandSecondWord = brandRestWords.join(" ");
+
   return (
     <section className="hero-section">
       <HeroMotionField />
@@ -16,7 +19,13 @@ export function HomepageHero({ locale, content }: HomepageHeroProps) {
         <div className="hero-layout hero-layout--centered">
           <div className="hero-copy">
             <p className="eyebrow">{content.eyebrow}</p>
-            <h1 className="hero-title tracking-in-expand">{content.title}</h1>
+            <h1 className="hero-title tracking-in-expand">
+              <span className="hero-title__word hero-title__word--papp">{brandFirstWord}</span>
+              {brandSecondWord ? " " : null}
+              {brandSecondWord ? (
+                <span className="hero-title__word hero-title__word--mobility">{brandSecondWord}</span>
+              ) : null}
+            </h1>
             <p className="hero-lead">{content.lead}</p>
             <p>{content.body}</p>
             <div className="hero-actions">
