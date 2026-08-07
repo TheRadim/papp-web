@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import type { Locale } from "@/content/types";
-import { company } from "@/content/global/company";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -47,7 +46,6 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
               referrerPolicy="no-referrer-when-downgrade"
             />
           </div>
-          <p className="contact-map-cvr"><strong>CVR</strong><span>{company.cvr}</span></p>
         </div>
         <ContactForm locale={locale} />
       </div>

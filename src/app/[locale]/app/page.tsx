@@ -9,43 +9,43 @@ const appFeatures = [
   {
     title: { en: "See availability nearby", da: "Se ledige pladser i nærheden" },
     body: {
-      en: "Explore parking areas on a live map and understand whether a space is likely to be available before you arrive.",
-      da: "Udforsk parkeringsområder på et livekort og se, om der sandsynligvis er en ledig plads, før du ankommer."
+      en: "A live map shows where Papp has active datapoints and how occupancy appears to the people using the area.",
+      da: "Et livekort viser, hvor Papp har aktive datapunkter, og hvordan belægning opleves af brugerne i området."
     }
   },
   {
     title: { en: "Navigate directly", da: "Naviger direkte" },
     body: {
-      en: "Open navigation from the selected parking location and get moving without switching between several tools.",
-      da: "Start navigation fra den valgte parkeringslokation uden at skifte mellem flere værktøjer."
+      en: "Selected locations connect directly to navigation, turning mobility data into a practical action for end users.",
+      da: "Valgte lokationer kobles direkte til navigation, så mobilitetsdata bliver til en praktisk handling for slutbrugere."
     }
   },
   {
     title: { en: "Compare practical details", da: "Sammenlign praktiske detaljer" },
     body: {
-      en: "View location context, pricing information and special parking types where the data is available.",
-      da: "Se lokation, prisinformation og særlige parkeringstyper, hvor data er tilgængelig."
+      en: "Pricing, location context and special parking types help partners see how information is presented outside the dashboard.",
+      da: "Priser, lokationskontekst og særlige parkeringstyper viser partnere, hvordan information præsenteres uden for dashboardet."
     }
   },
   {
     title: { en: "Plan before arrival", da: "Planlæg før ankomst" },
     body: {
-      en: "Check your options before you leave, so the parking part of the trip feels less uncertain.",
-      da: "Tjek dine muligheder, før du kører, så parkeringsdelen af turen føles mindre usikker."
+      en: "The app reveals how real-time signals can reduce uncertainty before a driver reaches a busy destination.",
+      da: "Appen viser, hvordan realtidssignaler kan mindske usikkerhed, før en bilist når frem til et travlt område."
     }
   },
   {
     title: { en: "Find relevant parking types", da: "Find relevante parkeringstyper" },
     body: {
-      en: "Look for the parking information that matters to the situation, from public spaces to selected special locations.",
-      da: "Find den parkeringsinformation, der passer til situationen, fra offentlige pladser til udvalgte særlige lokationer."
+      en: "Different parking types make the public app a useful reference for understanding site coverage and user needs.",
+      da: "Forskellige parkeringstyper gør den offentlige app til en nyttig reference for dækning og brugerbehov."
     }
   },
   {
     title: { en: "Stay updated on the move", da: "Hold dig opdateret undervejs" },
     body: {
-      en: "Use live availability signals where they exist and keep the journey moving toward a practical choice.",
-      da: "Brug live tilgængelighed, hvor data findes, og hold turen rettet mod et praktisk valg."
+      en: "Live availability shows the operational side of Papp's data network as conditions change through the day.",
+      da: "Live tilgængelighed viser den operationelle side af Papps datanetværk, når forhold ændrer sig i løbet af dagen."
     }
   }
 ];
@@ -69,11 +69,11 @@ export default async function AppPage({ params }: { params: Promise<{ locale: Lo
     <Section className="app-feature-section app-feature-page">
       <SectionHeading
         eyebrow={locale === "da" ? "Gratis app" : "Free app"}
-        title={locale === "da" ? "Et enkelt værktøj til parkeringsbrugere." : "A simple tool for parking users."}
+        title={locale === "da" ? "Se hvor Papp måler parkeringsbelægning." : "See where Papp measures parking occupancy."}
         body={
           locale === "da"
-            ? "Papp-appen hjælper brugere med at finde relevante parkeringsmuligheder, se praktisk information og komme videre til destinationen."
-            : "The Papp app helps users find relevant parking options, see practical information and move on to their destination."
+            ? "Den offentlige app er både et praktisk værktøj for bilister og et B2B-showcase for de lokationer, datapunkter og realtidssignaler, Papp arbejder med."
+            : "The public app is both a practical tool for drivers and a B2B showcase of the locations, datapoints and real-time signals Papp works with."
         }
         align="center"
       />

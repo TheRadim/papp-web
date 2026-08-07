@@ -3,10 +3,10 @@ import type { CSSProperties } from "react";
 const balls = Array.from({ length: 50 }, (_, index) => {
   const seed = (index * 37) % 101;
   const colors = [
-    "rgba(0, 126, 181, 0.2)",
-    "rgba(71, 178, 228, 0.18)",
-    "rgba(251, 134, 127, 0.2)",
-    "rgba(255, 255, 255, 0.58)"
+    "rgba(0, 126, 181, 0.3)",
+    "rgba(71, 178, 228, 0.28)",
+    "rgba(251, 134, 127, 0.3)",
+    "rgba(255, 255, 255, 0.68)"
   ];
 
   return {

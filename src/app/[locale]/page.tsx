@@ -35,7 +35,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   return (
     <>
       <HomepageHero locale={locale} content={content.hero} />
-      <ProcessSection content={content.process} />
+      <ProcessSection content={content.process} locale={locale} />
+      <TestimonialsSection locale={locale} />
       <Section id="solutions">
         <SectionHeading
           eyebrow={locale === "da" ? "Løsninger" : "Solutions"}
@@ -64,7 +65,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
           <Button href={`/${locale}/projects`} variant="secondary">{content.featured.cta}</Button>
         </div>
       </Section>
-      <TestimonialsSection locale={locale} />
       <ContactSection locale={locale} content={content.contact} />
       <AppPromotion locale={locale} content={content.app} />
     </>

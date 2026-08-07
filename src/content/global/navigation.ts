@@ -16,7 +16,6 @@ export const navLabels = {
 export function primaryNavigation(locale: Locale) {
   return [
     { label: navLabels.projects[locale], href: `/${locale}/projects` },
-    { label: navLabels.app[locale], href: `/${locale}/app` },
     { label: navLabels.about[locale], href: `/${locale}/about` },
     { label: navLabels.contact[locale], href: `/${locale}/contact` }
   ];
@@ -50,6 +49,14 @@ export const solutionGroups = [
           da: "Platformen der samler live og historiske data."
         },
         href: { en: "/en/products/insights", da: "/da/products/insights" }
+      },
+      {
+        label: { en: "Papp App", da: "Papp App" },
+        description: {
+          en: "A public app that shows where Papp operates and measures occupancy.",
+          da: "En offentlig app, der viser hvor Papp opererer og måler belægning."
+        },
+        href: { en: "/en/app", da: "/da/app" }
       }
     ]
   },

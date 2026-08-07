@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bell, Clock, Info, MapPinned, Navigation, Search } from "lucide-react";
 import { company } from "@/content/global/company";
 import type { Locale } from "@/content/types";
@@ -21,12 +21,25 @@ const icons = [MapPinned, Navigation, Search, Clock, Info, Bell];
 
 export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const activeFeature = features[activeIndex];
 
+  useEffect(() => {
+    if (isPaused || features.length < 2) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % features.length);
+    }, 3000);
+
+    return () => window.clearInterval(timer);
+  }, [features.length, isPaused]);
+
   return (
-    <div className="app-feature-selector">
+    <div className="app-feature-selector" onBlur={() => setIsPaused(false)} onFocus={() => setIsPaused(true)} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
       <div className="app-feature-selector__stage">
-        <div className="app-feature-selector__phone">
+        <div className="app-feature-selector__phone" key={`phone-${activeIndex}`}>
           <Image
             src={withBasePath("/images/app/papp-app-phone.png")}
             alt=""

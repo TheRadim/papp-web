@@ -68,8 +68,8 @@ export function getHomepageContent(locale: Locale): HomeContent {
       },
       app: {
         eyebrow: "Free app",
-        title: "A related app experience for parking users.",
-        body: "The Papp app remains a public-facing part of the ecosystem, while this website positions Papp's broader mobility-intelligence work.",
+        title: "A public view of where Papp measures occupancy.",
+        body: "Explore the app as a showcase of live parking datapoints and the places where Papp helps users understand available capacity.",
         cta: "Explore the app"
       }
     },
@@ -106,8 +106,8 @@ export function getHomepageContent(locale: Locale): HomeContent {
       },
       app: {
         eyebrow: "Gratis app",
-        title: "En relateret appoplevelse for parkeringsbrugere.",
-        body: "Papp-appen er fortsat en offentlig del af økosystemet, mens websitet løfter Papps bredere arbejde med mobilitetsindsigt.",
+        title: "Et offentligt indblik i hvor Papp måler belægning.",
+        body: "Udforsk appen som et showcase for live parkeringsdatapunkter og de steder, hvor Papp hjælper brugere med at forstå ledig kapacitet.",
         cta: "Udforsk appen"
       }
     }

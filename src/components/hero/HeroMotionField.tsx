@@ -128,10 +128,10 @@ export function HeroMotionField() {
           }
         }
 
-        drawingContext.globalAlpha = 0.28 + Math.sin(rowT * Math.PI) * 0.09;
+        drawingContext.globalAlpha = 0.33 + Math.sin(rowT * Math.PI) * 0.1;
         drawingContext.filter = "none";
         drawingContext.lineWidth = 1.15;
-        drawingContext.strokeStyle = row % 3 === 0 ? "rgba(0, 126, 181, 0.42)" : "rgba(251, 134, 127, 0.34)";
+        drawingContext.strokeStyle = row % 3 === 0 ? "rgba(0, 126, 181, 0.48)" : "rgba(251, 134, 127, 0.4)";
         drawingContext.stroke();
       }
 

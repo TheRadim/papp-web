@@ -5,7 +5,6 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AboutTimeline } from "@/components/about/AboutTimeline";
-import { OpenApplication } from "@/components/about/OpenApplication";
 
 const timeline = [
   {
@@ -64,38 +63,11 @@ const timeline = [
     image: "/images/projects/cameras/parkeringsmoenstre-ishoej-cover.jpg"
   },
   {
-    date: { en: "December 2025", da: "December 2025" },
-    title: { en: "Smart camera concept", da: "Smart kamera-koncept" },
-    body: {
-      en: "A battery-powered camera concept is developed to read parking and street activity with precision.",
-      da: "Et batteridrevet kamerakoncept udvikles til præcist at aflæse aktivitet på parkeringspladser og gader."
-    },
-    image: "/images/products/cameras/camera-street-measurement.jpg"
-  },
-  {
-    date: { en: "March 2026", da: "Marts 2026" },
-    title: { en: "Papp AI", da: "Papp AI" },
-    body: {
-      en: "AI workflows help users understand their data faster and act without waiting for manual analysis.",
-      da: "AI-arbejdsgange hjælper brugere med at forstå deres data hurtigere og handle uden at vente på manuel analyse."
-    },
-    image: "/images/projects/sensors/sensordata-herning-image12.png"
-  },
-  {
-    date: { en: "September 2026", da: "September 2026" },
-    title: { en: "Our own sensor", da: "Vores egen sensor" },
-    body: {
-      en: "After more than two years of development, Papp launches its first in-ground parking sensor.",
-      da: "Efter mere end to års udvikling lancerer Papp sin første nedgravede parkeringssensor."
-    },
-    image: "/images/projects/sensors/iot-teknologi-varde-image1.jpg"
-  },
-  {
     date: { en: "November 2026", da: "November 2026" },
-    title: { en: "Insights 2.0", da: "Insights 2.0" },
+    title: { en: "Sensor launch and Insights 2.0", da: "Sensorlancering og Insights 2.0" },
     body: {
-      en: "Insights is rebuilt as a smarter 24/7 platform for navigating collected mobility intelligence.",
-      da: "Insights genopbygges som en smartere 24/7-platform til at navigere i indsamlet mobilitetsviden."
+      en: "Papp prepares its first in-ground sensor and rebuilds Insights as a smarter 24/7 platform for collected mobility intelligence.",
+      da: "Papp forbereder sin første nedgravede sensor og genopbygger Insights som en smartere 24/7-platform til indsamlet mobilitetsviden."
     },
     image: "/images/products/insights/papp-insights-current.png"
   },
@@ -248,7 +220,6 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
               </a>
             ))}
           </div>
-          <OpenApplication locale={locale} />
         </div>
       </Section>
     </>

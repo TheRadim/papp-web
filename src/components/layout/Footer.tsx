@@ -30,6 +30,7 @@ export function Footer({ locale }: FooterProps) {
           <div className="footer-legal">
             <Link href={`/${locale}/privacy`}>{locale === "da" ? "Privatlivspolitik" : "Privacy Policy"}</Link>
             <span>© {company.copyrightYear} {company.legalName}.</span>
+            <span>CVR {company.cvr}</span>
           </div>
         </div>
       </div>
