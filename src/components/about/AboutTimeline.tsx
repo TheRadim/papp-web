@@ -66,6 +66,24 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
 
   return (
     <div className="history-accordion" ref={timelineRef}>
+      <aside className="history-accordion__sticky" aria-label={locale === "da" ? "Tidslinjeår" : "Timeline years"}>
+        <span className="history-accordion__rail" aria-hidden="true" />
+        <ol className="history-accordion__dates" role="list">
+          {items.map((item, index) => {
+            const isActive = index === activeIndex;
+            const isPassed = index < activeIndex;
+
+            return (
+              <li className={`${isActive ? "is-active" : ""} ${isPassed ? "is-passed" : ""}`.trim()} key={item.date.da}>
+                <a href={`#timeline-${index}`}>
+                  <span aria-hidden="true" />
+                  {item.date[locale]}
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      </aside>
       <ol className="history-accordion__list" role="list">
         {items.map((item, index) => {
           const isActive = index === activeIndex;
