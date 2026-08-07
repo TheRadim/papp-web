@@ -2056,13 +2056,13 @@ button.project-category-card {
 
 .history-timeline__nav {
   position: sticky;
-  top: 50%;
+  top: 92px;
   z-index: 2;
   align-self: start;
   display: grid;
-  max-height: calc(100svh - 150px);
+  min-height: calc(100svh - 184px);
+  max-height: calc(100svh - 184px);
   align-content: center;
-  transform: translateY(-50%);
   padding: 0.25rem 0 0.25rem 1.5rem;
 }
 
@@ -2110,10 +2110,10 @@ button.project-category-card {
 
 .history-timeline__nav a span {
   position: absolute;
-  left: -1.38rem;
-  width: 14px;
-  height: 14px;
-  border: 2px solid #fff;
+  left: -1.49rem;
+  width: 18px;
+  height: 18px;
+  border: 3px solid #fff;
   border-radius: 50%;
   background: #d8dde4;
   box-shadow: 0 0 0 1px rgba(55, 81, 126, 0.12);
@@ -2121,8 +2121,8 @@ button.project-category-card {
 }
 
 .history-timeline__nav li.is-passed a span {
-  background: var(--papp-blue-light);
-  box-shadow: 0 0 0 5px rgba(71, 178, 228, 0.12);
+  background: color-mix(in srgb, var(--papp-blue-light), var(--papp-coral) calc(var(--timeline-progress) * 100%));
+  box-shadow: 0 0 0 6px rgba(71, 178, 228, 0.12);
 }
 
 .history-timeline__nav a.is-active {
@@ -2987,14 +2987,14 @@ button.project-category-card {
   transition: transform 0.2s ease;
 }
 
-.app-feature-selector__buttons button::after {
+.app-feature-selector__buttons button.is-active::after {
   position: absolute;
   bottom: 5%;
   left: 50%;
   width: 5px;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--papp-heading), transparent 55%);
+  background: var(--papp-blue);
   content: "";
   transform: translate(-50%, -50%);
 }
