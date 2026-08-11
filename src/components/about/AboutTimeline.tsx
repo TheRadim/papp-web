@@ -18,10 +18,18 @@ interface AboutTimelineProps {
   locale: Locale;
 }
 
+function getYearSuffix(item: TimelineItem) {
+  const match = item.date.en.match(/20\d{2}/);
+
+  return match ? match[0].slice(2) : "26";
+}
+
 export function AboutTimeline({ items, locale }: AboutTimelineProps) {
   const timelineRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
+  const activeItem = items[activeIndex] ?? items[0];
+  const activeSuffix = activeItem ? getYearSuffix(activeItem) : "20";
 
   useEffect(() => {
     function measureActiveItem() {
@@ -32,11 +40,11 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
       }
 
       const cards = Array.from(element.querySelectorAll<HTMLElement>("[data-timeline-card]"));
-      const target = window.innerHeight * 0.44;
+      const target = window.innerHeight * 0.5;
       const nextActive = cards.reduce(
         (closest, card, index) => {
           const rect = card.getBoundingClientRect();
-          const distance = Math.abs(rect.top + rect.height * 0.42 - target);
+          const distance = Math.abs(rect.top + rect.height * 0.5 - target);
 
           return distance < closest.distance ? { index, distance } : closest;
         },
@@ -65,10 +73,17 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
   }, []);
 
   return (
-    <div className="history-accordion" ref={timelineRef}>
-      <aside className="history-accordion__sticky" aria-label={locale === "da" ? "Tidslinjeår" : "Timeline years"}>
-        <span className="history-accordion__rail" aria-hidden="true" />
-        <ol className="history-accordion__dates" role="list">
+    <div className="history-showcase" ref={timelineRef}>
+      <aside className="history-showcase__sticky" aria-label={locale === "da" ? "Aktivt tidslinjeår" : "Active timeline year"}>
+        <div className="history-showcase__year" aria-hidden="true">
+          <span>20</span>
+          <span key={activeSuffix}>{activeSuffix}</span>
+        </div>
+        <div className="history-showcase__active">
+          <time dateTime={activeItem?.date.en}>{activeItem?.date[locale]}</time>
+          <strong>{activeItem?.title[locale]}</strong>
+        </div>
+        <ol className="history-showcase__dates" role="list">
           {items.map((item, index) => {
             const isActive = index === activeIndex;
             const isPassed = index < activeIndex;
@@ -84,7 +99,7 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
           })}
         </ol>
       </aside>
-      <ol className="history-accordion__list" role="list">
+      <ol className="history-showcase__stream" role="list">
         {items.map((item, index) => {
           const isActive = index === activeIndex;
           const isPassed = index < activeIndex;
@@ -96,22 +111,17 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
               id={`timeline-${index}`}
               key={item.date.da}
             >
-              <article className="history-accordion__item">
-                <div className="history-accordion__summary">
+              <article className="history-showcase__card">
+                <div className="history-showcase__summary">
                   <time dateTime={item.date.en}>{item.date[locale]}</time>
                   <h3>{item.title[locale]}</h3>
-                  <span className="history-accordion__pm" aria-hidden="true" />
                 </div>
-                <div className="history-accordion__reveal">
-                  <div className="history-accordion__panel">
-                    <p>{item.body[locale]}</p>
-                    {item.image ? (
-                      <div className={`history-accordion__media history-accordion__media--${item.imageFit ?? "cover"}`}>
-                        <Image src={withBasePath(item.image)} alt="" width={860} height={520} sizes="(max-width: 768px) 100vw, 620px" />
-                      </div>
-                    ) : null}
+                <p>{item.body[locale]}</p>
+                {item.image ? (
+                  <div className={`history-showcase__media history-showcase__media--${item.imageFit ?? "cover"}`}>
+                    <Image src={withBasePath(item.image)} alt="" width={860} height={520} sizes="(max-width: 768px) 100vw, 500px" />
                   </div>
-                </div>
+                ) : null}
               </article>
             </li>
           );

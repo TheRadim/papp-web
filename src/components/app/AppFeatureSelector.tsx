@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import { Bell, Clock, Info, MapPinned, Navigation, Search } from "lucide-react";
 import { company } from "@/content/global/company";
 import type { Locale } from "@/content/types";
@@ -18,28 +19,42 @@ interface AppFeatureSelectorProps {
 }
 
 const icons = [MapPinned, Navigation, Search, Clock, Info, Bell];
+const phoneFrames = [
+  { x: "0%", y: "0%", scale: "1" },
+  { x: "1.8%", y: "-1.2%", scale: "1.018" },
+  { x: "-1.5%", y: "1.1%", scale: "1.012" },
+  { x: "1.2%", y: "1.7%", scale: "1.02" },
+  { x: "-1.8%", y: "-0.7%", scale: "1.016" },
+  { x: "0.8%", y: "-1.6%", scale: "1.014" }
+];
 
 export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [userSelected, setUserSelected] = useState(false);
   const activeFeature = features[activeIndex];
+  const phoneFrame = phoneFrames[activeIndex % phoneFrames.length];
+  const phoneStyle = {
+    "--app-phone-pan-x": phoneFrame.x,
+    "--app-phone-pan-y": phoneFrame.y,
+    "--app-phone-scale": phoneFrame.scale
+  } as CSSProperties;
 
   useEffect(() => {
-    if (isPaused || features.length < 2) {
+    if (userSelected || features.length < 2) {
       return;
     }
 
     const timer = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % features.length);
-    }, 3000);
+    }, 4000);
 
     return () => window.clearInterval(timer);
-  }, [features.length, isPaused]);
+  }, [features.length, userSelected]);
 
   return (
-    <div className="app-feature-selector" onBlur={() => setIsPaused(false)} onFocus={() => setIsPaused(true)} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
+    <div className="app-feature-selector">
       <div className="app-feature-selector__stage">
-        <div className="app-feature-selector__phone" key={`phone-${activeIndex}`}>
+        <div className="app-feature-selector__phone" key={`phone-${activeIndex}`} style={phoneStyle}>
           <Image
             src={withBasePath("/images/app/papp-app-phone.png")}
             alt=""
@@ -73,7 +88,10 @@ export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps
               aria-selected={activeIndex === index}
               className={activeIndex === index ? "is-active" : undefined}
               key={feature.title.en}
-              onClick={() => setActiveIndex(index)}
+              onClick={() => {
+                setActiveIndex(index);
+                setUserSelected(true);
+              }}
               role="tab"
               title={feature.title[locale]}
               type="button"

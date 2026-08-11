@@ -17,6 +17,7 @@ type DashboardTab = {
   accent: string;
   accentSoft: string;
   variant: "occupancy" | "origin" | "vehicles" | "flow";
+  maxKpis?: number;
   bars: number[];
   line: string;
   kpis: Array<{
@@ -45,6 +46,7 @@ const tabs: DashboardTab[] = [
     accent: "#47b2e4",
     accentSoft: "rgba(71, 178, 228, 0.28)",
     variant: "occupancy",
+    maxKpis: 3,
     bars: [42, 58, 72, 64, 86, 78, 51],
     line: "M8 108 C44 66 82 82 118 44 S198 78 232 34 S304 42 344 20",
     kpis: [
@@ -72,6 +74,7 @@ const tabs: DashboardTab[] = [
     accent: "#fb867f",
     accentSoft: "rgba(251, 134, 127, 0.28)",
     variant: "origin",
+    maxKpis: 3,
     bars: [61, 44, 67, 73, 52, 38, 49],
     line: "M8 92 C42 48 82 64 118 76 S194 30 236 50 S294 98 344 38",
     kpis: [
@@ -99,6 +102,7 @@ const tabs: DashboardTab[] = [
     accent: "#7fd5b7",
     accentSoft: "rgba(127, 213, 183, 0.24)",
     variant: "vehicles",
+    maxKpis: 3,
     bars: [36, 54, 44, 75, 68, 84, 58],
     line: "M8 82 C52 80 76 34 112 38 S166 100 208 66 S284 20 344 58",
     kpis: [
@@ -126,6 +130,7 @@ const tabs: DashboardTab[] = [
     accent: "#b9a5ff",
     accentSoft: "rgba(185, 165, 255, 0.25)",
     variant: "flow",
+    maxKpis: 3,
     bars: [78, 71, 66, 54, 49, 38, 31],
     line: "M8 38 C50 44 76 84 112 70 S172 30 216 58 S286 112 344 72",
     kpis: [
@@ -198,7 +203,7 @@ export function InsightDashboardMockup({ locale }: InsightDashboardMockupProps) 
               <span>{locale === "da" ? "Live datastrøm" : "Live data stream"}</span>
             </div>
             <div className="insight-dashboard__kpis">
-              {activeTab.kpis.map((kpi) => (
+              {activeTab.kpis.slice(0, activeTab.maxKpis ?? 3).map((kpi) => (
                 <article className={kpi.tone ? `is-${kpi.tone}` : undefined} key={kpi.label.en}>
                   <h4>{kpi.label[locale]}</h4>
                   <p>{kpi.value}</p>
@@ -209,7 +214,7 @@ export function InsightDashboardMockup({ locale }: InsightDashboardMockupProps) 
             <div className="insight-dashboard__chart-grid">
               <article className="insight-dashboard__panel insight-dashboard__panel--main">
                 <div className="insight-dashboard__panel-heading">
-                  <span>{activeTab.title[locale]}</span>
+                  <span>{activeTab.label[locale]}</span>
                   <strong>{activeTab.metric}</strong>
                 </div>
                 <DashboardVisual tab={activeTab} locale={locale} />
@@ -253,7 +258,7 @@ function DashboardVisual({ tab, locale }: { tab: DashboardTab; locale: Locale })
           <i className="is-node-4" />
         </div>
         <ul>
-          {["8210 Aarhus V", "8000 Aarhus C", "8240 Risskov"].map((place, index) => (
+          {["8210 Aarhus V", "8000 Aarhus C"].map((place, index) => (
             <li key={place}>
               <span>{place}</span>
               <strong>{[34, 27, 18][index]}%</strong>
@@ -267,7 +272,7 @@ function DashboardVisual({ tab, locale }: { tab: DashboardTab; locale: Locale })
   if (tab.variant === "vehicles") {
     return (
       <div className="insight-dashboard__vehicle-mix">
-        {tab.meters.map((meter) => (
+        {tab.meters.slice(0, 2).map((meter) => (
           <div key={meter.label.en} style={{ "--donut-value": `${meter.value}%` } as CSSProperties}>
             <span>{meter.value}%</span>
             <small>{meter.label[locale]}</small>
