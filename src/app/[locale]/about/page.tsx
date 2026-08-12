@@ -161,11 +161,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           ...item,
           image: "/images/corporate/insights-meeting-city.jpg"
         }
-      : {
-          date: item.date,
-          title: item.title,
-          body: item.body
-        }
+      : item
   );
 
   return (

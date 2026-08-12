@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import type { Locale } from "@/content/types";
 import { getTestimonials } from "@/lib/content/accessors";
@@ -15,9 +15,33 @@ interface TestimonialsSectionProps {
 export function TestimonialsSection({ locale }: TestimonialsSectionProps) {
   const testimonials = getTestimonials(locale);
   const [active, setActive] = useState(0);
+  const touchStartX = useRef<number | null>(null);
 
   const previous = () => setActive((current) => (current - 1 + testimonials.length) % testimonials.length);
   const next = () => setActive((current) => (current + 1) % testimonials.length);
+
+  useEffect(() => {
+    if (testimonials.length < 2) return;
+
+    const timer = window.setInterval(() => {
+      setActive((current) => (current + 1) % testimonials.length);
+    }, 10000);
+
+    return () => window.clearInterval(timer);
+  }, [testimonials.length]);
+
+  function handleTouchEnd(x: number) {
+    if (touchStartX.current === null) return;
+    const distance = touchStartX.current - x;
+    touchStartX.current = null;
+
+    if (Math.abs(distance) < 44) return;
+    if (distance > 0) {
+      next();
+    } else {
+      previous();
+    }
+  }
 
   return (
     <Section className="testimonials-section">
@@ -31,7 +55,13 @@ export function TestimonialsSection({ locale }: TestimonialsSectionProps) {
         }
         align="center"
       />
-      <div className="testimonial-carousel">
+      <div
+        className="testimonial-carousel"
+        onTouchStart={(event) => {
+          touchStartX.current = event.changedTouches[0]?.clientX ?? null;
+        }}
+        onTouchEnd={(event) => handleTouchEnd(event.changedTouches[0]?.clientX ?? 0)}
+      >
         <button type="button" className="testimonial-arrow testimonial-arrow--left" onClick={previous} aria-label={locale === "da" ? "Forrige" : "Previous"}>
           <ChevronLeft aria-hidden="true" size={22} />
         </button>
