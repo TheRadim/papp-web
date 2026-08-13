@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { BarChart3, Camera, CircleDot } from "lucide-react";
+import { BarChart3, Camera, CircleDot, LayoutGrid } from "lucide-react";
 import type { Locale, Project, ProjectCategory } from "@/content/types";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 
@@ -12,24 +12,22 @@ interface ProjectPortfolioFilterProps {
   projects: Project[];
 }
 
-const filters: Array<{
-  id: PortfolioFilter;
-  label: Record<Locale, string>;
-}> = [
-  { id: "all", label: { en: "All", da: "Alle" } },
-  { id: "sensors", label: { en: "Sensors", da: "Sensorer" } },
-  { id: "cameras", label: { en: "Cameras", da: "Kameraer" } },
-  { id: "analysis", label: { en: "Analysis", da: "Analyse" } }
-];
-
 const categoryCards: Array<{
-  category: Exclude<PortfolioFilter, "all">;
+  category: PortfolioFilter;
   title: Record<Locale, string>;
   body: Record<Locale, string>;
 }> = [
   {
+    category: "all",
+    title: { en: "All projects", da: "Alle projekter" },
+    body: {
+      en: "Sensor, camera and analysis work across real mobility environments.",
+      da: "Sensor-, kamera- og analysearbejde i rigtige mobilitetsmiljøer."
+    }
+  },
+  {
     category: "sensors",
-    title: { en: "Sensor projects", da: "Sensorprojekter" },
+    title: { en: "Sensors", da: "Sensorer" },
     body: {
       en: "Ground-level measurement of occupancy, duration and charging-space utilisation.",
       da: "Belægning, varighed og udnyttelse på parkerings- og ladepladsniveau."
@@ -37,7 +35,7 @@ const categoryCards: Array<{
   },
   {
     category: "cameras",
-    title: { en: "Camera projects", da: "Kameraprojekter" },
+    title: { en: "Cameras", da: "Kameraer" },
     body: {
       en: "Camera-based area measurement, flow and parking behaviour across larger environments.",
       da: "Områdemåling, flow og parkeringsadfærd på større arealer."
@@ -45,7 +43,7 @@ const categoryCards: Array<{
   },
   {
     category: "analysis",
-    title: { en: "Analysis projects", da: "Analyseprojekter" },
+    title: { en: "Analysis", da: "Analyse" },
     body: {
       en: "Interpretation, reporting and practical next-step recommendations from collected data.",
       da: "Datafortolkning, rapportering og praktiske anbefalinger til næste skridt."
@@ -54,6 +52,7 @@ const categoryCards: Array<{
 ];
 
 const categoryIcons = {
+  all: LayoutGrid,
   sensors: CircleDot,
   cameras: Camera,
   analysis: BarChart3
@@ -74,8 +73,8 @@ export function ProjectPortfolioFilter({ locale, projects }: ProjectPortfolioFil
 
   return (
     <div className="portfolio-filter" id="project-portfolio">
-      <div className="project-category-grid">
-        {categoryCards.map((card, index) => {
+      <div className="project-category-grid project-category-grid--filters" aria-label={locale === "da" ? "Filtrer projekter" : "Filter projects"}>
+        {categoryCards.map((card) => {
           const Icon = categoryIcons[card.category];
 
           return (
@@ -86,25 +85,12 @@ export function ProjectPortfolioFilter({ locale, projects }: ProjectPortfolioFil
               aria-pressed={activeFilter === card.category}
               onClick={() => setActiveFilter(card.category)}
             >
-              <Icon aria-hidden="true" size={38} />
-              <span>{String(index + 1).padStart(2, "0")}</span>
+              <Icon aria-hidden="true" size={30} />
               <h2>{card.title[locale]}</h2>
               <p>{card.body[locale]}</p>
             </button>
           );
         })}
-      </div>
-      <div className="portfolio-filter__tabs" aria-label={locale === "da" ? "Filtrer projekter" : "Filter projects"}>
-        {filters.map((filter) => (
-          <button
-            className={activeFilter === filter.id ? "is-active" : undefined}
-            key={filter.id}
-            type="button"
-            onClick={() => setActiveFilter(filter.id)}
-          >
-            {filter.label[locale]}
-          </button>
-        ))}
       </div>
       <div className="project-grid project-grid--featured">
         {filteredProjects.map((project) => (

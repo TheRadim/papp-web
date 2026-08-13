@@ -46,13 +46,7 @@ export function TestimonialsSection({ locale }: TestimonialsSectionProps) {
   return (
     <Section className="testimonials-section">
       <SectionHeading
-        eyebrow={locale === "da" ? "Tillid" : "Trust"}
-        title={locale === "da" ? "Hvad samarbejdet gør muligt" : "What collaboration makes possible"}
-        body={
-          locale === "da"
-            ? "Udvalgte erfaringer fra kommuner og partnere, hvor data har gjort beslutninger lettere at diskutere."
-            : "Selected experiences from municipalities and partners where data made decisions easier to discuss."
-        }
+        title={locale === "da" ? "Samarbejde, der gør mobilitetsdata lettere at handle på." : "Collaboration that makes mobility data easier to act on."}
         align="center"
       />
       <div

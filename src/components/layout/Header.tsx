@@ -25,6 +25,7 @@ export function Header({ locale }: HeaderProps) {
   const [dockIndicator, setDockIndicator] = useState({ x: 0, width: 0, opacity: 0 });
   const navRef = useRef<HTMLDivElement>(null);
   const dockRef = useRef<HTMLDivElement>(null);
+  const solutionsCloseTimer = useRef<number | null>(null);
   const pathname = usePathname();
 
   const localeRoot = `/${locale}`;
@@ -117,6 +118,34 @@ export function Header({ locale }: HeaderProps) {
     };
   }, [pathname, syncIndicatorToActive]);
 
+  const openSolutionsMenu = useCallback(() => {
+    if (solutionsCloseTimer.current) {
+      window.clearTimeout(solutionsCloseTimer.current);
+      solutionsCloseTimer.current = null;
+    }
+
+    setSolutionsOpen(true);
+  }, []);
+
+  const scheduleSolutionsClose = useCallback(() => {
+    if (solutionsCloseTimer.current) {
+      window.clearTimeout(solutionsCloseTimer.current);
+    }
+
+    solutionsCloseTimer.current = window.setTimeout(() => {
+      setSolutionsOpen(false);
+      solutionsCloseTimer.current = null;
+    }, 260);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (solutionsCloseTimer.current) {
+        window.clearTimeout(solutionsCloseTimer.current);
+      }
+    };
+  }, []);
+
   const dockStyle = {
     "--nav-indicator-x": `${dockIndicator.x}px`,
     "--nav-indicator-width": `${dockIndicator.width}px`,
@@ -146,9 +175,9 @@ export function Header({ locale }: HeaderProps) {
             <span className="nav-indicator" aria-hidden="true" />
             <div
               className="solutions-menu"
-              onMouseEnter={() => setSolutionsOpen(true)}
-              onMouseLeave={() => setSolutionsOpen(false)}
-              onFocus={() => setSolutionsOpen(true)}
+              onMouseEnter={openSolutionsMenu}
+              onMouseLeave={scheduleSolutionsClose}
+              onFocus={openSolutionsMenu}
             >
               <Link
                 className={`nav-item nav-item--solutions-combined ${solutionsOpen || isSolutionsActive() ? "is-active" : ""}`}

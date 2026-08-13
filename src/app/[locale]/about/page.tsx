@@ -113,11 +113,6 @@ const teamMembers = [
     linkedinUrl: "https://www.linkedin.com/in/martine-winther-54b29696/"
   },
   {
-    name: "Carina Von Staffeldt Beck Mejlshede",
-    role: { en: "Mechanical Engineer", da: "Mechanical Engineer" },
-    linkedinUrl: "https://www.linkedin.com/in/carina-staffeldt-918b732b4/"
-  },
-  {
     name: "Maxim Zavidei",
     role: { en: "Backend Software Engineer", da: "Backend-softwareingeniør" },
     email: "maxim.zavidei@pappmobility.com",
@@ -128,6 +123,11 @@ const teamMembers = [
     role: { en: "Product Owner", da: "Product Owner" },
     email: "radim.theiner@pappmobility.com",
     linkedinUrl: "https://www.linkedin.com/in/therad/"
+  },
+  {
+    name: "Sarah Sigvardt",
+    role: { en: "Team Member", da: "Teammedlem" },
+    linkedinUrl: linkedinSearch("Sarah Sigvardt")
   },
   {
     name: "Henrik Gade Hyldgaard",

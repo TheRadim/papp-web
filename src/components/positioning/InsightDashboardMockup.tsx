@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import type { Locale } from "@/content/types";
 import { withBasePath } from "@/lib/site/basePath";
@@ -153,11 +153,25 @@ interface InsightDashboardMockupProps {
 
 export function InsightDashboardMockup({ locale }: InsightDashboardMockupProps) {
   const [activeId, setActiveId] = useState(tabs[0].id);
+  const [userSelected, setUserSelected] = useState(false);
   const activeTab = useMemo(() => tabs.find((tab) => tab.id === activeId) ?? tabs[0], [activeId]);
   const screenStyle = {
     "--dashboard-accent": activeTab.accent,
     "--dashboard-accent-soft": activeTab.accentSoft
   } as CSSProperties;
+
+  useEffect(() => {
+    if (userSelected) return;
+
+    const timer = window.setInterval(() => {
+      setActiveId((current) => {
+        const currentIndex = tabs.findIndex((tab) => tab.id === current);
+        return tabs[(currentIndex + 1) % tabs.length].id;
+      });
+    }, 4000);
+
+    return () => window.clearInterval(timer);
+  }, [userSelected]);
 
   return (
     <div className="insight-dashboard" aria-label={locale === "da" ? "Interaktiv datavisning" : "Interactive data view"}>
@@ -170,7 +184,10 @@ export function InsightDashboardMockup({ locale }: InsightDashboardMockupProps) 
               aria-selected={isActive}
               className={isActive ? "is-active" : undefined}
               key={tab.id}
-              onClick={() => setActiveId(tab.id)}
+              onClick={() => {
+                setActiveId(tab.id);
+                setUserSelected(true);
+              }}
               role="tab"
               type="button"
             >

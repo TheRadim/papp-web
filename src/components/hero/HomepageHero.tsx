@@ -27,14 +27,16 @@ export function HomepageHero({ locale, content }: HomepageHeroProps) {
               ) : null}
             </h1>
             <p className="hero-lead">{content.lead}</p>
-            <p>{content.body}</p>
-            <div className="hero-actions">
-              <Button href={`/${locale}/solutions`} variant="primary" className="hero-action hero-action--blue">
-                {content.primaryCta}
-              </Button>
-              <Button href={`/${locale}/projects`} variant="text" className="hero-action hero-action--salmon">
-                {content.secondaryCta}
-              </Button>
+            <div className="hero-secondary">
+              <p>{content.body}</p>
+              <div className="hero-actions">
+                <Button href={`/${locale}/solutions`} variant="primary" className="hero-action hero-action--blue">
+                  {content.primaryCta}
+                </Button>
+                <Button href={`/${locale}/projects`} variant="text" className="hero-action hero-action--salmon">
+                  {content.secondaryCta}
+                </Button>
+              </div>
             </div>
             <a className="hero-scroll-cue" href="#movement-meaning" aria-label={locale === "da" ? "Gå til næste sektion" : "Scroll to next section"}>
               <svg viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

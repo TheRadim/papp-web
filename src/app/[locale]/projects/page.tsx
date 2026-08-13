@@ -5,6 +5,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ProjectPortfolioFilter } from "@/components/projects/ProjectPortfolioFilter";
+import { ProjectHeroNet } from "@/components/projects/ProjectHeroNet";
 
 const workSteps = [
   {
@@ -47,6 +48,7 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
   return (
     <>
       <Section className="projects-page">
+        <ProjectHeroNet />
         <div className="projects-hero">
           <SectionHeading
             eyebrow={locale === "da" ? "Projekter" : "Projects"}
