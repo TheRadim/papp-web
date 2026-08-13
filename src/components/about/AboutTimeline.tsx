@@ -83,21 +83,6 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
           <time dateTime={activeItem?.date.en}>{activeItem?.date[locale]}</time>
           <strong>{activeItem?.title[locale]}</strong>
         </div>
-        <ol className="history-showcase__dates" role="list">
-          {items.map((item, index) => {
-            const isActive = index === activeIndex;
-            const isPassed = index < activeIndex;
-
-            return (
-              <li className={`${isActive ? "is-active" : ""} ${isPassed ? "is-passed" : ""}`.trim()} key={item.date.da}>
-                <a href={`#timeline-${index}`}>
-                  <span aria-hidden="true" />
-                  {item.date[locale]}
-                </a>
-              </li>
-            );
-          })}
-        </ol>
       </aside>
       <ol className="history-showcase__stream" role="list">
         {items.map((item, index) => {

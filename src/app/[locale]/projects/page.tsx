@@ -47,43 +47,45 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
 
   return (
     <>
-      <Section className="projects-page">
+      <div className="projects-net-zone">
         <ProjectHeroNet />
-        <div className="projects-hero">
+        <Section className="projects-page">
+          <div className="projects-hero">
+            <SectionHeading
+              eyebrow={locale === "da" ? "Projekter" : "Projects"}
+              title={locale === "da" ? "Mobility projects built around real behaviour." : "Mobility projects built around real behaviour."}
+              body={
+                locale === "da"
+                  ? "Vi hjælper byer, operatører og partnere med at bruge sensorer, kameraer og analyse til at forstå parkering og bevægelse i praksis."
+                  : "We help cities, operators and partners use sensors, cameras and analysis to understand parking and movement in practice."
+              }
+            />
+          </div>
+        </Section>
+        <Section className="project-work-section">
           <SectionHeading
-            eyebrow={locale === "da" ? "Projekter" : "Projects"}
-            title={locale === "da" ? "Mobility projects built around real behaviour." : "Mobility projects built around real behaviour."}
+            eyebrow={locale === "da" ? "Sådan arbejder vi" : "How we work"}
+            title={locale === "da" ? "From local question to practical recommendation." : "From local question to practical recommendation."}
             body={
               locale === "da"
-                ? "Vi hjælper byer, operatører og partnere med at bruge sensorer, kameraer og analyse til at forstå parkering og bevægelse i praksis."
-                : "We help cities, operators and partners use sensors, cameras and analysis to understand parking and movement in practice."
+                ? "En enkel proces, der forbinder målinger, analyse og rådgivning uden at gøre projektet tungere end nødvendigt."
+                : "A simple process that connects measurement, analysis and advisory without making the project heavier than it needs to be."
             }
+            align="center"
           />
-        </div>
-      </Section>
-      <Section className="project-work-section">
-        <SectionHeading
-          eyebrow={locale === "da" ? "Sådan arbejder vi" : "How we work"}
-          title={locale === "da" ? "From local question to practical recommendation." : "From local question to practical recommendation."}
-          body={
-            locale === "da"
-              ? "En enkel proces, der forbinder målinger, analyse og rådgivning uden at gøre projektet tungere end nødvendigt."
-              : "A simple process that connects measurement, analysis and advisory without making the project heavier than it needs to be."
-          }
-          align="center"
-        />
-        <div className="project-workflow">
-          {workSteps.map((step, index) => (
-            <article className={`project-workflow__step project-workflow__step--${index % 2 === 0 ? "left" : "right"}`} key={step.title.en}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <div>
-                <h3>{step.title[locale]}</h3>
-                <p>{step.body[locale]}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </Section>
+          <div className="project-workflow">
+            {workSteps.map((step, index) => (
+              <article className={`project-workflow__step project-workflow__step--${index % 2 === 0 ? "left" : "right"}`} key={step.title.en}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <h3>{step.title[locale]}</h3>
+                  <p>{step.body[locale]}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </Section>
+      </div>
       <Section tone="soft" className="project-listing-section">
         <SectionHeading
           eyebrow={locale === "da" ? "Portfolio" : "Portfolio"}
