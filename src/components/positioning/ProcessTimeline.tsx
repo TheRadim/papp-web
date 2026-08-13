@@ -9,7 +9,7 @@ interface ProcessTimelineProps {
 
 export function ProcessTimeline({ steps }: ProcessTimelineProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const itemRefs = useRef<Array<HTMLLIElement | null>>([]);
+  const cardRefs = useRef<Array<HTMLElement | null>>([]);
 
   useEffect(() => {
     let frame = 0;
@@ -19,9 +19,9 @@ export function ProcessTimeline({ steps }: ProcessTimelineProps) {
       let closestIndex = 0;
       let closestDistance = Number.POSITIVE_INFINITY;
 
-      itemRefs.current.forEach((item, index) => {
-        if (!item) return;
-        const rect = item.getBoundingClientRect();
+      cardRefs.current.forEach((card, index) => {
+        if (!card) return;
+        const rect = card.getBoundingClientRect();
         const distance = Math.abs(rect.top + rect.height * 0.5 - target);
 
         if (distance < closestDistance) {
@@ -59,11 +59,13 @@ export function ProcessTimeline({ steps }: ProcessTimelineProps) {
           <li
             className={`${index === activeIndex ? "is-active" : ""} ${index < activeIndex ? "is-passed" : ""}`}
             key={step.title}
-            ref={(element) => {
-              itemRefs.current[index] = element;
-            }}
           >
-            <article className={`process-flow__step process-flow__step--${index + 1}`}>
+            <article
+              className={`process-flow__step process-flow__step--${index + 1}`}
+              ref={(element) => {
+                cardRefs.current[index] = element;
+              }}
+            >
               <div>
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <h3>{step.title}</h3>

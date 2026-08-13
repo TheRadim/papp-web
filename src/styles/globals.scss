@@ -888,33 +888,37 @@ img {
 @keyframes dashboard-line-drift {
   0%,
   100% {
+    stroke-dashoffset: 0;
     transform: translateY(0);
   }
 
   50% {
+    stroke-dashoffset: -22;
     transform: translateY(-3px);
   }
 }
 
-@keyframes dashboard-chart-float {
+@keyframes dashboard-chart-load-pulse {
   0%,
   100% {
-    transform: translate3d(0, 0, 0);
+    opacity: 1;
+    transform: scaleX(1);
   }
 
   50% {
-    transform: translate3d(0, -2px, 0);
+    opacity: 0.82;
+    transform: scaleX(0.965);
   }
 }
 
-@keyframes dashboard-panel-drift {
+@keyframes dashboard-meter-cycle {
   0%,
   100% {
-    transform: translate3d(0, 0, 0);
+    transform: scaleX(1);
   }
 
   50% {
-    transform: translate3d(1px, -1px, 0);
+    transform: scaleX(0.92);
   }
 }
 
@@ -1643,7 +1647,6 @@ img {
 .insight-dashboard__chart {
   position: relative;
   min-height: 0;
-  animation: dashboard-chart-float 9s ease-in-out infinite;
 }
 
 .insight-dashboard__chart svg {
@@ -1694,7 +1697,6 @@ img {
   align-content: space-evenly;
   gap: 0.32rem;
   min-height: 0;
-  animation: dashboard-panel-drift 10s 0.5s ease-in-out infinite;
 }
 
 .insight-dashboard__meters div {
@@ -1732,7 +1734,8 @@ img {
   height: 100%;
   background: linear-gradient(90deg, var(--dashboard-accent), #fb867f);
   content: "";
-  animation: dashboard-meter-load 0.7s ease both, dashboard-meter-shimmer 4.8s 0.8s ease-in-out infinite;
+  transform-origin: left;
+  animation: dashboard-meter-load 0.7s ease both, dashboard-meter-cycle 6.5s 1s ease-in-out infinite, dashboard-meter-shimmer 4.8s 0.8s ease-in-out infinite;
 }
 
 .insight-dashboard__origin {
@@ -1745,14 +1748,14 @@ img {
 
 .insight-dashboard__orbit {
   position: relative;
-  width: min(100%, 118px);
+  width: min(100%, 148px);
   aspect-ratio: 1;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 50%;
   background:
     radial-gradient(circle at center, rgba(255, 255, 255, 0.08) 0 18%, transparent 19%),
     repeating-radial-gradient(circle at center, transparent 0 28%, rgba(255, 255, 255, 0.08) 29% 30%, transparent 31% 48%);
-  animation: dashboard-panel-in 0.45s ease both;
+  animation: dashboard-panel-in 0.45s ease both, dashboard-chart-load-pulse 7s 0.8s ease-in-out infinite;
 }
 
 .insight-dashboard__orbit .is-core {
@@ -1794,7 +1797,6 @@ img {
   margin: 0;
   padding: 0;
   list-style: none;
-  animation: dashboard-panel-drift 9.5s 0.3s ease-in-out infinite;
 }
 
 .insight-dashboard__origin li {
@@ -1972,12 +1974,12 @@ img {
 .process-timeline__stream {
   display: grid;
   margin: 0;
-  padding: 0;
+  padding-block: clamp(9rem, 28vh, 18rem);
   list-style: none;
 }
 
 .process-timeline__stream > li {
-  min-height: clamp(320px, 44svh, 500px);
+  min-height: clamp(300px, 42svh, 470px);
   display: grid;
   align-items: center;
 }
@@ -2126,7 +2128,7 @@ img {
 }
 
 .project-hero-net canvas {
-  opacity: 0.62;
+  opacity: 0.6;
 }
 
 .projects-hero,
@@ -2972,9 +2974,9 @@ button.project-category-card {
 
 .history-showcase {
   display: grid;
-  width: min(1280px, 100%);
-  grid-template-columns: minmax(300px, 0.38fr) minmax(0, 0.62fr);
-  gap: clamp(1rem, 4vw, 3rem);
+  width: min(1120px, 100%);
+  grid-template-columns: minmax(270px, 0.46fr) minmax(0, 0.54fr);
+  gap: clamp(2rem, 6vw, 6rem);
   margin-inline: auto;
 }
 
@@ -2985,7 +2987,7 @@ button.project-category-card {
   display: grid;
   min-height: calc(100svh - 120px);
   align-content: center;
-  gap: clamp(0.65rem, 1.5vw, 1rem);
+  gap: clamp(1rem, 2.4vw, 1.8rem);
 }
 
 .history-showcase__year {
@@ -3036,19 +3038,19 @@ button.project-category-card {
 .history-showcase__stream {
   display: grid;
   margin: 0;
-  padding: 0;
+  padding-block: clamp(8rem, 22vh, 15rem);
   list-style: none;
 }
 
 .history-showcase__stream > li {
   display: grid;
-  min-height: clamp(380px, 48svh, 560px);
+  min-height: clamp(360px, 50svh, 580px);
   align-items: center;
   scroll-margin-top: 120px;
 }
 
 .history-showcase__card {
-  width: min(520px, 100%);
+  width: min(480px, 100%);
   border: 1px solid rgba(55, 81, 126, 0.12);
   background: rgba(255, 255, 255, 0.88);
   box-shadow: 0 24px 60px rgba(55, 81, 126, 0.08);
@@ -4285,6 +4287,10 @@ button.project-category-card {
     font-size: clamp(4.8rem, 17vw, 8rem);
   }
 
+  .process-timeline__stream {
+    padding-block: clamp(2rem, 8vh, 4rem);
+  }
+
   .process-timeline__stream > li {
     min-height: clamp(280px, 42svh, 430px);
   }
@@ -4423,6 +4429,10 @@ button.project-category-card {
   .history-showcase__year {
     font-size: clamp(4.4rem, 20vw, 7.4rem);
     line-height: 0.86;
+  }
+
+  .history-showcase__stream {
+    padding-block: clamp(2rem, 8vh, 4rem);
   }
 
   .history-showcase__stream > li {
@@ -4667,6 +4677,10 @@ button.project-category-card {
 
   .process-timeline__number {
     font-size: clamp(3.7rem, 18vw, 5.6rem);
+  }
+
+  .process-timeline__stream {
+    padding-block: 0;
   }
 
   .process-timeline__stream > li {
