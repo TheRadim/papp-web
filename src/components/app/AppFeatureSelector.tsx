@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { Bell, ChevronLeft, ChevronRight, Clock, Info, MapPinned, Navigation, Search } from "lucide-react";
 import { company } from "@/content/global/company";
@@ -31,6 +31,7 @@ const phoneFrames = [
 export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [userSelected, setUserSelected] = useState(false);
+  const swipeStartRef = useRef<number | null>(null);
   const activeFeature = features[activeIndex];
   const phoneFrame = phoneFrames[activeIndex % phoneFrames.length];
   const phoneStyle = {
@@ -42,6 +43,23 @@ export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps
   function showFeature(index: number) {
     setActiveIndex((index + features.length) % features.length);
     setUserSelected(true);
+  }
+
+  function handleSwipeEnd(clientX: number) {
+    const swipeStart = swipeStartRef.current;
+    swipeStartRef.current = null;
+
+    if (swipeStart === null) {
+      return;
+    }
+
+    const delta = clientX - swipeStart;
+
+    if (Math.abs(delta) < 42) {
+      return;
+    }
+
+    showFeature(delta < 0 ? activeIndex + 1 : activeIndex - 1);
   }
 
   useEffect(() => {
@@ -60,7 +78,14 @@ export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps
     <div className="app-feature-selector">
       <div className="app-feature-selector__stage">
         <h2 className="app-feature-selector__mobile-title">{activeFeature.title[locale]}</h2>
-        <div className="app-feature-selector__phone-wrap">
+        <div
+          className="app-feature-selector__phone-wrap"
+          onPointerDown={(event) => {
+            swipeStartRef.current = event.clientX;
+          }}
+          onPointerLeave={(event) => handleSwipeEnd(event.clientX)}
+          onPointerUp={(event) => handleSwipeEnd(event.clientX)}
+        >
           <button
             aria-label={locale === "da" ? "Forrige appfunktion" : "Previous app feature"}
             className="app-feature-selector__arrow app-feature-selector__arrow--prev"

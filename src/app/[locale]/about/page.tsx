@@ -167,7 +167,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
   return (
     <>
-      <Section>
+      <Section className="about-hero-section">
+        <AboutFogBackground />
         <div className="about-hero-block">
           <SectionHeading
             eyebrow={locale === "da" ? "Om Papp" : "About Papp"}
@@ -180,8 +181,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           />
         </div>
       </Section>
-      <Section tone="soft" className="about-story-section">
-        <AboutFogBackground />
+      <Section tone="soft">
         <div className="about-timeline-layout">
           <SectionHeading
             eyebrow={locale === "da" ? "Historie" : "History"}
