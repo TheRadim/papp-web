@@ -18,7 +18,7 @@ export function HomepageHero({ locale, content }: HomepageHeroProps) {
       <div className="container">
         <div className="hero-layout hero-layout--centered">
           <div className="hero-copy">
-            <p className="eyebrow">{content.eyebrow}</p>
+            {content.eyebrow ? <p className="eyebrow">{content.eyebrow}</p> : null}
             <h1 className="hero-title tracking-in-expand">
               <span className="hero-title__word hero-title__word--papp">{brandFirstWord}</span>
               {brandSecondWord ? " " : null}
@@ -26,9 +26,9 @@ export function HomepageHero({ locale, content }: HomepageHeroProps) {
                 <span className="hero-title__word hero-title__word--mobility">{brandSecondWord}</span>
               ) : null}
             </h1>
-            <p className="hero-lead">{content.lead}</p>
+            {content.lead ? <p className="hero-lead">{content.lead}</p> : null}
             <div className="hero-secondary">
-              <p>{content.body}</p>
+              {content.body ? <p>{content.body}</p> : null}
               <div className="hero-actions">
                 <Button href={`/${locale}/solutions`} variant="primary" className="hero-action hero-action--blue">
                   {content.primaryCta}

@@ -12,6 +12,7 @@ export interface HomeContent {
   process: {
     eyebrow: string;
     title: string;
+    body: string;
     steps: Array<{ title: string; body: string }>;
   };
   featured: {
@@ -37,16 +38,17 @@ export function getHomepageContent(locale: Locale): HomeContent {
   const content: Record<Locale, HomeContent> = {
     en: {
       hero: {
-        eyebrow: "Reliable mobility monitoring",
+        eyebrow: "",
         title: "Papp Mobility",
-        lead: "Reliable data gathering for parking, streets and mobility decisions.",
-        body: "Papp combines IoT sensors, camera analytics and Papp Insights to show how places are used, where capacity is hidden and what action should come next.",
+        lead: "",
+        body: "Reliable data gathering for parking, streets and mobility decisions.",
         primaryCta: "Explore our solutions",
         secondaryCta: "View projects"
       },
       process: {
         eyebrow: "From movement to meaning",
         title: "A clearer path from data collection to decisions.",
+        body: "Papp combines IoT sensors, camera analytics and Papp Insights to show how places are used, where capacity is hidden and what action should come next.",
         steps: [
           { title: "Frame the question", body: "We start with the practical decision: capacity, flow, dwell time, user behaviour or a future investment." },
           { title: "Collect", body: "Sensors and cameras measure real-world activity across parking areas, streets and selected mobility environments." },
@@ -75,16 +77,17 @@ export function getHomepageContent(locale: Locale): HomeContent {
     },
     da: {
       hero: {
-        eyebrow: "Pålidelig mobilitetsmonitorering",
+        eyebrow: "",
         title: "Papp Mobility",
-        lead: "Pålidelig dataindsamling til parkering, gader og mobilitetsbeslutninger.",
-        body: "Papp kombinerer IoT-sensorer, kameraanalyse og Papp Insights, så I kan se, hvordan steder bruges, hvor kapacitet er skjult, og hvad der bør ske bagefter.",
+        lead: "",
+        body: "Pålidelig dataindsamling til parkering, gader og mobilitetsbeslutninger.",
         primaryCta: "Udforsk løsninger",
         secondaryCta: "Se projekter"
       },
       process: {
         eyebrow: "Fra bevægelse til mening",
         title: "En tydelig vej fra dataindsamling til beslutninger.",
+        body: "Papp kombinerer IoT-sensorer, kameraanalyse og Papp Insights, så I kan se, hvordan steder bruges, hvor kapacitet er skjult, og hvad der bør ske bagefter.",
         steps: [
           { title: "Definer spørgsmålet", body: "Vi starter med den praktiske beslutning: kapacitet, flow, opholdstid, brugeradfærd eller en fremtidig investering." },
           { title: "Indsaml", body: "Sensorer og kameraer måler aktivitet på parkeringsarealer, gader og udvalgte mobilitetsmiljøer." },

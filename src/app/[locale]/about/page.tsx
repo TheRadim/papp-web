@@ -5,6 +5,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AboutTimeline } from "@/components/about/AboutTimeline";
+import { AboutHistoryFog } from "@/components/about/AboutHistoryFog";
 
 const timeline = [
   {
@@ -167,25 +168,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   return (
     <>
       <Section className="about-hero-section">
-        <div className="about-hero-block">
-          <SectionHeading
-            eyebrow={locale === "da" ? "Om Papp" : "About Papp"}
-            title={locale === "da" ? "Historien om Papp Mobility" : "The Story of Papp Mobility"}
-            body={
-              locale === "da"
-                ? "Oplev vores historie. En dynamisk fortælling, der følger vores ydmyge begyndelse, banebrydende innovationer og urokkelige engagement i at revolutionere den måde, verden tilgår parkeringsløsninger på."
-                : "Explore our story. A dynamic journey through our humble beginnings, breakthrough innovations and steady commitment to changing how the world approaches parking solutions."
-            }
-          />
-        </div>
-      </Section>
-      <Section tone="soft">
         <div className="about-timeline-layout">
-          <SectionHeading
-            eyebrow={locale === "da" ? "Historie" : "History"}
-            title={locale === "da" ? "Fra idé til intelligent mobilitet." : "From idea to intelligent mobility."}
-            body={locale === "da" ? "Følg punkterne gennem Papps udvikling fra parkeringsapp til data, IoT og Insights." : "Follow the milestones as Papp moves from parking app to data, IoT and Insights."}
-          />
+          <AboutHistoryFog />
           <AboutTimeline items={timelineItems} locale={locale} />
         </div>
       </Section>
