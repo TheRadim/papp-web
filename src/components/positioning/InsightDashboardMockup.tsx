@@ -274,11 +274,11 @@ function DashboardVisual({ tab, locale }: { tab: DashboardTab; locale: Locale })
           <i className="is-node-3" />
           <i className="is-node-4" />
         </div>
-        <ul>
-          {["8210 Aarhus V", "8000 Aarhus C"].map((place, index) => (
+        <ul className="insight-dashboard__origin-list">
+          {["8210", "8000"].map((place, index) => (
             <li key={place}>
               <span>{place}</span>
-              <strong>{[34, 27, 18][index]}%</strong>
+              <strong>{[34, 27][index]}%</strong>
             </li>
           ))}
         </ul>
@@ -289,7 +289,7 @@ function DashboardVisual({ tab, locale }: { tab: DashboardTab; locale: Locale })
   if (tab.variant === "vehicles") {
     return (
       <div className="insight-dashboard__vehicle-mix">
-        {tab.meters.slice(0, 2).map((meter) => (
+        {tab.meters.slice(0, 3).map((meter) => (
           <div key={meter.label.en} style={{ "--donut-value": `${meter.value}%` } as CSSProperties}>
             <span>{meter.value}%</span>
             <small>{meter.label[locale]}</small>

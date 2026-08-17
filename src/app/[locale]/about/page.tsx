@@ -5,7 +5,6 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AboutTimeline } from "@/components/about/AboutTimeline";
-import { AboutFogBackground } from "@/components/about/AboutFogBackground";
 
 const timeline = [
   {
@@ -168,7 +167,6 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   return (
     <>
       <Section className="about-hero-section">
-        <AboutFogBackground />
         <div className="about-hero-block">
           <SectionHeading
             eyebrow={locale === "da" ? "Om Papp" : "About Papp"}
