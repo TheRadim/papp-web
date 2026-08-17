@@ -338,7 +338,13 @@ export const projects: Project[] = [
 ];
 
 export function getProjects(_locale: Locale, filters?: { category?: Project["category"] }) {
-  return projects.filter((project) => project.published && (!filters?.category || project.category === filters.category));
+  return projects.filter((project) => {
+    if (!project.published) return false;
+    if (!filters?.category) return true;
+    if (project.category === filters.category) return true;
+
+    return project.technologies?.includes(filters.category) ?? false;
+  });
 }
 
 export function getProjectBySlug(_locale: Locale, slug: string) {

@@ -5,6 +5,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AboutTimeline } from "@/components/about/AboutTimeline";
+import { AboutFogBackground } from "@/components/about/AboutFogBackground";
 
 const timeline = [
   {
@@ -179,7 +180,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           />
         </div>
       </Section>
-      <Section tone="soft">
+      <Section tone="soft" className="about-story-section">
+        <AboutFogBackground />
         <div className="about-timeline-layout">
           <SectionHeading
             eyebrow={locale === "da" ? "Historie" : "History"}

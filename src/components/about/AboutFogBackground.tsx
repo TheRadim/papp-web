@@ -35,7 +35,7 @@ function loadScript(id: string, src: string) {
   });
 }
 
-export function ProjectHeroNet() {
+export function AboutFogBackground() {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -44,32 +44,31 @@ export function ProjectHeroNet() {
 
     async function start() {
       await loadScript("papp-three-r134", "https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js");
-      await loadScript("papp-vanta-net", "https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js");
+      await loadScript("papp-vanta-fog", "https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js");
 
-      if (cancelled || !containerRef.current || !window.VANTA?.NET) {
+      if (cancelled || !containerRef.current || !window.VANTA?.FOG) {
         return;
       }
 
-      effect = window.VANTA.NET({
+      effect = window.VANTA.FOG({
         el: containerRef.current,
         mouseControls: true,
         touchControls: true,
         gyroControls: false,
         minHeight: 200,
         minWidth: 200,
-        scale: 1,
-        scaleMobile: 1,
-        color: 0x47b2e4,
-        backgroundColor: 0xffffff,
-        points: 5,
-        maxDistance: 16,
-        spacing: 26,
-        showDots: true
+        highlightColor: 0x0096ff,
+        midtoneColor: 0xffffff,
+        lowlightColor: 0x2284e6,
+        baseColor: 0xffffff,
+        blurFactor: 0.46,
+        speed: 0.2,
+        zoom: 0.1
       });
     }
 
     start().catch(() => {
-      // The page remains usable if the decorative network cannot load.
+      // Decorative only; the timeline remains fully readable without it.
     });
 
     return () => {
@@ -78,5 +77,5 @@ export function ProjectHeroNet() {
     };
   }, []);
 
-  return <div className="project-hero-net" ref={containerRef} aria-hidden="true" />;
+  return <div className="about-fog-background" ref={containerRef} aria-hidden="true" />;
 }

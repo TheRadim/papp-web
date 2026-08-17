@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
-import { Bell, Clock, Info, MapPinned, Navigation, Search } from "lucide-react";
+import { Bell, ChevronLeft, ChevronRight, Clock, Info, MapPinned, Navigation, Search } from "lucide-react";
 import { company } from "@/content/global/company";
 import type { Locale } from "@/content/types";
 import { withBasePath } from "@/lib/site/basePath";
@@ -39,6 +39,11 @@ export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps
     "--app-phone-scale": phoneFrame.scale
   } as CSSProperties;
 
+  function showFeature(index: number) {
+    setActiveIndex((index + features.length) % features.length);
+    setUserSelected(true);
+  }
+
   useEffect(() => {
     if (userSelected || features.length < 2) {
       return;
@@ -54,14 +59,33 @@ export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps
   return (
     <div className="app-feature-selector">
       <div className="app-feature-selector__stage">
-        <div className="app-feature-selector__phone" key={`phone-${activeIndex}`} style={phoneStyle}>
-          <Image
-            src={withBasePath("/images/app/papp-app-phone.png")}
-            alt=""
-            width={580}
-            height={1112}
-            sizes="(max-width: 768px) 58vw, 240px"
-          />
+        <h2 className="app-feature-selector__mobile-title">{activeFeature.title[locale]}</h2>
+        <div className="app-feature-selector__phone-wrap">
+          <button
+            aria-label={locale === "da" ? "Forrige appfunktion" : "Previous app feature"}
+            className="app-feature-selector__arrow app-feature-selector__arrow--prev"
+            onClick={() => showFeature(activeIndex - 1)}
+            type="button"
+          >
+            <ChevronLeft aria-hidden="true" size={22} />
+          </button>
+          <div className="app-feature-selector__phone" key={`phone-${activeIndex}`} style={phoneStyle}>
+            <Image
+              src={withBasePath("/images/app/papp-app-phone.png")}
+              alt=""
+              width={580}
+              height={1112}
+              sizes="(max-width: 768px) 70vw, 240px"
+            />
+          </div>
+          <button
+            aria-label={locale === "da" ? "Næste appfunktion" : "Next app feature"}
+            className="app-feature-selector__arrow app-feature-selector__arrow--next"
+            onClick={() => showFeature(activeIndex + 1)}
+            type="button"
+          >
+            <ChevronRight aria-hidden="true" size={22} />
+          </button>
         </div>
         <article className="app-feature-selector__panel" id="app-feature-panel" role="tabpanel">
           <span>{String(activeIndex + 1).padStart(2, "0")}</span>
@@ -88,10 +112,7 @@ export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps
               aria-selected={activeIndex === index}
               className={activeIndex === index ? "is-active" : undefined}
               key={feature.title.en}
-              onClick={() => {
-                setActiveIndex(index);
-                setUserSelected(true);
-              }}
+              onClick={() => showFeature(index)}
               role="tab"
               title={feature.title[locale]}
               type="button"

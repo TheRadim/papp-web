@@ -21,6 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   const mapQuery = encodeURIComponent("Papp Headquarters, Rytoften 5, 8210 Aarhus, Denmark");
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
   return (
     <Section className="contact-page-section">
@@ -35,7 +36,9 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           <div className="contact-page-details" aria-label={locale === "da" ? "Virksomhedsoplysninger" : "Company details"}>
             <p>
               <strong>{locale === "da" ? "Adresse" : "Address"}</strong>
-              <span>Papp Headquarters · Rytoften 5, 2 sal · 8210 Aarhus</span>
+              <a href={mapsUrl} target="_blank" rel="noreferrer">
+                Papp Headquarters · Rytoften 5, 2 sal · 8210 Aarhus
+              </a>
             </p>
           </div>
           <div className="contact-map" aria-label={locale === "da" ? "Kort til Papp Mobility" : "Map to Papp Mobility"}>

@@ -58,16 +58,25 @@ const categoryIcons = {
   analysis: BarChart3
 };
 
-function matchesFilter(category: ProjectCategory, filter: PortfolioFilter) {
+function matchesFilter(project: Project, filter: PortfolioFilter) {
   if (filter === "all") return true;
-  if (filter === "analysis") return category === "analysis" || category === "consultancy";
-  return category === filter;
+
+  const projectCategories = new Set<ProjectCategory>([project.category]);
+
+  project.technologies?.forEach((technology) => {
+    if (technology === "sensors" || technology === "cameras" || technology === "analysis" || technology === "consultancy") {
+      projectCategories.add(technology);
+    }
+  });
+
+  if (filter === "analysis") return projectCategories.has("analysis") || projectCategories.has("consultancy");
+  return projectCategories.has(filter);
 }
 
 export function ProjectPortfolioFilter({ locale, projects }: ProjectPortfolioFilterProps) {
   const [activeFilter, setActiveFilter] = useState<PortfolioFilter>("all");
   const filteredProjects = useMemo(
-    () => projects.filter((project) => matchesFilter(project.category, activeFilter)),
+    () => projects.filter((project) => matchesFilter(project, activeFilter)),
     [activeFilter, projects]
   );
 

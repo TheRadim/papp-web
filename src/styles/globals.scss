@@ -2128,7 +2128,7 @@ img {
 }
 
 .project-hero-net canvas {
-  opacity: 0.6;
+  opacity: 0.38;
 }
 
 .projects-hero,
@@ -2973,11 +2973,30 @@ button.project-category-card {
 }
 
 .history-showcase {
+  position: relative;
   display: grid;
   width: min(1120px, 100%);
   grid-template-columns: minmax(270px, 0.46fr) minmax(0, 0.54fr);
   gap: clamp(2rem, 6vw, 6rem);
   margin-inline: auto;
+}
+
+.about-story-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.about-story-section .container {
+  position: relative;
+  z-index: 1;
+}
+
+.about-fog-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 .history-showcase__sticky {
@@ -3550,8 +3569,18 @@ button.project-category-card {
   text-transform: uppercase;
 }
 
-.contact-page-details span {
+.contact-page-details span,
+.contact-page-details a {
   color: var(--papp-body);
+}
+
+.contact-page-details a {
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.contact-page-details a:hover {
+  color: var(--papp-blue);
 }
 
 .contact-map {
@@ -3845,6 +3874,16 @@ button.project-category-card {
   gap: clamp(2rem, 6vw, 4.5rem);
 }
 
+.app-feature-selector__mobile-title {
+  display: none;
+}
+
+.app-feature-selector__phone-wrap {
+  position: relative;
+  display: grid;
+  justify-items: center;
+}
+
 .app-feature-selector__phone {
   display: grid;
   justify-items: center;
@@ -3857,6 +3896,10 @@ button.project-category-card {
   height: auto;
   filter: drop-shadow(0 24px 38px rgba(20, 28, 35, 0.12));
   animation: app-phone-fade 0.95s ease both;
+}
+
+.app-feature-selector__arrow {
+  display: none;
 }
 
 .app-feature-selector__buttons {
@@ -4661,6 +4704,7 @@ button.project-category-card {
 
   .process-timeline {
     grid-template-columns: 1fr;
+    justify-items: center;
   }
 
   .process-timeline__sticky {
@@ -4680,16 +4724,24 @@ button.project-category-card {
   }
 
   .process-timeline__stream {
+    width: 100%;
+    justify-items: center;
     padding-block: 0;
   }
 
   .process-timeline__stream > li {
     min-height: auto;
+    width: 100%;
     padding-block: 1rem;
   }
 
+  .process-timeline .process-flow__step {
+    width: min(100%, 390px);
+    margin-inline: auto;
+  }
+
   .app-feature-selector__buttons {
-    display: grid;
+    display: none;
     width: min(100%, 340px);
     max-width: calc(100vw - 2rem);
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -4743,6 +4795,80 @@ button.project-category-card {
 
   .app-feature-selector__badges {
     justify-content: center;
+  }
+
+  .app-feature-selector {
+    gap: 1.45rem;
+  }
+
+  .app-feature-selector__stage {
+    justify-items: center;
+    gap: 1rem;
+  }
+
+  .app-feature-selector__mobile-title {
+    display: block;
+    max-width: 22rem;
+    margin: 0 auto 0.4rem;
+    color: var(--papp-heading);
+    text-align: center;
+    font-size: clamp(1.35rem, 8vw, 2rem);
+    line-height: 1.08;
+  }
+
+  .app-feature-selector__phone-wrap {
+    width: min(100%, 360px);
+  }
+
+  .app-feature-selector__phone img {
+    width: min(235px, 72vw);
+  }
+
+  .app-feature-selector__arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 1px solid rgba(71, 178, 228, 0.28);
+    background: rgba(255, 255, 255, 0.88);
+    color: var(--papp-blue);
+    transform: translateY(-50%);
+  }
+
+  .app-feature-selector__arrow--prev {
+    left: 0;
+  }
+
+  .app-feature-selector__arrow--next {
+    right: 0;
+  }
+
+  .app-feature-selector__panel {
+    display: grid;
+    width: min(100%, 390px);
+    justify-items: center;
+    text-align: center;
+  }
+
+  .app-feature-selector__panel > span,
+  .app-feature-selector__panel h2 {
+    display: none;
+  }
+
+  .app-feature-selector__badges {
+    margin-top: 1.35rem;
+  }
+
+  .contact-page-section .contact-map {
+    display: none;
+  }
+
+  .contact-page-details p {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
   }
 
   .project-workflow::before,
