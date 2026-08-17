@@ -57,13 +57,13 @@ export function AboutFogBackground() {
         gyroControls: false,
         minHeight: 200,
         minWidth: 200,
-        highlightColor: 0x0096ff,
-        midtoneColor: 0xffffff,
-        lowlightColor: 0x2284e6,
-        baseColor: 0xffffff,
-        blurFactor: 0.46,
-        speed: 0.2,
-        zoom: 0.1
+        highlightColor: 0xd7ebff,
+        midtoneColor: 0xd7d7d7,
+        lowlightColor: 0xffffff,
+        baseColor: 0xf0f0f0,
+        blurFactor: 0.59,
+        speed: 1.1,
+        zoom: 0.7
       });
     }
 

@@ -61,9 +61,9 @@ export function ProjectHeroNet() {
         scaleMobile: 1,
         color: 0x47b2e4,
         backgroundColor: 0xffffff,
-        points: 5,
-        maxDistance: 16,
-        spacing: 26,
+        points: 2,
+        maxDistance: 27,
+        spacing: 20,
         showDots: true
       });
     }

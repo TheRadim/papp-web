@@ -1443,7 +1443,7 @@ img {
   justify-content: center;
   width: clamp(112px, 9vw, 132px);
   border: 1px solid rgba(55, 81, 126, 0.12);
-  border-radius: 2px;
+  border-radius: 4px;
   background: rgba(255, 255, 255, 0.78);
   color: var(--papp-heading);
   padding: 0.62rem 1rem;
@@ -2984,7 +2984,7 @@ button.project-category-card {
 .about-hero-section {
   position: relative;
   overflow: hidden;
-  background: #fff;
+  background: #f0f0f0;
 }
 
 .about-hero-section .container {
@@ -2997,7 +2997,12 @@ button.project-category-card {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.72;
+}
+
+.about-fog-background canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .history-showcase__sticky {
@@ -3071,6 +3076,7 @@ button.project-category-card {
 
 .history-showcase__card {
   width: min(480px, 100%);
+  border-radius: 5px;
   border: 1px solid rgba(55, 81, 126, 0.12);
   background: rgba(255, 255, 255, 0.88);
   box-shadow: 0 24px 60px rgba(55, 81, 126, 0.08);
@@ -3626,6 +3632,7 @@ button.project-category-card {
   gap: 1.05rem;
   width: min(100%, 540px);
   justify-self: center;
+  border-radius: 5px;
   background: #fff;
   border: 1px solid rgba(55, 81, 126, 0.08);
   box-shadow: 0 10px 26px rgba(55, 81, 126, 0.03);
@@ -3650,7 +3657,7 @@ button.project-category-card {
 .contact-form select {
   width: 100%;
   border: 1px solid color-mix(in srgb, var(--papp-body), transparent 86%);
-  border-radius: 0;
+  border-radius: 5px;
   background: #fff;
   padding: 0.74rem 0.8rem;
   color: var(--papp-body);
@@ -4721,6 +4728,78 @@ button.project-category-card {
     width: min(620px, 100%);
   }
 
+  .insight-dashboard__screen {
+    gap: 0.28rem;
+    padding: clamp(0.24rem, 1.25vw, 0.42rem);
+  }
+
+  .insight-dashboard__screen-header {
+    gap: 0.28rem;
+    font-size: clamp(0.34rem, 1.7vw, 0.52rem);
+  }
+
+  .insight-dashboard__brand img {
+    width: clamp(10px, 3vw, 14px);
+    height: clamp(10px, 3vw, 14px);
+  }
+
+  .insight-dashboard__kpis {
+    gap: 0.22rem;
+  }
+
+  .insight-dashboard__kpis article {
+    padding: 0.28rem;
+  }
+
+  .insight-dashboard__kpis h4 {
+    font-size: clamp(0.3rem, 1.35vw, 0.42rem);
+    letter-spacing: 0.07em;
+  }
+
+  .insight-dashboard__kpis p {
+    font-size: clamp(0.66rem, 3vw, 0.95rem);
+  }
+
+  .insight-dashboard__panel {
+    padding: 0.32rem;
+  }
+
+  .insight-dashboard__panel-heading {
+    font-size: clamp(0.3rem, 1.4vw, 0.42rem);
+    letter-spacing: 0.05em;
+  }
+
+  .insight-dashboard__panel-heading strong {
+    font-size: clamp(0.66rem, 3vw, 0.95rem);
+  }
+
+  .insight-dashboard__origin {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .insight-dashboard__orbit {
+    width: min(72%, 118px);
+  }
+
+  .insight-dashboard__origin ul,
+  .insight-dashboard__queue {
+    display: none;
+  }
+
+  .insight-dashboard__vehicle-mix {
+    width: min(82%, 150px);
+    justify-self: center;
+  }
+
+  .insight-dashboard__vehicle-mix span {
+    font-size: clamp(0.58rem, 3vw, 0.92rem);
+  }
+
+  .insight-dashboard__flow {
+    gap: 0;
+  }
+
   .process-timeline {
     width: 100%;
     grid-template-columns: 1fr;
@@ -4758,7 +4837,8 @@ button.project-category-card {
   }
 
   .process-timeline .process-flow__step {
-    width: min(100%, 390px);
+    box-sizing: border-box;
+    width: min(100%, calc(100vw - 2.75rem), 360px);
     margin-inline: auto;
   }
 
