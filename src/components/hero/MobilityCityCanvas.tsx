@@ -75,7 +75,7 @@ export default function MobilityCityCanvas({
         className="mobility-city__canvas"
         camera={{ position: CAMERA_VIEWS.overview.position, fov: CAMERA_VIEWS.overview.fov }}
         dpr={[1, 1.25]}
-        frameloop="demand"
+        frameloop={reducedMotion ? "demand" : "always"}
         gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
         onPointerMissed={onReturnToOverview}
       >

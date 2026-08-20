@@ -3,7 +3,7 @@
 import { useGLTF } from "@react-three/drei";
 import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
-import { AnimationMixer, Color, Group, Material, Mesh, MeshStandardMaterial, Object3D } from "three";
+import { AnimationMixer, Color, Group, LoopRepeat, Material, Mesh, MeshStandardMaterial, Object3D } from "three";
 import { CITY_OBJECT_NAMES, getMobilityAreaFromObject, MOBILITY_AREAS, MOBILITY_CITY_MODEL_URL } from "@/config/mobility-city";
 import type { MobilityArea, MobilityModelStatus } from "@/types/mobility-city";
 
@@ -152,6 +152,9 @@ export function MobilityCityModel({
     const actions = gltf.animations.map((clip) => {
       const action = mixer.clipAction(clip);
       action.reset();
+      action.setLoop(LoopRepeat, Infinity);
+      action.clampWhenFinished = false;
+      action.enabled = true;
       action.play();
       return action;
     });
