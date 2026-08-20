@@ -22,36 +22,36 @@ export const MOBILITY_AREA_ANCHORS: Record<MobilityArea, string> = {
 
 export const MOBILITY_MARKERS: Record<MobilityArea, { position: [number, number, number] }> = {
   sensors: {
-    position: [0.95, 0.24, 0.36]
+    position: [0.95, 0.22, -0.78]
   },
   cameras: {
-    position: [0.32, 1.28, -2.15]
+    position: [0.29, 1.02, -2.12]
   },
   insights: {
-    position: [-1.62, 1.72, -1.05]
+    position: [-1.62, 1.62, -1.05]
   }
 };
 
 export const CAMERA_VIEWS: Record<MobilityView, { position: [number, number, number]; target: [number, number, number]; fov: number }> = {
   overview: {
-    position: [3.75, 2.75, -5.15],
-    target: [-0.42, 0.58, -0.72],
-    fov: 33
+    position: [3.65, 2.05, -5.45],
+    target: [-0.24, 0.2, -0.78],
+    fov: 40
   },
   sensors: {
-    position: [2.15, 1.2, 1.95],
-    target: [0.95, 0.14, 0.36],
-    fov: 24
+    position: [2.05, 0.44, -1.08],
+    target: [0.95, 0.04, -0.95],
+    fov: 17
   },
   cameras: {
-    position: [1.75, 1.75, -0.85],
-    target: [0.32, 1.02, -2.15],
-    fov: 24
+    position: [0.95, 1.36, -3.14],
+    target: [0.32, 1.08, -2.17],
+    fov: 17
   },
   insights: {
-    position: [0.65, 1.95, 0.45],
-    target: [-1.62, 1.26, -1.05],
-    fov: 25
+    position: [0.38, 1.72, -2.72],
+    target: [-1.61, 1.36, -1.05],
+    fov: 24
   }
 };
 

@@ -187,7 +187,7 @@ export function MobilityCityModel({
   }, [model, onStatusChange, roots]);
 
   useEffect(() => {
-    const activeArea = selectedArea ?? hoveredArea;
+    const activeArea = selectedArea ? null : hoveredArea;
 
     model.traverse((child) => {
       if (!(child instanceof Mesh)) {
@@ -209,7 +209,6 @@ export function MobilityCityModel({
   }, [hoveredArea, invalidate, model, selectedArea]);
 
   useFrame((_, delta) => {
-    const activeArea = selectedArea ?? hoveredArea;
     let needsAnotherFrame = !reducedMotion && gltf.animations.length > 0;
 
     if (needsAnotherFrame) {
@@ -224,11 +223,10 @@ export function MobilityCityModel({
         return;
       }
 
-      const targetScale = selectedArea === area ? 1.07 : activeArea === area ? 1.08 : 1;
       const factor = reducedMotion ? 1 : 0.14;
-      const targetX = baseScale.x * targetScale;
-      const targetY = baseScale.y * targetScale;
-      const targetZ = baseScale.z * targetScale;
+      const targetX = baseScale.x;
+      const targetY = baseScale.y;
+      const targetZ = baseScale.z;
       const scaleDelta = Math.max(Math.abs(object.scale.x - targetX), Math.abs(object.scale.y - targetY), Math.abs(object.scale.z - targetZ));
       object.scale.x += (targetX - object.scale.x) * factor;
       object.scale.y += (targetY - object.scale.y) * factor;

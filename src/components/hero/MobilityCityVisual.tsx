@@ -138,10 +138,11 @@ export function MobilityCityVisual({
       }
 
       setSelectedArea(area);
-      setHoveredArea(area);
+      setHoveredArea(null);
+      onAreaHover?.(null);
       onAreaSelect?.(area);
     },
-    [lockedArea, onAreaSelect]
+    [lockedArea, onAreaHover, onAreaSelect]
   );
 
   const handleReturnToOverview = useCallback(() => {
