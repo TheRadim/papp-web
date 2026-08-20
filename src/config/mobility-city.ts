@@ -12,6 +12,12 @@ export const CITY_OBJECT_NAMES = {
   insights: "PappInsights"
 } as const;
 
+export const CITY_OBJECT_AREA_ALIASES: Record<string, MobilityArea> = {
+  "parking selectable": "sensors",
+  "PappCamera selectable": "cameras",
+  "PappCamera pole": "cameras"
+};
+
 export const MOBILITY_AREAS: MobilityArea[] = ["sensors", "cameras", "insights"];
 
 export const MOBILITY_AREA_ANCHORS: Record<MobilityArea, string> = {
@@ -22,10 +28,10 @@ export const MOBILITY_AREA_ANCHORS: Record<MobilityArea, string> = {
 
 export const MOBILITY_MARKERS: Record<MobilityArea, { position: [number, number, number] }> = {
   sensors: {
-    position: [0.95, 0.22, -0.78]
+    position: [0.95, 0.2, -0.72]
   },
   cameras: {
-    position: [0.29, 1.02, -2.12]
+    position: [0.31, 0.74, -2.15]
   },
   insights: {
     position: [-1.62, 1.62, -1.05]
@@ -34,9 +40,9 @@ export const MOBILITY_MARKERS: Record<MobilityArea, { position: [number, number,
 
 export const CAMERA_VIEWS: Record<MobilityView, { position: [number, number, number]; target: [number, number, number]; fov: number }> = {
   overview: {
-    position: [4.05, 2.05, -5.3],
-    target: [-0.2, -0.28, -0.82],
-    fov: 43
+    position: [3.9, 1.94, -5.12],
+    target: [-0.08, -0.4, -0.82],
+    fov: 42.5
   },
   sensors: {
     position: [2.05, 0.44, -1.08],
@@ -44,9 +50,9 @@ export const CAMERA_VIEWS: Record<MobilityView, { position: [number, number, num
     fov: 17
   },
   cameras: {
-    position: [1.13, 1.36, -3.02],
-    target: [0.32, 1.08, -2.17],
-    fov: 18
+    position: [0.9, 1.32, -2.9],
+    target: [0.35, 1.07, -2.18],
+    fov: 16.5
   },
   insights: {
     position: [0.38, 1.72, -2.72],
@@ -63,6 +69,12 @@ export function getMobilityAreaFromObject(object: Object3D): MobilityArea | null
   let current: Object3D | null = object;
 
   while (current) {
+    const alias = CITY_OBJECT_AREA_ALIASES[current.name];
+
+    if (alias) {
+      return alias;
+    }
+
     const area = MOBILITY_AREAS.find((candidate) => {
       const targetName = CITY_OBJECT_NAMES[candidate];
       return current?.name === targetName || current?.name.startsWith(`${targetName}_`);

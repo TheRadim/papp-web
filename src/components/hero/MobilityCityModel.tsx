@@ -3,7 +3,7 @@
 import { useGLTF } from "@react-three/drei";
 import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
-import { AnimationMixer, Color, Group, LoopPingPong, Material, Mesh, MeshStandardMaterial, Object3D } from "three";
+import { AnimationMixer, Color, Group, LoopPingPong, Material, Mesh, MeshStandardMaterial, Object3D, Vector3 } from "three";
 import { CITY_OBJECT_NAMES, getMobilityAreaFromObject, MOBILITY_AREAS, MOBILITY_CITY_MODEL_URL } from "@/config/mobility-city";
 import type { MobilityArea, MobilityModelStatus } from "@/types/mobility-city";
 
@@ -29,6 +29,9 @@ const AREA_COLORS: Record<MobilityArea, Color> = {
   cameras: new Color("#6dcaf0"),
   insights: new Color("#50b7e4")
 };
+
+const CAMERA_SELECTABLE_CENTER = new Vector3(0.31, 0.74, -2.15);
+const CAMERA_SELECTABLE_RADIUS = 0.82;
 
 function cloneMaterial(material: Material | Material[]) {
   return Array.isArray(material) ? material.map((item) => item.clone()) : material.clone();
@@ -93,8 +96,22 @@ function applyMaterialState(material: Material, active: boolean, muted: boolean,
   standard.needsUpdate = true;
 }
 
+function hideSelectableHelperMaterial(material: Material) {
+  const standard = material as MeshStandardMaterial;
+
+  standard.opacity = 0;
+  standard.transparent = true;
+  standard.depthWrite = false;
+  standard.colorWrite = false;
+  standard.needsUpdate = true;
+}
+
 function namedObject(scene: Object3D, objectName: string) {
   return scene.getObjectByName(objectName) ?? null;
+}
+
+function isSelectableHelper(object: Object3D) {
+  return object.name.toLowerCase().includes("selectable");
 }
 
 export function MobilityCityModel({
@@ -114,8 +131,14 @@ export function MobilityCityModel({
     clone.traverse((object) => {
       if (object instanceof Mesh) {
         object.material = cloneMaterial(object.material);
-        object.castShadow = true;
-        object.receiveShadow = true;
+        const selectableHelper = isSelectableHelper(object);
+
+        object.castShadow = !selectableHelper;
+        object.receiveShadow = !selectableHelper;
+
+        if (selectableHelper) {
+          eachMaterial(object.material, hideSelectableHelperMaterial);
+        }
       }
     });
 
@@ -153,7 +176,7 @@ export function MobilityCityModel({
       const action = mixer.clipAction(clip);
       action.reset();
       action.setLoop(LoopPingPong, Infinity);
-      action.timeScale = 0.44;
+      action.timeScale = clip.name === "PappCamera_body" ? 0.2 : 0.28;
       action.clampWhenFinished = false;
       action.enabled = true;
       action.play();
@@ -197,7 +220,7 @@ export function MobilityCityModel({
 
       const area = getMobilityAreaFromObject(child);
 
-      if (!area) {
+      if (!area || isSelectableHelper(child)) {
         return;
       }
 
@@ -208,6 +231,16 @@ export function MobilityCityModel({
     });
     invalidate();
   }, [hoveredArea, invalidate, model, selectedArea]);
+
+  function getAreaFromPointer(event: ThreeEvent<PointerEvent | MouseEvent>) {
+    const area = getMobilityAreaFromObject(event.object);
+
+    if (area !== "cameras" || event.object.name !== "PappCamera selectable") {
+      return area;
+    }
+
+    return event.point.distanceTo(CAMERA_SELECTABLE_CENTER) < CAMERA_SELECTABLE_RADIUS ? area : null;
+  }
 
   useFrame((_, delta) => {
     let needsAnotherFrame = !reducedMotion && gltf.animations.length > 0;
@@ -244,7 +277,7 @@ export function MobilityCityModel({
   });
 
   function handlePointerEnter(event: ThreeEvent<PointerEvent>) {
-    const area = getMobilityAreaFromObject(event.object);
+    const area = getAreaFromPointer(event);
 
     if (!area) {
       return;
@@ -256,7 +289,7 @@ export function MobilityCityModel({
   }
 
   function handlePointerMove(event: ThreeEvent<PointerEvent>) {
-    const area = getMobilityAreaFromObject(event.object);
+    const area = getAreaFromPointer(event);
 
     if (!area || area === hoveredArea) {
       return;
@@ -280,7 +313,7 @@ export function MobilityCityModel({
   }
 
   function handleClick(event: ThreeEvent<MouseEvent>) {
-    const area = getMobilityAreaFromObject(event.object);
+    const area = getAreaFromPointer(event);
 
     if (!area) {
       return;

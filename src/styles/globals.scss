@@ -2635,18 +2635,18 @@ button.project-category-card {
   right: 1rem;
   bottom: 1rem;
   z-index: 5;
-  width: min(390px, calc(100% - 2rem));
+  width: min(430px, calc(100% - 2rem));
   border: 1px solid rgba(71, 178, 228, 0.28);
   border-top: 4px solid var(--papp-blue-light);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 22px 70px rgba(0, 84, 131, 0.14);
-  padding: 1.2rem 1.25rem 1.25rem;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(247, 252, 255, 0.9));
+  box-shadow: 0 26px 80px rgba(0, 84, 131, 0.16);
+  padding: 1.25rem 1.35rem 1.3rem;
   backdrop-filter: blur(14px);
 }
 
 .mobility-city__panel--selected {
-  width: min(420px, calc(100% - 2rem));
+  width: min(470px, calc(100% - 2rem));
 }
 
 .mobility-city__panel h3 {
