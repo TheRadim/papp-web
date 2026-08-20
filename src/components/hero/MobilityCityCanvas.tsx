@@ -2,6 +2,7 @@
 
 import { Canvas } from "@react-three/fiber";
 import { Component, ReactNode, Suspense, useEffect } from "react";
+import { ACESFilmicToneMapping, PCFShadowMap, SRGBColorSpace } from "three";
 import { CAMERA_VIEWS } from "@/config/mobility-city";
 import { MobilityCityScene } from "@/components/hero/MobilityCityScene";
 import type { Locale } from "@/content/types";
@@ -76,7 +77,20 @@ export default function MobilityCityCanvas({
         camera={{ position: CAMERA_VIEWS.overview.position, fov: CAMERA_VIEWS.overview.fov }}
         dpr={[1, 1.25]}
         frameloop={reducedMotion ? "demand" : "always"}
+        shadows="soft"
         gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
+        onCreated={({ gl }) => {
+          gl.outputColorSpace = SRGBColorSpace;
+          gl.toneMapping = ACESFilmicToneMapping;
+          gl.toneMappingExposure = 1.02;
+          gl.shadowMap.enabled = true;
+          gl.shadowMap.type = PCFShadowMap;
+
+          const renderer = gl as typeof gl & { useLegacyLights?: boolean };
+          if ("useLegacyLights" in renderer) {
+            renderer.useLegacyLights = false;
+          }
+        }}
         onPointerMissed={onReturnToOverview}
       >
         <Suspense fallback={<LoadingStatus onStatusChange={onStatusChange} />}>

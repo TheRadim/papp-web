@@ -2,7 +2,7 @@
 
 /* eslint-disable react-hooks/immutability */
 
-import { Html, OrbitControls } from "@react-three/drei";
+import { ContactShadows, Html, OrbitControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import { Vector3 } from "three";
@@ -147,8 +147,25 @@ export function MobilityCityScene({
 
   return (
     <>
-      <ambientLight intensity={1.2} />
-      <directionalLight position={[5, 8, 5]} intensity={1.8} />
+      <ambientLight intensity={0.28} color="#f8fbff" />
+      <hemisphereLight args={["#ffffff", "#cbdbe3", 0.72]} />
+      <directionalLight
+        castShadow
+        position={[4.8, 7.2, -4.6]}
+        intensity={2.65}
+        color="#fff5ea"
+        shadow-mapSize-width={2048}
+        shadow-mapSize-height={2048}
+        shadow-camera-left={-5.4}
+        shadow-camera-right={5.4}
+        shadow-camera-top={5.4}
+        shadow-camera-bottom={-5.4}
+        shadow-camera-near={0.2}
+        shadow-camera-far={18}
+        shadow-bias={-0.00022}
+        shadow-normalBias={0.035}
+      />
+      <ContactShadows position={[0, -0.015, 0]} opacity={0.28} scale={8.5} blur={2.8} far={4.5} resolution={512} color="#52616a" frames={1} />
       <CameraController view={view} reducedMotion={reducedMotion} />
       <MobilityCityModel
         hoveredArea={hoveredArea}

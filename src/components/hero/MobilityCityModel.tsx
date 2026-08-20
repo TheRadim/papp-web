@@ -3,7 +3,7 @@
 import { useGLTF } from "@react-three/drei";
 import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
-import { AnimationMixer, Color, Group, LoopRepeat, Material, Mesh, MeshStandardMaterial, Object3D } from "three";
+import { AnimationMixer, Color, Group, LoopPingPong, Material, Mesh, MeshStandardMaterial, Object3D } from "three";
 import { CITY_OBJECT_NAMES, getMobilityAreaFromObject, MOBILITY_AREAS, MOBILITY_CITY_MODEL_URL } from "@/config/mobility-city";
 import type { MobilityArea, MobilityModelStatus } from "@/types/mobility-city";
 
@@ -25,9 +25,9 @@ interface MaterialSnapshot {
 }
 
 const AREA_COLORS: Record<MobilityArea, Color> = {
-  sensors: new Color("#0786c5"),
-  cameras: new Color("#ff7f7b"),
-  insights: new Color("#0b5f8f")
+  sensors: new Color("#58bfe9"),
+  cameras: new Color("#6dcaf0"),
+  insights: new Color("#50b7e4")
 };
 
 function cloneMaterial(material: Material | Material[]) {
@@ -114,8 +114,8 @@ export function MobilityCityModel({
     clone.traverse((object) => {
       if (object instanceof Mesh) {
         object.material = cloneMaterial(object.material);
-        object.castShadow = false;
-        object.receiveShadow = false;
+        object.castShadow = true;
+        object.receiveShadow = true;
       }
     });
 
@@ -152,7 +152,8 @@ export function MobilityCityModel({
     const actions = gltf.animations.map((clip) => {
       const action = mixer.clipAction(clip);
       action.reset();
-      action.setLoop(LoopRepeat, Infinity);
+      action.setLoop(LoopPingPong, Infinity);
+      action.timeScale = 0.44;
       action.clampWhenFinished = false;
       action.enabled = true;
       action.play();
