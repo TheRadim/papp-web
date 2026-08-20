@@ -3,7 +3,7 @@
 import { useGLTF } from "@react-three/drei";
 import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
-import { Color, Group, Material, Mesh, MeshStandardMaterial, Object3D } from "three";
+import { AnimationMixer, Color, Group, Material, Mesh, MeshStandardMaterial, Object3D } from "three";
 import { CITY_OBJECT_NAMES, getMobilityAreaFromObject, MOBILITY_AREAS, MOBILITY_CITY_MODEL_URL } from "@/config/mobility-city";
 import type { MobilityArea, MobilityModelStatus } from "@/types/mobility-city";
 
@@ -132,6 +132,39 @@ export function MobilityCityModel({
     );
   }, [model]);
 
+  const baseScales = useMemo(() => {
+    return MOBILITY_AREAS.reduce<Record<MobilityArea, Object3D["scale"] | null>>(
+      (accumulator, area) => {
+        accumulator[area] = roots[area]?.scale.clone() ?? null;
+        return accumulator;
+      },
+      { sensors: null, cameras: null, insights: null }
+    );
+  }, [roots]);
+
+  const mixer = useMemo(() => new AnimationMixer(model), [model]);
+
+  useEffect(() => {
+    if (reducedMotion || gltf.animations.length === 0) {
+      return undefined;
+    }
+
+    const actions = gltf.animations.map((clip) => {
+      const action = mixer.clipAction(clip);
+      action.reset();
+      action.play();
+      return action;
+    });
+
+    invalidate();
+
+    return () => {
+      actions.forEach((action) => action.stop());
+      mixer.stopAllAction();
+      mixer.uncacheRoot(model);
+    };
+  }, [gltf.animations, invalidate, mixer, model, reducedMotion]);
+
   useEffect(() => {
     onStatusChange("ready");
 
@@ -153,42 +186,52 @@ export function MobilityCityModel({
   useEffect(() => {
     const activeArea = selectedArea ?? hoveredArea;
 
-    MOBILITY_AREAS.forEach((area) => {
-      const object = roots[area];
-      if (!object) {
+    model.traverse((child) => {
+      if (!(child instanceof Mesh)) {
+        return;
+      }
+
+      const area = getMobilityAreaFromObject(child);
+
+      if (!area) {
         return;
       }
 
       const active = area === activeArea;
       const muted = Boolean(activeArea && area !== activeArea);
 
-      object.traverse((child) => {
-        if (child instanceof Mesh) {
-          eachMaterial(child.material, (material) => applyMaterialState(material, active, muted, AREA_COLORS[area]));
-        }
-      });
+      eachMaterial(child.material, (material) => applyMaterialState(material, active, muted, AREA_COLORS[area]));
     });
     invalidate();
-  }, [hoveredArea, invalidate, roots, selectedArea]);
+  }, [hoveredArea, invalidate, model, selectedArea]);
 
-  useFrame(() => {
+  useFrame((_, delta) => {
     const activeArea = selectedArea ?? hoveredArea;
-    let needsAnotherFrame = false;
+    let needsAnotherFrame = !reducedMotion && gltf.animations.length > 0;
+
+    if (needsAnotherFrame) {
+      mixer.update(delta);
+    }
 
     MOBILITY_AREAS.forEach((area) => {
       const object = roots[area];
-      if (!object) {
+      const baseScale = baseScales[area];
+
+      if (!object || !baseScale) {
         return;
       }
 
       const targetScale = selectedArea === area ? 1.07 : activeArea === area ? 1.08 : 1;
       const factor = reducedMotion ? 1 : 0.14;
-      const delta = Math.abs(object.scale.x - targetScale);
-      object.scale.x += (targetScale - object.scale.x) * factor;
-      object.scale.y += (targetScale - object.scale.y) * factor;
-      object.scale.z += (targetScale - object.scale.z) * factor;
+      const targetX = baseScale.x * targetScale;
+      const targetY = baseScale.y * targetScale;
+      const targetZ = baseScale.z * targetScale;
+      const scaleDelta = Math.max(Math.abs(object.scale.x - targetX), Math.abs(object.scale.y - targetY), Math.abs(object.scale.z - targetZ));
+      object.scale.x += (targetX - object.scale.x) * factor;
+      object.scale.y += (targetY - object.scale.y) * factor;
+      object.scale.z += (targetZ - object.scale.z) * factor;
 
-      if (delta > 0.002) {
+      if (scaleDelta > 0.002) {
         needsAnotherFrame = true;
       }
     });
