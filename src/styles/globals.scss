@@ -1980,6 +1980,7 @@ img {
   display: grid;
   margin: 0;
   padding-block: clamp(9rem, 28vh, 18rem);
+  padding-inline: 0;
   list-style: none;
 }
 
@@ -3014,9 +3015,9 @@ button.project-category-card {
 .history-showcase {
   position: relative;
   display: grid;
-  width: min(1120px, 100%);
-  grid-template-columns: minmax(270px, 0.46fr) minmax(0, 0.54fr);
-  gap: clamp(2rem, 6vw, 6rem);
+  width: min(1280px, 100%);
+  grid-template-columns: minmax(310px, 0.42fr) minmax(0, 0.58fr);
+  gap: clamp(3.5rem, 8vw, 8rem);
   margin-inline: auto;
 }
 
@@ -3042,7 +3043,7 @@ button.project-category-card {
   overflow: visible;
   color: var(--papp-heading);
   font-family: Jost, Poppins, system-ui, sans-serif;
-  font-size: clamp(7rem, 18vw, 17rem);
+  font-size: clamp(6.4rem, 13vw, 13rem);
   font-weight: 300;
   letter-spacing: -0.12em;
   line-height: 0.78;
@@ -3084,19 +3085,20 @@ button.project-category-card {
 .history-showcase__stream {
   display: grid;
   margin: 0;
-  padding-block: clamp(8rem, 22vh, 15rem);
+  padding-block: clamp(10rem, 28vh, 18rem);
+  padding-inline: 0;
   list-style: none;
 }
 
 .history-showcase__stream > li {
   display: grid;
-  min-height: clamp(360px, 50svh, 580px);
+  min-height: clamp(400px, 58svh, 660px);
   align-items: center;
   scroll-margin-top: 120px;
 }
 
 .history-showcase__card {
-  width: min(480px, 100%);
+  width: min(560px, 100%);
   border-radius: 5px;
   border: 1px solid rgba(55, 81, 126, 0.12);
   background: rgba(255, 255, 255, 0.88);
@@ -4494,6 +4496,7 @@ button.project-category-card {
   .history-showcase {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+    width: 100%;
   }
 
   .history-showcase__sticky {
@@ -4524,6 +4527,7 @@ button.project-category-card {
   .history-showcase__stream {
     padding-block: clamp(2rem, 8vh, 4rem);
     justify-items: center;
+    width: 100%;
   }
 
   .history-showcase__stream > li {
@@ -4535,7 +4539,7 @@ button.project-category-card {
   .history-showcase__card {
     box-sizing: border-box;
     justify-self: center;
-    width: min(100%, calc(100vw - 3rem), 360px);
+    width: min(100%, calc(100vw - 2rem), 360px);
     margin-inline: auto;
   }
 

@@ -158,7 +158,7 @@ export function MobilityCityModel({
       const clipName = clip.name.toLowerCase();
       action.reset();
       action.setLoop(LoopPingPong, Infinity);
-      action.timeScale = clipName.includes("camera") ? 0.18 : 0.2;
+      action.timeScale = clipName.includes("insights") ? 0.4 : 0.3;
       action.clampWhenFinished = false;
       action.enabled = true;
       action.paused = false;
