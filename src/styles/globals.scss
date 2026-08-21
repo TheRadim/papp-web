@@ -2646,7 +2646,23 @@ button.project-category-card {
 }
 
 .mobility-city__panel--selected {
-  width: min(470px, calc(100% - 2rem));
+  width: min(510px, calc(100% - 2rem));
+  min-height: 190px;
+  border-radius: 12px;
+}
+
+@media (min-width: 900px) {
+  .mobility-city[data-active="cameras"] .mobility-city__panel--selected {
+    top: clamp(1rem, 4vh, 2rem);
+    right: clamp(1rem, 3vw, 2.25rem);
+    bottom: auto;
+  }
+
+  .mobility-city[data-active="insights"] .mobility-city__panel--selected {
+    right: auto;
+    bottom: clamp(1rem, 4vh, 2rem);
+    left: clamp(1rem, 3vw, 2.25rem);
+  }
 }
 
 .mobility-city__panel h3 {

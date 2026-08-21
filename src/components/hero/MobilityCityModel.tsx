@@ -114,6 +114,11 @@ function isSelectableHelper(object: Object3D) {
   return object.name.toLowerCase().includes("selectable");
 }
 
+function isCameraSelectableHelper(object: Object3D) {
+  const normalizedName = object.name.trim().toLowerCase().replace(/[_-]+/g, " ");
+  return normalizedName === "pappcamera selectable" || normalizedName === "papp camera selectable";
+}
+
 export function MobilityCityModel({
   hoveredArea,
   selectedArea,
@@ -235,7 +240,7 @@ export function MobilityCityModel({
   function getAreaFromPointer(event: ThreeEvent<PointerEvent | MouseEvent>) {
     const area = getMobilityAreaFromObject(event.object);
 
-    if (area !== "cameras" || event.object.name !== "PappCamera selectable") {
+    if (area !== "cameras" || !isCameraSelectableHelper(event.object)) {
       return area;
     }
 

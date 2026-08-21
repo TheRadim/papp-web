@@ -14,7 +14,11 @@ export const CITY_OBJECT_NAMES = {
 
 export const CITY_OBJECT_AREA_ALIASES: Record<string, MobilityArea> = {
   "parking selectable": "sensors",
+  "pappsensor selectable": "sensors",
+  "papp sensor selectable": "sensors",
   "PappCamera selectable": "cameras",
+  "pappcamera selectable": "cameras",
+  "papp camera selectable": "cameras",
   "PappCamera pole": "cameras"
 };
 
@@ -69,7 +73,8 @@ export function getMobilityAreaFromObject(object: Object3D): MobilityArea | null
   let current: Object3D | null = object;
 
   while (current) {
-    const alias = CITY_OBJECT_AREA_ALIASES[current.name];
+    const normalizedName = current.name.trim().toLowerCase().replace(/[_-]+/g, " ");
+    const alias = CITY_OBJECT_AREA_ALIASES[current.name] ?? CITY_OBJECT_AREA_ALIASES[normalizedName];
 
     if (alias) {
       return alias;
