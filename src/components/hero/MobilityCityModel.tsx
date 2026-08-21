@@ -3,7 +3,7 @@
 import { useGLTF } from "@react-three/drei";
 import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
-import { AnimationMixer, Color, Group, LoopPingPong, Material, Mesh, MeshStandardMaterial, Object3D, Vector3 } from "three";
+import { AnimationMixer, Color, Group, LoopPingPong, Material, Mesh, MeshStandardMaterial, Object3D } from "three";
 import { CITY_OBJECT_NAMES, getMobilityAreaFromObject, MOBILITY_AREAS, MOBILITY_CITY_MODEL_URL } from "@/config/mobility-city";
 import type { MobilityArea, MobilityModelStatus } from "@/types/mobility-city";
 
@@ -29,9 +29,6 @@ const AREA_COLORS: Record<MobilityArea, Color> = {
   cameras: new Color("#6dcaf0"),
   insights: new Color("#50b7e4")
 };
-
-const CAMERA_SELECTABLE_CENTER = new Vector3(0.31, 0.74, -2.15);
-const CAMERA_SELECTABLE_RADIUS = 0.82;
 
 function cloneMaterial(material: Material | Material[]) {
   return Array.isArray(material) ? material.map((item) => item.clone()) : material.clone();
@@ -104,11 +101,6 @@ function isSelectableHelper(object: Object3D) {
   return object.name.toLowerCase().includes("selectable");
 }
 
-function isCameraSelectableHelper(object: Object3D) {
-  const normalizedName = object.name.trim().toLowerCase().replace(/[_-]+/g, " ");
-  return normalizedName === "pappcamera selectable" || normalizedName === "papp camera selectable";
-}
-
 export function MobilityCityModel({
   hoveredArea,
   selectedArea,
@@ -163,11 +155,15 @@ export function MobilityCityModel({
 
     const actions = gltf.animations.map((clip) => {
       const action = mixer.clipAction(clip);
+      const clipName = clip.name.toLowerCase();
       action.reset();
       action.setLoop(LoopPingPong, Infinity);
-      action.timeScale = clip.name === "PappCamera_body" ? 0.2 : 0.28;
+      action.timeScale = clipName.includes("camera") ? 0.18 : 0.2;
       action.clampWhenFinished = false;
       action.enabled = true;
+      action.paused = false;
+      action.setEffectiveWeight(1);
+      action.setEffectiveTimeScale(action.timeScale);
       action.play();
       return action;
     });
@@ -222,13 +218,7 @@ export function MobilityCityModel({
   }, [hoveredArea, invalidate, model, selectedArea]);
 
   function getAreaFromPointer(event: ThreeEvent<PointerEvent | MouseEvent>) {
-    const area = getMobilityAreaFromObject(event.object);
-
-    if (area !== "cameras" || !isCameraSelectableHelper(event.object)) {
-      return area;
-    }
-
-    return event.point.distanceTo(CAMERA_SELECTABLE_CENTER) < CAMERA_SELECTABLE_RADIUS ? area : null;
+    return getMobilityAreaFromObject(event.object);
   }
 
   useFrame((_, delta) => {
