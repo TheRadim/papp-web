@@ -96,16 +96,6 @@ function applyMaterialState(material: Material, active: boolean, muted: boolean,
   standard.needsUpdate = true;
 }
 
-function hideSelectableHelperMaterial(material: Material) {
-  const standard = material as MeshStandardMaterial;
-
-  standard.opacity = 0;
-  standard.transparent = true;
-  standard.depthWrite = false;
-  standard.colorWrite = false;
-  standard.needsUpdate = true;
-}
-
 function namedObject(scene: Object3D, objectName: string) {
   return scene.getObjectByName(objectName) ?? null;
 }
@@ -136,14 +126,8 @@ export function MobilityCityModel({
     clone.traverse((object) => {
       if (object instanceof Mesh) {
         object.material = cloneMaterial(object.material);
-        const selectableHelper = isSelectableHelper(object);
-
-        object.castShadow = !selectableHelper;
-        object.receiveShadow = !selectableHelper;
-
-        if (selectableHelper) {
-          eachMaterial(object.material, hideSelectableHelperMaterial);
-        }
+        object.castShadow = true;
+        object.receiveShadow = true;
       }
     });
 
@@ -225,7 +209,7 @@ export function MobilityCityModel({
 
       const area = getMobilityAreaFromObject(child);
 
-      if (!area || isSelectableHelper(child)) {
+      if (!area) {
         return;
       }
 
