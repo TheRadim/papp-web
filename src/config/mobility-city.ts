@@ -44,24 +44,24 @@ export const MOBILITY_MARKERS: Record<MobilityArea, { position: [number, number,
 
 export const CAMERA_VIEWS: Record<MobilityView, { position: [number, number, number]; target: [number, number, number]; fov: number }> = {
   overview: {
-    position: [4.35, 1.95, -5.02],
-    target: [-0.22, -0.36, -0.86],
+    position: [4.75, 1.98, -4.92],
+    target: [-0.34, -0.34, -0.84],
     fov: 42.5
   },
   sensors: {
-    position: [2.34, 0.5, -1.24],
-    target: [1.22, -0.08, -0.94],
-    fov: 21
+    position: [2.58, 0.48, -1.42],
+    target: [1.38, -0.2, -0.84],
+    fov: 24
   },
   cameras: {
-    position: [1.08, 1.36, -3.08],
-    target: [0.58, 0.94, -2.13],
-    fov: 21
+    position: [1.28, 1.44, -3.24],
+    target: [1.06, 0.92, -2.15],
+    fov: 24
   },
   insights: {
-    position: [0.68, 1.82, -2.92],
-    target: [-1.22, 1.2, -1.02],
-    fov: 30
+    position: [0.92, 1.86, -3.06],
+    target: [-0.72, 1.2, -1.04],
+    fov: 34
   }
 };
 

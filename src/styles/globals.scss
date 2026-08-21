@@ -2630,6 +2630,11 @@ button.project-category-card {
   transform: translate(-50%, 0);
 }
 
+.mobility-city-marker--cameras .mobility-city-marker__label {
+  top: calc(100% + 0.6rem);
+  bottom: auto;
+}
+
 .mobility-city__panel {
   position: absolute;
   right: 1rem;

@@ -209,7 +209,7 @@ export function MobilityCityModel({
 
       const area = getMobilityAreaFromObject(child);
 
-      if (!area) {
+      if (!area || isSelectableHelper(child)) {
         return;
       }
 
