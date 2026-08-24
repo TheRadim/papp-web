@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import type { Locale } from "@/content/types";
 import { withBasePath } from "@/lib/site/basePath";
 
@@ -18,18 +18,10 @@ interface AboutTimelineProps {
   locale: Locale;
 }
 
-function getYearSuffix(item: TimelineItem) {
-  const match = item.date.en.match(/20\d{2}/);
-
-  return match ? match[0].slice(2) : "26";
-}
-
 export function AboutTimeline({ items, locale }: AboutTimelineProps) {
   const timelineRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
-  const activeItem = items[activeIndex] ?? items[0];
-  const activeSuffix = activeItem ? getYearSuffix(activeItem) : "20";
 
   useEffect(() => {
     function measureActiveItem() {
@@ -52,6 +44,11 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
       ).index;
 
       setActiveIndex(nextActive);
+      if (window.innerWidth < 992) {
+        element
+          .querySelector<HTMLElement>(`.history-story__nav li:nth-child(${nextActive + 1}) a`)
+          ?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      }
       frameRef.current = 0;
     }
 
@@ -72,19 +69,37 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
     };
   }, []);
 
+  function handleNavClick(event: MouseEvent<HTMLAnchorElement>, index: number) {
+    event.preventDefault();
+    const target = timelineRef.current?.querySelector<HTMLElement>(`#timeline-${index}`);
+
+    target?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
   return (
-    <div className="history-showcase" ref={timelineRef}>
-      <aside className="history-showcase__sticky" aria-label={locale === "da" ? "Aktivt tidslinjeår" : "Active timeline year"}>
-        <div className="history-showcase__year" aria-hidden="true">
-          <span>20</span>
-          <span key={activeSuffix}>{activeSuffix}</span>
-        </div>
-        <div className="history-showcase__active">
-          <time dateTime={activeItem?.date.en}>{activeItem?.date[locale]}</time>
-          <strong>{activeItem?.title[locale]}</strong>
-        </div>
-      </aside>
-      <ol className="history-showcase__stream" role="list">
+    <div className="history-story" ref={timelineRef}>
+      <nav className="history-story__nav" aria-label={locale === "da" ? "Papp historie" : "Papp history"}>
+        <ol role="list">
+          {items.map((item, index) => {
+            const isActive = index === activeIndex;
+            const isPassed = index < activeIndex;
+
+            return (
+              <li className={`${isActive ? "is-active" : ""} ${isPassed ? "is-passed" : ""}`.trim()} key={item.date.da}>
+                <a aria-current={isActive ? "step" : undefined} href={`#timeline-${index}`} onClick={(event) => handleNavClick(event, index)}>
+                  <span className="history-story__counter">{String(index + 1).padStart(2, "0")}</span>
+                  <span className="history-story__copy">
+                    <span className="history-story__date">{item.date[locale]}</span>
+                    <strong>{item.title[locale]}</strong>
+                    <span>{item.body[locale]}</span>
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
+      <ol className="history-story__stream" role="list">
         {items.map((item, index) => {
           const isActive = index === activeIndex;
           const isPassed = index < activeIndex;
@@ -96,14 +111,15 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
               id={`timeline-${index}`}
               key={item.date.da}
             >
-              <article className="history-showcase__card">
-                <div className="history-showcase__summary">
+              <article className="history-story__card" data-step={String(index + 1).padStart(2, "0")}>
+                <div className="history-story__summary">
+                  <span>{String(index + 1).padStart(2, "0")}</span>
                   <time dateTime={item.date.en}>{item.date[locale]}</time>
                   <h3>{item.title[locale]}</h3>
                 </div>
                 <p>{item.body[locale]}</p>
                 {item.image ? (
-                  <div className={`history-showcase__media history-showcase__media--${item.imageFit ?? "cover"}`}>
+                  <div className={`history-story__media history-story__media--${item.imageFit ?? "cover"}`}>
                     <Image src={withBasePath(item.image)} alt="" width={860} height={520} sizes="(max-width: 768px) 100vw, 500px" />
                   </div>
                 ) : null}
