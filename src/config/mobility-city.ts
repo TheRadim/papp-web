@@ -59,7 +59,7 @@ export const CAMERA_VIEWS: Record<MobilityView, { position: [number, number, num
     fov: 38
   },
   insights: {
-    position: [0.02, 1.34, -2.16],
+    position: [0.02, 2.34, -2.16],
     target: [-1.86, 0.84, -1.46],
     fov: 44
   }

@@ -25,7 +25,7 @@ interface MobilityCitySceneProps {
   locale: Locale;
 }
 
-function CameraController({ view, reducedMotion }: { view: MobilityView; reducedMotion: boolean }) {
+function CameraController({ view, reducedMotion, enabled }: { view: MobilityView; reducedMotion: boolean; enabled: boolean }) {
   const { camera, invalidate } = useThree();
   const target = useRef(new Vector3(...CAMERA_VIEWS.overview.target));
   const targetPosition = useMemo(() => new Vector3(...CAMERA_VIEWS[view].position), [view]);
@@ -53,7 +53,7 @@ function CameraController({ view, reducedMotion }: { view: MobilityView; reduced
   }, [camera, invalidate, reducedMotion, targetFov, targetLookAt, targetPosition]);
 
   useFrame(() => {
-    if (reducedMotion) {
+    if (reducedMotion || !enabled) {
       return;
     }
 
@@ -166,7 +166,7 @@ export function MobilityCityScene({
         shadow-normalBias={0.035}
       />
       <ContactShadows position={[0, -0.015, 0]} opacity={0.28} scale={8.5} blur={2.8} far={4.5} resolution={512} color="#52616a" frames={1} />
-      <CameraController view={view} reducedMotion={reducedMotion} />
+      <CameraController view={view} reducedMotion={reducedMotion} enabled={view !== "overview"} />
       <MobilityCityModel
         hoveredArea={hoveredArea}
         selectedArea={selectedArea}
@@ -184,7 +184,17 @@ export function MobilityCityScene({
           onAreaSelect={onAreaSelect}
         />
       ) : null}
-      {debug ? <OrbitControls enablePan={false} makeDefault /> : null}
+      <OrbitControls
+        enabled={view === "overview" || debug}
+        enableDamping
+        enablePan={false}
+        enableZoom={false}
+        dampingFactor={0.08}
+        rotateSpeed={0.35}
+        minPolarAngle={0.72}
+        maxPolarAngle={1.38}
+        makeDefault
+      />
     </>
   );
 }

@@ -32,18 +32,19 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
       }
 
       const cards = Array.from(element.querySelectorAll<HTMLElement>("[data-timeline-card]"));
-      const target = window.innerHeight * 0.5;
+      const target = window.innerHeight * (window.innerWidth < 992 ? 0.42 : 0.52);
       const nextActive = cards.reduce(
         (closest, card, index) => {
           const rect = card.getBoundingClientRect();
-          const distance = Math.abs(rect.top + rect.height * 0.5 - target);
+          const cardFocus = rect.top + Math.min(rect.height * 0.42, 260);
+          const distance = Math.abs(cardFocus - target);
 
           return distance < closest.distance ? { index, distance } : closest;
         },
         { index: 0, distance: Number.POSITIVE_INFINITY }
       ).index;
 
-      setActiveIndex(nextActive);
+      setActiveIndex((current) => (current === nextActive ? current : nextActive));
       if (window.innerWidth < 992) {
         element
           .querySelector<HTMLElement>(`.history-story__nav li:nth-child(${nextActive + 1}) a`)
@@ -59,15 +60,17 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
     }
 
     onScroll();
+    const delayedMeasure = window.setTimeout(measureActiveItem, 160);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
 
     return () => {
       window.cancelAnimationFrame(frameRef.current);
+      window.clearTimeout(delayedMeasure);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, []);
+  }, [items.length]);
 
   function handleNavClick(event: MouseEvent<HTMLAnchorElement>, index: number) {
     event.preventDefault();

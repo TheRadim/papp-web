@@ -17,10 +17,5 @@ export default async function SensorsPage({ params }: { params: Promise<{ locale
   const { locale } = await params;
   const offering = getOfferingBySlug(locale, "sensors");
   if (!offering) notFound();
-  return (
-    <>
-      <OfferingPage locale={locale} offering={offering} />
-      <SensorAssemblySection locale={locale} />
-    </>
-  );
+  return <OfferingPage locale={locale} offering={offering} afterHero={<SensorAssemblySection locale={locale} />} />;
 }

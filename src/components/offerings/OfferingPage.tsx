@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
 import type { Locale, Offering } from "@/content/types";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
@@ -11,9 +12,10 @@ import { ProjectCard } from "@/components/projects/ProjectCard";
 interface OfferingPageProps {
   locale: Locale;
   offering: Offering;
+  afterHero?: ReactNode;
 }
 
-export function OfferingPage({ locale, offering }: OfferingPageProps) {
+export function OfferingPage({ locale, offering, afterHero }: OfferingPageProps) {
   const relatedProjects = getProjects(locale).filter((project) => offering.relatedProjectSlugs.includes(project.slug));
 
   return (
@@ -32,6 +34,8 @@ export function OfferingPage({ locale, offering }: OfferingPageProps) {
           </div>
         </div>
       </section>
+
+      {afterHero}
 
       <Section>
         <div className="detail-grid">

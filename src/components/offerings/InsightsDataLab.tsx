@@ -38,6 +38,10 @@ const copy = {
     date: "Date",
     allAreas: "All areas",
     allDates: "All dates",
+    traffic: "Traffic",
+    origin: "Origin",
+    view: "View",
+    theme: "Theme",
     hourly: "Arrivals by hour",
     hourlySub: "Compare demand curves across measured visits.",
     zip: "Origin and dwell",
@@ -54,6 +58,10 @@ const copy = {
     date: "Dato",
     allAreas: "Alle områder",
     allDates: "Alle datoer",
+    traffic: "Trafik",
+    origin: "Opland",
+    view: "Visning",
+    theme: "Tema",
     hourly: "Ankomster pr. time",
     hourlySub: "Sammenlign efterspørgsel på tværs af målte besøg.",
     zip: "Opland og ophold",
@@ -72,6 +80,7 @@ export function InsightsDataLab({ locale }: { locale: Locale }) {
     [area, date]
   );
 
+  const metrics = useMemo(() => buildMetrics(filteredRows), [filteredRows]);
   const plots = useMemo(() => buildPlots(filteredRows, locale), [filteredRows, locale]);
 
   return (
@@ -105,6 +114,53 @@ export function InsightsDataLab({ locale }: { locale: Locale }) {
               ))}
             </select>
           </label>
+          <div className="insights-data-lab__segmented" aria-label={text.traffic}>
+            <span>{text.traffic}</span>
+            <div>
+              <button type="button" className="is-active">
+                Guests
+              </button>
+              <button type="button">Operational</button>
+              <button type="button">All</button>
+            </div>
+          </div>
+          <div className="insights-data-lab__segmented" aria-label={text.origin}>
+            <span>{text.origin}</span>
+            <div>
+              <button type="button" className="is-active">
+                All
+              </button>
+              <button type="button">Denmark</button>
+              <button type="button">International</button>
+            </div>
+          </div>
+          <div className="insights-data-lab__segmented" aria-label={text.view}>
+            <span>{text.view}</span>
+            <div>
+              <button type="button" className="is-active">
+                Charts
+              </button>
+              <button type="button">Tables</button>
+            </div>
+          </div>
+          <div className="insights-data-lab__segmented" aria-label={text.theme}>
+            <span>{text.theme}</span>
+            <div>
+              <button type="button">Dark</button>
+              <button type="button" className="is-active">
+                Light
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="insights-data-lab__metrics">
+          {metrics.map((metric) => (
+            <article key={metric.label}>
+              <span>{metric.label}</span>
+              <strong>{metric.value}</strong>
+              <p>{metric.detail}</p>
+            </article>
+          ))}
         </div>
         <div className="insights-data-lab__grid">
           {plots.map((plot) => (
@@ -114,6 +170,25 @@ export function InsightsDataLab({ locale }: { locale: Locale }) {
       </div>
     </section>
   );
+}
+
+function buildMetrics(filteredRows: DemoRow[]) {
+  const safeRows = filteredRows.length ? filteredRows : rows;
+  const uniqueVehicles = new Set(safeRows.map((row) => `${row.zip}-${row.manufacturer}-${row.vehicleType}`)).size;
+  const uniqueZips = new Set(safeRows.map((row) => row.zip)).size;
+  const sortedDwell = safeRows.map((row) => row.dwellMin).sort((a, b) => a - b);
+  const medianDwell = sortedDwell[Math.floor(sortedDwell.length / 2)] ?? 0;
+  const evShare = Math.round((safeRows.filter((row) => row.fuel === "EV").length / safeRows.length) * 100);
+  const hourly = Array.from({ length: 24 }, (_, hour) => ({ hour, count: safeRows.filter((row) => row.hour === hour).length })).sort((a, b) => b.count - a.count)[0];
+
+  return [
+    { label: "Visits", value: safeRows.length.toLocaleString("en"), detail: "filtered records" },
+    { label: "Unique vehicles", value: uniqueVehicles.toLocaleString("en"), detail: "profiled visits" },
+    { label: "Median dwell", value: `${medianDwell}m`, detail: "inside area" },
+    { label: "EV share", value: `${evShare}%`, detail: "battery-electric" },
+    { label: "Origins", value: uniqueZips.toLocaleString("en"), detail: "postal areas" },
+    { label: "Peak hour", value: `${hourly?.hour ?? 0}:00`, detail: `${hourly?.count ?? 0} visits` }
+  ];
 }
 
 function PlotCard({ plot }: { plot: PlotSpec }) {
@@ -166,14 +241,14 @@ function buildPlots(filteredRows: DemoRow[], locale: Locale): PlotSpec[] {
     .sort((a, b) => b.count - a.count)
     .slice(0, 8);
 
-  const darkLayout = {
+  const lightLayout = {
     autosize: true,
-    margin: { l: 36, r: 16, t: 12, b: 34 },
+    margin: { l: 42, r: 20, t: 14, b: 36 },
     paper_bgcolor: "rgba(0,0,0,0)",
-    plot_bgcolor: "rgba(0,0,0,0)",
-    font: { color: "#dbeafe", family: "Inter, system-ui, sans-serif", size: 11 },
-    xaxis: { gridcolor: "rgba(219,234,254,0.09)", zeroline: false },
-    yaxis: { gridcolor: "rgba(219,234,254,0.09)", zeroline: false }
+    plot_bgcolor: "rgba(255,255,255,0)",
+    font: { color: "#444444", family: "Inter, system-ui, sans-serif", size: 11 },
+    xaxis: { gridcolor: "rgba(68,68,68,0.08)", zeroline: false },
+    yaxis: { gridcolor: "rgba(68,68,68,0.08)", zeroline: false }
   };
 
   return [
@@ -197,7 +272,7 @@ function buildPlots(filteredRows: DemoRow[], locale: Locale): PlotSpec[] {
           hovertemplate: "%{x}<br>%{y:.1f} smoothed<extra></extra>"
         }
       ],
-      layout: darkLayout
+      layout: lightLayout
     },
     {
       title: locale === "da" ? copy.da.zip : copy.en.zip,
@@ -208,11 +283,11 @@ function buildPlots(filteredRows: DemoRow[], locale: Locale): PlotSpec[] {
           orientation: "h",
           x: topZips.map((zip) => zip.dwell),
           y: topZips.map((zip) => zip.zip),
-          marker: { color: topZips.map((_, index) => (index % 2 ? "#8fd8f6" : "#fb867f")) },
+          marker: { color: topZips.map((_, index) => (index % 2 ? "#47b2e4" : "#fb867f")) },
           hovertemplate: "%{y}<br>%{x} min median-like dwell<extra></extra>"
         }
       ],
-      layout: { ...darkLayout, margin: { l: 54, r: 16, t: 12, b: 28 } }
+      layout: { ...lightLayout, margin: { l: 58, r: 20, t: 14, b: 30 } }
     },
     {
       title: locale === "da" ? copy.da.scatter : copy.en.scatter,
@@ -234,13 +309,13 @@ function buildPlots(filteredRows: DemoRow[], locale: Locale): PlotSpec[] {
         }
       ],
       layout: {
-        ...darkLayout,
+        ...lightLayout,
         margin: { l: 0, r: 0, t: 4, b: 0 },
         scene: {
           bgcolor: "rgba(0,0,0,0)",
-          xaxis: { title: "Hour", gridcolor: "rgba(219,234,254,0.08)", zeroline: false },
-          yaxis: { title: "Dwell", gridcolor: "rgba(219,234,254,0.08)", zeroline: false },
-          zaxis: { title: "Zip", gridcolor: "rgba(219,234,254,0.08)", zeroline: false },
+          xaxis: { title: "Hour", gridcolor: "rgba(68,68,68,0.08)", zeroline: false },
+          yaxis: { title: "Dwell", gridcolor: "rgba(68,68,68,0.08)", zeroline: false },
+          zaxis: { title: "Zip", gridcolor: "rgba(68,68,68,0.08)", zeroline: false },
           camera: { eye: { x: 1.45, y: 1.35, z: 0.95 } }
         }
       }

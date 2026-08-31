@@ -1,6 +1,6 @@
 "use client";
 
-import { Environment, ContactShadows, useGLTF } from "@react-three/drei";
+import { Environment, ContactShadows, OrbitControls, useGLTF } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Box3, Group, Mesh, MeshStandardMaterial, Object3D, Vector3 } from "three";
@@ -61,6 +61,9 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
   const text = copy[locale];
   const sectionRef = useRef<HTMLElement>(null);
   const [progress, setProgress] = useState(0);
+  const [selectedStep, setSelectedStep] = useState<number | null>(null);
+  const scrollStep = Math.min(text.steps.length - 1, Math.max(0, Math.floor(progress * text.steps.length)));
+  const activeStep = selectedStep ?? scrollStep;
 
   useEffect(() => {
     let frame = 0;
@@ -98,7 +101,7 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
         <div className="sensor-product-lab__layout">
           <div className="sensor-product-lab__stage" aria-label={locale === "da" ? "3D-model af Papp sensor" : "3D model of Papp sensor"}>
             <Canvas
-              camera={{ position: [3.1, 2.15, 3.4], fov: 34 }}
+              camera={{ position: [3.2, 2.35, 4.4], fov: 32 }}
               dpr={[1, 1.6]}
               gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
               shadows
@@ -113,9 +116,18 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
                 shadow-mapSize-height={1024}
                 shadow-bias={-0.0002}
               />
-              <SensorModel progress={progress} />
+              <SensorModel progress={progress} activeStep={activeStep} />
               <ContactShadows position={[0, -0.78, 0]} opacity={0.22} scale={4} blur={2.4} far={2.5} resolution={384} frames={1} />
               <Environment preset="city" environmentIntensity={0.28} />
+              <OrbitControls
+                enableDamping
+                enablePan={false}
+                enableZoom={false}
+                dampingFactor={0.08}
+                rotateSpeed={0.45}
+                minPolarAngle={0.85}
+                maxPolarAngle={1.72}
+              />
             </Canvas>
           </div>
           <div className="sensor-product-lab__copy">
@@ -124,12 +136,14 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
             <p>{text.intro}</p>
             <ol role="list">
               {text.steps.map((step, index) => (
-                <li className={progress >= index / text.steps.length - 0.05 && progress <= (index + 1.2) / text.steps.length ? "is-active" : ""} key={step.title}>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <div>
-                    <h3>{step.title}</h3>
-                    <p>{step.body}</p>
-                  </div>
+                <li className={activeStep === index ? "is-active" : ""} key={step.title}>
+                  <button type="button" onClick={() => setSelectedStep(index)} onFocus={() => setSelectedStep(index)}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <div>
+                      <h3>{step.title}</h3>
+                      <p>{step.body}</p>
+                    </div>
+                  </button>
                 </li>
               ))}
             </ol>
@@ -140,12 +154,13 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
   );
 }
 
-function SensorModel({ progress }: { progress: number }) {
+function SensorModel({ progress, activeStep }: { progress: number; activeStep: number }) {
   const gltf = useGLTF(withBasePath("/models/sensor/sensor.gltf"));
   const groupRef = useRef<Group>(null);
   const parts = useRef<Partial<Record<SensorPartName, Object3D>>>({});
   const snapshots = useRef(new Map<Object3D, PartSnapshot>());
-  const openAmount = Math.sin(progress * Math.PI);
+  const smoothedOpen = useRef(0);
+  const stepOpen = [0.16, 0.58, 0.94][activeStep] ?? Math.sin(progress * Math.PI);
 
   const scene = useMemo(() => {
     const clone = gltf.scene.clone(true) as Group;
@@ -155,8 +170,8 @@ function SensorModel({ progress }: { progress: number }) {
     const maxAxis = Math.max(size.x, size.y, size.z) || 1;
 
     clone.position.sub(center);
-    clone.scale.setScalar(2.3 / maxAxis);
-    clone.rotation.set(-0.12, -0.58, 0.03);
+    clone.scale.setScalar(1.58 / maxAxis);
+    clone.rotation.set(Math.PI / 2, -0.58, 0.03);
 
     clone.traverse((object) => {
       if (object instanceof Mesh) {
@@ -199,6 +214,8 @@ function SensorModel({ progress }: { progress: number }) {
   }, [scene]);
 
   useFrame(() => {
+    smoothedOpen.current += (stepOpen - smoothedOpen.current) * 0.08;
+    const openAmount = smoothedOpen.current;
     const eased = openAmount * openAmount * (3 - 2 * openAmount);
     const lid = parts.current.lid;
     const core = parts.current.core;
@@ -221,7 +238,7 @@ function SensorModel({ progress }: { progress: number }) {
     }
 
     if (groupRef.current) {
-      groupRef.current.rotation.y += 0.0018;
+      groupRef.current.rotation.y += 0.0008;
     }
   });
 
