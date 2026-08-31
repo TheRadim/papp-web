@@ -286,19 +286,15 @@ function DashboardVisual({ tab, locale }: { tab: DashboardTab; locale: Locale })
   if (tab.variant === "vehicles") {
     return (
       <div className="insight-dashboard__vehicle-mix">
-        <div className="insight-dashboard__vehicle-stack" aria-hidden="true">
+        <div className="insight-dashboard__vehicle-bars" aria-hidden="true">
           {tab.meters.slice(0, 3).map((meter) => (
-            <i key={meter.label.en} style={{ "--stack-width": `${meter.value}%` } as CSSProperties} />
+            <div className="insight-dashboard__vehicle-row" key={meter.label.en}>
+              <span>{meter.label[locale]}</span>
+              <i style={{ "--vehicle-width": `${meter.value}%` } as CSSProperties} />
+              <strong>{meter.value}%</strong>
+            </div>
           ))}
         </div>
-        <ul>
-          {tab.meters.slice(0, 3).map((meter) => (
-            <li key={meter.label.en}>
-              <span>{meter.label[locale]}</span>
-              <strong>{meter.value}%</strong>
-            </li>
-          ))}
-        </ul>
       </div>
     );
   }

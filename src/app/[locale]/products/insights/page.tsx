@@ -17,5 +17,5 @@ export default async function InsightsPage({ params }: { params: Promise<{ local
   const { locale } = await params;
   const offering = getOfferingBySlug(locale, "insights");
   if (!offering) notFound();
-  return <OfferingPage locale={locale} offering={offering} afterHero={<InsightsDataLab locale={locale} />} />;
+  return <OfferingPage locale={locale} offering={offering} afterHero={<InsightsDataLab locale={locale} />} hideDetailSections />;
 }

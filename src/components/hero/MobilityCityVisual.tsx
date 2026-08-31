@@ -109,6 +109,7 @@ export function MobilityCityVisual({
   const [hoveredArea, setHoveredArea] = useState<MobilityArea | null>(activeArea);
   const [selectedArea, setSelectedArea] = useState<MobilityArea | null>(lockedArea ?? (initialView === "overview" ? null : initialView));
   const [modelStatus, setModelStatus] = useState<MobilityModelStatus>("idle");
+  const [resetKey, setResetKey] = useState(0);
 
   const wants3d = interactive && visualMode === "3d";
   const canUse3d = wants3d && desktop3d.enabled && nearViewport;
@@ -148,6 +149,9 @@ export function MobilityCityVisual({
   const handleReturnToOverview = useCallback(() => {
     setSelectedArea(lockedArea ?? null);
     setHoveredArea(null);
+    if (!lockedArea) {
+      setResetKey((key) => key + 1);
+    }
     onReturnToOverview?.();
   }, [lockedArea, onReturnToOverview]);
 
@@ -168,6 +172,7 @@ export function MobilityCityVisual({
         {showImageFallback ? <MobilityCityFallback locale={locale} status={modelStatus} /> : null}
         {canUse3d ? (
           <MobilityCityCanvas
+            key={resetKey}
             hoveredArea={hoveredArea}
             selectedArea={selectedArea}
             view={view}

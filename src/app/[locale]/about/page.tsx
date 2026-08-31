@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import type { Locale } from "@/content/types";
 import { company } from "@/content/global/company";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { Section } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AboutTimeline } from "@/components/about/AboutTimeline";
+import { withBasePath } from "@/lib/site/basePath";
 
 const timeline = [
   {
@@ -14,7 +16,7 @@ const timeline = [
       en: "Martin, Alfred and Tan start shaping a parking knowledge platform after parking fines in Aarhus.",
       da: "Martin, Alfred og Tan begynder at forme en platform til parkeringsviden efter p-bøder i Aarhus."
     },
-    image: "/images/projects/sensors/sensordata-herning-cover.jpg"
+    image: "/images/about/timeline-idea.jpg"
   },
   {
     date: { en: "January 2020", da: "Januar 2020" },
@@ -23,8 +25,7 @@ const timeline = [
       en: "The first app prototype is built, setting the foundation for the company later that year.",
       da: "Den første app-prototype bliver bygget og skaber grundlaget for virksomheden senere samme år."
     },
-    image: "/images/app/papp-app-phone.png",
-    imageFit: "contain" as const
+    image: "/images/about/timeline-prototype.jpg"
   },
   {
     date: { en: "February 2021", da: "Februar 2021" },
@@ -33,7 +34,7 @@ const timeline = [
       en: "Live parking data and AI forecasting move from idea to active development.",
       da: "Live parkeringsdata og AI-prognoser går fra idé til aktiv udvikling."
     },
-    image: "/images/projects/consultancy/dataoptimering-faaborg-cover.jpg"
+    image: "/images/about/timeline-data.jpg"
   },
   {
     date: { en: "May 2022", da: "Maj 2022" },
@@ -42,7 +43,7 @@ const timeline = [
       en: "Investment and early municipal testing turn IoT data collection into a real product track.",
       da: "Investering og tidlige kommunale tests gør IoT-dataindsamling til et konkret produktspor."
     },
-    image: "/images/products/sensors/parking-sensor-closeup.jpg"
+    image: "/images/about/timeline-iot.jpg"
   },
   {
     date: { en: "March 2023", da: "Marts 2023" },
@@ -51,7 +52,7 @@ const timeline = [
       en: "Papp Insights launches as the place where sensor, parking-house and external data meet.",
       da: "Papp Insights lanceres som stedet, hvor sensor-, parkeringshus- og eksterne data samles."
     },
-    image: "/images/products/insights/papp-insights-current.png"
+    image: "/images/about/timeline-insights.jpg"
   },
   {
     date: { en: "August 2025", da: "August 2025" },
@@ -60,7 +61,7 @@ const timeline = [
       en: "A strategic partnership adds vehicle type, fuel, brand and location intelligence to the data layer.",
       da: "Et strategisk partnerskab tilføjer biltype, drivmiddel, mærke og lokationsindsigt til datalaget."
     },
-    image: "/images/projects/cameras/parkeringsmoenstre-ishoej-cover.jpg"
+    image: "/images/about/timeline-camera.jpg"
   },
   {
     date: { en: "November 2026", da: "November 2026" },
@@ -69,7 +70,7 @@ const timeline = [
       en: "Papp prepares its first in-ground sensor and rebuilds Insights as a smarter 24/7 platform for collected mobility intelligence.",
       da: "Papp forbereder sin første nedgravede sensor og genopbygger Insights som en smartere 24/7-platform til indsamlet mobilitetsviden."
     },
-    image: "/images/products/insights/papp-insights-current.png"
+    image: "/images/about/timeline-sensor-launch.jpg"
   },
   {
     date: { en: "Today", da: "I dag" },
@@ -78,8 +79,7 @@ const timeline = [
       en: "Papp helps cities and operators make mobility decisions from real behaviour, not assumptions.",
       da: "Papp hjælper byer og operatører med at træffe mobilitetsbeslutninger ud fra reel adfærd, ikke antagelser."
     },
-    image: "/images/hero/mobility-city-visual.png",
-    imageFit: "contain" as const
+    image: "/images/about/timeline-data.jpg"
   }
 ];
 
@@ -92,42 +92,49 @@ const teamMembers = [
     name: "Tan Minh Nguyen Tran",
     role: { en: "CEO", da: "CEO" },
     email: "tan.tran@pappmobility.com",
-    linkedinUrl: "https://www.linkedin.com/in/tanminhnguyentran/"
+    linkedinUrl: "https://www.linkedin.com/in/tanminhnguyentran/",
+    image: "/images/team/tan-profile-new.jpg"
   },
   {
     name: "Martin Holk Rasmussen",
     role: { en: "Data Specialist", da: "Data Specialist" },
     email: "martin.rasmussen@pappmobility.com",
-    linkedinUrl: "https://www.linkedin.com/in/martinholk/"
+    linkedinUrl: "https://www.linkedin.com/in/martinholk/",
+    image: "/images/team/martin-profile-new.jpg"
   },
   {
     name: "Alfred Röttger Rydahl",
     role: { en: "Software Developer", da: "Softwareudvikler" },
     email: "alfred.rydahl@pappmobility.com",
-    linkedinUrl: "https://www.linkedin.com/in/alfred-r%C3%B6ttger-rydahl-8a6707a2/"
+    linkedinUrl: "https://www.linkedin.com/in/alfred-r%C3%B6ttger-rydahl-8a6707a2/",
+    image: "/images/team/alfred-profile-new.jpg"
   },
   {
     name: "Martine Winther",
     role: { en: "Development Consultant", da: "Udviklingskonsulent" },
     email: "martine.winther@pappmobility.com",
-    linkedinUrl: "https://www.linkedin.com/in/martine-winther-54b29696/"
+    linkedinUrl: "https://www.linkedin.com/in/martine-winther-54b29696/",
+    image: "/images/team/martine-profile.png"
   },
   {
     name: "Maxim Zavidei",
     role: { en: "Backend Software Engineer", da: "Backend-softwareingeniør" },
     email: "maxim.zavidei@pappmobility.com",
-    linkedinUrl: "https://www.linkedin.com/in/v1max/"
+    linkedinUrl: "https://www.linkedin.com/in/v1max/",
+    image: "/images/team/maxim-profile.jpg"
   },
   {
     name: "Radim Theiner",
     role: { en: "Product Owner", da: "Product Owner" },
     email: "radim.theiner@pappmobility.com",
-    linkedinUrl: "https://www.linkedin.com/in/therad/"
+    linkedinUrl: "https://www.linkedin.com/in/therad/",
+    image: "/images/team/radim-profile-new.jpg"
   },
   {
     name: "Sarah Sigvardt",
     role: { en: "Team Member", da: "Teammedlem" },
-    linkedinUrl: linkedinSearch("Sarah Sigvardt")
+    linkedinUrl: linkedinSearch("Sarah Sigvardt"),
+    image: "/images/team/sarah-profile.jpg"
   },
   {
     name: "Henrik Gade Hyldgaard",
@@ -159,7 +166,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     index === 0
       ? {
           ...item,
-          image: "/images/corporate/insights-meeting-city.jpg"
+          image: "/images/about/timeline-idea.jpg"
         }
       : item
   );
@@ -179,7 +186,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           />
         </div>
       </Section>
-      <Section tone="soft">
+      <Section className="about-timeline-section">
         <div className="about-timeline-layout">
           <AboutTimeline items={timelineItems} locale={locale} />
         </div>
@@ -201,7 +208,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 aria-label={`${member.name} on LinkedIn`}
               >
                 <span className="team-card__portrait" aria-hidden="true">
-                  <span>{member.initials ?? member.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}</span>
+                  {"image" in member && member.image ? (
+                    <Image src={withBasePath(member.image)} alt="" width={900} height={900} sizes="(max-width: 768px) 46vw, 22vw" />
+                  ) : (
+                    <span>{member.initials ?? member.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}</span>
+                  )}
                 </span>
                 <span className="team-card__content">
                   <h3>{member.name}</h3>

@@ -1,37 +1,48 @@
 "use client";
 
-import { Environment, ContactShadows, OrbitControls, useGLTF } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Box3, Group, Mesh, MeshStandardMaterial, Object3D, Vector3 } from "three";
+import { Box3, Group, Material, Mesh, MeshStandardMaterial, Object3D, Vector3 } from "three";
 import type { Locale } from "@/content/types";
 import { withBasePath } from "@/lib/site/basePath";
 
 type SensorPartName = "base" | "lid" | "core";
+
+interface SensorStep {
+  part: SensorPartName;
+  title: string;
+  body: string;
+}
 
 interface PartSnapshot {
   position: Vector3;
   rotation: { x: number; y: number; z: number };
 }
 
-const copy = {
+const copy: Record<Locale, { eyebrow: string; title: string; intro: string; steps: SensorStep[] }> = {
   en: {
-    eyebrow: "Sensor hardware",
+    eyebrow: "Sensor Hardware",
     title: "A parking sensor designed as part of the full data chain.",
     intro:
       "The sensor is the physical starting point: a compact unit that can sit in a parking space, collect occupancy signals and feed them into Papp Insights.",
     steps: [
       {
-        title: "Outer casing",
-        body: "The casing protects the electronics from daily parking-area use while keeping the installation discreet."
-      },
-      {
+        part: "core",
         title: "Sensor core",
-        body: "The inner sensing layer is built to detect real occupancy events and support long-term measurement programmes."
+        body:
+          "The core hides the technical work: mobile-network transmission, remote updates, LoRaWAN support, optimised battery drain and energy-efficient vehicle detection."
       },
       {
-        title: "Connected data",
-        body: "Each detected event becomes part of a wider data picture that can be reviewed, analysed and turned into recommendations."
+        part: "base",
+        title: "Base",
+        body: "The base holds the whole sensor in place, designed to be sturdy yet flexible through daily pressure, weather and installation conditions."
+      },
+      {
+        part: "lid",
+        title: "Lid",
+        body:
+          "The lid works with the base to create a watertight seal, protects the electronics and is built to handle even heavy vehicles."
       }
     ]
   },
@@ -39,19 +50,23 @@ const copy = {
     eyebrow: "Sensorhardware",
     title: "En parkeringssensor designet som del af hele datakæden.",
     intro:
-      "Sensoren er det fysiske udgangspunkt: en kompakt enhed, der kan placeres på en parkeringsplads, indsamle belægningssignaler og sende dem videre til Papp Insights.",
+      "Sensoren er det fysiske udgangspunkt: en kompakt enhed, der kan sidde i en parkeringsplads, indsamle belægningssignaler og sende dem videre til Papp Insights.",
     steps: [
       {
-        title: "Ydre kabinet",
-        body: "Kabinettet beskytter elektronikken i daglig brug og holder installationen diskret."
-      },
-      {
+        part: "core",
         title: "Sensorkerne",
-        body: "Den indre sensor måler faktiske belægningshændelser og understøtter længere måleprogrammer."
+        body:
+          "Kernen rummer teknikken: mobilnetværk, fjernopdateringer, LoRaWAN-support, optimeret batteriforbrug og energieffektiv bilregistrering."
       },
       {
-        title: "Forbundet data",
-        body: "Hver registrering bliver en del af et større databillede, der kan analyseres og omsættes til anbefalinger."
+        part: "base",
+        title: "Base",
+        body: "Basen holder hele sensoren på plads og er designet til at være robust, men fleksibel under daglig belastning, vejr og installation."
+      },
+      {
+        part: "lid",
+        title: "Låg",
+        body: "Låget arbejder sammen med basen for at skabe en vandtæt forsegling, beskytte elektronikken og håndtere selv tunge køretøjer."
       }
     ]
   }
@@ -64,6 +79,7 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
   const [selectedStep, setSelectedStep] = useState<number | null>(null);
   const scrollStep = Math.min(text.steps.length - 1, Math.max(0, Math.floor(progress * text.steps.length)));
   const activeStep = selectedStep ?? scrollStep;
+  const activePart = text.steps[activeStep]?.part ?? "core";
 
   useEffect(() => {
     let frame = 0;
@@ -96,48 +112,59 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
   }, []);
 
   return (
-    <section className="sensor-product-lab papp-section papp-section--soft" ref={sectionRef}>
+    <section className="sensor-product-lab papp-section" ref={sectionRef}>
       <div className="container">
+        <div className="sensor-product-lab__heading section-heading section-heading--start">
+          <p className="eyebrow">{text.eyebrow}</p>
+          <h2>{text.title}</h2>
+          <p>{text.intro}</p>
+        </div>
         <div className="sensor-product-lab__layout">
           <div className="sensor-product-lab__stage" aria-label={locale === "da" ? "3D-model af Papp sensor" : "3D model of Papp sensor"}>
             <Canvas
-              camera={{ position: [3.2, 2.35, 4.4], fov: 32 }}
+              className="sensor-product-lab__canvas"
+              camera={{ position: [3.2, 2.35, 4.4], fov: 30 }}
               dpr={[1, 1.6]}
               gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
               shadows
             >
-              <ambientLight intensity={0.55} />
-              <hemisphereLight args={["#ffffff", "#dce8ef", 1.1]} />
+              <ambientLight intensity={0.58} />
+              <hemisphereLight args={["#ffffff", "#dce8ef", 1.05]} />
               <directionalLight
                 castShadow
                 position={[3, 5, 4]}
-                intensity={2}
+                intensity={1.8}
                 shadow-mapSize-width={1024}
                 shadow-mapSize-height={1024}
                 shadow-bias={-0.0002}
               />
-              <SensorModel progress={progress} activeStep={activeStep} />
-              <ContactShadows position={[0, -0.78, 0]} opacity={0.22} scale={4} blur={2.4} far={2.5} resolution={384} frames={1} />
-              <Environment preset="city" environmentIntensity={0.28} />
+              <SensorCameraSetup />
+              <SensorModel activePart={activePart} progress={progress} />
+              <Environment preset="city" environmentIntensity={0.24} />
               <OrbitControls
                 enableDamping
                 enablePan={false}
-                enableZoom={false}
+                enableZoom
                 dampingFactor={0.08}
-                rotateSpeed={0.45}
-                minPolarAngle={0.85}
-                maxPolarAngle={1.72}
+                rotateSpeed={0.5}
+                zoomSpeed={0.6}
+                minDistance={2.1}
+                maxDistance={6.5}
+                minPolarAngle={0}
+                maxPolarAngle={Math.PI}
               />
             </Canvas>
           </div>
           <div className="sensor-product-lab__copy">
-            <p className="eyebrow">{text.eyebrow}</p>
-            <h2>{text.title}</h2>
-            <p>{text.intro}</p>
             <ol role="list">
               {text.steps.map((step, index) => (
                 <li className={activeStep === index ? "is-active" : ""} key={step.title}>
-                  <button type="button" onClick={() => setSelectedStep(index)} onFocus={() => setSelectedStep(index)}>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedStep(index)}
+                    onFocus={() => setSelectedStep(index)}
+                    onPointerEnter={() => setSelectedStep(index)}
+                  >
                     <span>{String(index + 1).padStart(2, "0")}</span>
                     <div>
                       <h3>{step.title}</h3>
@@ -154,13 +181,50 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
   );
 }
 
-function SensorModel({ progress, activeStep }: { progress: number; activeStep: number }) {
+function SensorCameraSetup() {
+  const { camera } = useThree();
+
+  useEffect(() => {
+    camera.lookAt(0, 0, 0);
+    camera.updateProjectionMatrix();
+  }, [camera]);
+
+  return null;
+}
+
+function cloneMaterial(material: Material | Material[]) {
+  return Array.isArray(material) ? material.map((item) => item.clone()) : material.clone();
+}
+
+function eachMaterial(material: Material | Material[], callback: (material: Material) => void) {
+  if (Array.isArray(material)) {
+    material.forEach(callback);
+    return;
+  }
+
+  callback(material);
+}
+
+function setObjectOpacity(object: Object3D | null | undefined, opacity: number) {
+  object?.traverse((child) => {
+    if (!(child instanceof Mesh)) return;
+
+    eachMaterial(child.material, (material) => {
+      const standard = material as MeshStandardMaterial;
+      standard.transparent = opacity < 0.98;
+      standard.opacity = opacity;
+      standard.depthWrite = opacity > 0.18;
+      standard.needsUpdate = true;
+    });
+  });
+}
+
+function SensorModel({ activePart, progress }: { activePart: SensorPartName; progress: number }) {
   const gltf = useGLTF(withBasePath("/models/sensor/sensor.gltf"));
   const groupRef = useRef<Group>(null);
   const parts = useRef<Partial<Record<SensorPartName, Object3D>>>({});
   const snapshots = useRef(new Map<Object3D, PartSnapshot>());
   const smoothedOpen = useRef(0);
-  const stepOpen = [0.16, 0.58, 0.94][activeStep] ?? Math.sin(progress * Math.PI);
 
   const scene = useMemo(() => {
     const clone = gltf.scene.clone(true) as Group;
@@ -170,20 +234,23 @@ function SensorModel({ progress, activeStep }: { progress: number; activeStep: n
     const maxAxis = Math.max(size.x, size.y, size.z) || 1;
 
     clone.position.sub(center);
-    clone.scale.setScalar(1.58 / maxAxis);
+    clone.scale.setScalar(1.8 / maxAxis);
     clone.rotation.set(Math.PI / 2, -0.58, 0.03);
 
     clone.traverse((object) => {
-      if (object instanceof Mesh) {
-        object.castShadow = true;
-        object.receiveShadow = true;
+      if (!(object instanceof Mesh)) return;
 
-        if (object.material instanceof MeshStandardMaterial) {
-          object.material = object.material.clone();
-          object.material.roughness = Math.max(object.material.roughness, 0.58);
-          object.material.metalness *= 0.4;
+      object.material = cloneMaterial(object.material);
+      object.castShadow = true;
+      object.receiveShadow = true;
+
+      eachMaterial(object.material, (material) => {
+        const standard = material as MeshStandardMaterial;
+        if (standard.roughness !== undefined) {
+          standard.roughness = Math.max(standard.roughness, 0.58);
+          standard.metalness *= 0.4;
         }
-      }
+      });
     });
 
     return clone;
@@ -198,7 +265,7 @@ function SensorModel({ progress, activeStep }: { progress: number; activeStep: n
 
       if (name.includes("base")) nextParts.base = object;
       if (name.includes("lid")) nextParts.lid = object;
-      if (name.includes("perry")) nextParts.core = object;
+      if (name.includes("perry") || name.includes("core")) nextParts.core = object;
     });
 
     Object.values(nextParts).forEach((part) => {
@@ -213,17 +280,24 @@ function SensorModel({ progress, activeStep }: { progress: number; activeStep: n
     snapshots.current = nextSnapshots;
   }, [scene]);
 
-  useFrame(() => {
-    smoothedOpen.current += (stepOpen - smoothedOpen.current) * 0.08;
-    const openAmount = smoothedOpen.current;
-    const eased = openAmount * openAmount * (3 - 2 * openAmount);
+  useEffect(() => {
+    (["base", "core", "lid"] as SensorPartName[]).forEach((partName) => {
+      setObjectOpacity(parts.current[partName], partName === activePart ? 1 : 0.12);
+    });
+  }, [activePart, scene]);
+
+  useFrame((_, delta) => {
+    const targetOpen = Math.min(1, Math.max(0.18, progress * 1.2));
+    smoothedOpen.current += (targetOpen - smoothedOpen.current) * Math.min(1, delta * 5);
+    const eased = smoothedOpen.current * smoothedOpen.current * (3 - 2 * smoothedOpen.current);
     const lid = parts.current.lid;
     const core = parts.current.core;
+    const base = parts.current.base;
 
     if (lid) {
       const snapshot = snapshots.current.get(lid);
       if (snapshot) {
-        lid.position.y = snapshot.position.y + eased * 0.42;
+        lid.position.y = snapshot.position.y + eased * 0.52;
         lid.position.x = snapshot.position.x + eased * 0.03;
         lid.rotation.z = snapshot.rotation.z + eased * 0.07;
       }
@@ -237,8 +311,15 @@ function SensorModel({ progress, activeStep }: { progress: number; activeStep: n
       }
     }
 
+    if (base) {
+      const snapshot = snapshots.current.get(base);
+      if (snapshot) {
+        base.position.y = snapshot.position.y - eased * 0.14;
+      }
+    }
+
     if (groupRef.current) {
-      groupRef.current.rotation.y += 0.0008;
+      groupRef.current.rotation.y += delta * 0.045;
     }
   });
 

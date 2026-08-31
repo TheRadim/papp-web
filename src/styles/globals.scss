@@ -9,6 +9,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
+  overflow-x: clip;
 }
 
 [id] {
@@ -17,7 +18,7 @@ html {
 
 body {
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body.has-open-menu {
@@ -1377,11 +1378,18 @@ img {
 
 .sensor-product-lab {
   overflow: clip;
+  min-height: 165vh;
+  background: #fff;
+}
+
+.sensor-product-lab__heading {
+  max-width: 780px;
+  margin-bottom: clamp(2rem, 5vw, 4rem);
 }
 
 .sensor-product-lab__layout {
   display: grid;
-  grid-template-columns: minmax(320px, 0.95fr) minmax(0, 1.05fr);
+  grid-template-columns: minmax(360px, 1.15fr) minmax(0, 0.85fr);
   align-items: start;
   gap: clamp(2rem, 5vw, 5rem);
 }
@@ -1390,15 +1398,22 @@ img {
   position: sticky;
   top: 92px;
   overflow: hidden;
-  height: min(640px, calc(100svh - 120px));
-  min-height: 440px;
+  height: min(740px, calc(100svh - 120px));
+  min-height: 520px;
   background: transparent;
+}
+
+.sensor-product-lab__stage canvas,
+.sensor-product-lab__canvas {
+  display: block;
+  width: 100%;
+  height: 100% !important;
 }
 
 .sensor-product-lab__copy {
   display: grid;
   gap: 1.1rem;
-  padding-block: clamp(2rem, 7vh, 4.5rem);
+  padding-block: clamp(4rem, 16vh, 10rem);
 }
 
 .sensor-product-lab__copy h2 {
@@ -1472,16 +1487,17 @@ img {
 }
 
 .insights-data-lab {
-  background: linear-gradient(180deg, #fff, #f7fafc);
+  background: linear-gradient(180deg, #fff, #f8fbfd 58%, #fff);
 }
 
 .insights-data-lab__controls {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(210px, 280px) minmax(260px, 560px);
   align-items: end;
   justify-content: center;
-  gap: 0.8rem;
-  margin: 2rem auto 1.25rem;
+  gap: 1rem;
+  margin: clamp(2rem, 4vw, 3rem) auto 1.5rem;
+  max-width: 880px;
 }
 
 .insights-data-lab__controls label {
@@ -1507,6 +1523,27 @@ img {
   color: var(--papp-heading);
   padding: 0.55rem 0.8rem;
   font: inherit;
+}
+
+.insights-data-lab__slider-label {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+}
+
+.insights-data-lab__slider-label span {
+  grid-column: 1 / -1;
+}
+
+.insights-data-lab__slider-label input {
+  width: 100%;
+  accent-color: var(--papp-blue-light);
+}
+
+.insights-data-lab__slider-label strong {
+  min-width: 5.8rem;
+  color: var(--papp-heading);
+  font-size: 0.92rem;
+  text-align: right;
 }
 
 .insights-data-lab__segmented {
@@ -1550,7 +1587,7 @@ img {
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 1px;
   overflow: hidden;
-  margin: 0 auto 1.35rem;
+  margin: 0 auto clamp(2rem, 5vw, 4rem);
   border: 1px solid rgba(68, 68, 68, 0.1);
   border-radius: 5px;
   background: rgba(68, 68, 68, 0.1);
@@ -1592,19 +1629,58 @@ img {
   gap: 1rem;
 }
 
+.insights-data-lab__story,
+.insights-data-lab__note,
+.insights-data-lab__text-panel {
+  max-width: 720px;
+  color: var(--papp-body);
+  line-height: 1.68;
+}
+
+.insights-data-lab__story {
+  margin: 0 auto clamp(1.8rem, 4vw, 3rem);
+  text-align: center;
+}
+
+.insights-data-lab__story h3,
+.insights-data-lab__text-panel h3 {
+  margin-bottom: 0.75rem;
+  color: var(--papp-heading);
+  font-size: clamp(1.65rem, 3vw, 2.4rem);
+  letter-spacing: -0.02em;
+}
+
+.insights-data-lab__note {
+  margin: 1rem auto clamp(3rem, 7vw, 5rem);
+  text-align: center;
+}
+
+.insights-data-lab__split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 4rem);
+  margin-top: clamp(2.5rem, 6vw, 5rem);
+}
+
+.insights-data-lab__split--reverse {
+  grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.05fr);
+}
+
 .insights-data-lab__card {
   display: grid;
   gap: 1rem;
   min-height: 430px;
-  border: 1px solid rgba(68, 68, 68, 0.1);
+  border: 1px solid rgba(71, 178, 228, 0.18);
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.74);
   color: var(--papp-heading);
   padding: clamp(1rem, 2vw, 1.45rem);
-  box-shadow: 0 22px 65px rgba(55, 81, 126, 0.08);
+  box-shadow: 0 22px 65px rgba(55, 81, 126, 0.065);
+  backdrop-filter: blur(10px);
 }
 
-.insights-data-lab__card:first-child {
+.insights-data-lab__card--wide {
   grid-column: 1 / -1;
 }
 
@@ -2044,48 +2120,45 @@ img {
 
 .insight-dashboard__vehicle-mix {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
   gap: clamp(0.22rem, 0.6vw, 0.42rem);
   min-height: 0;
   align-content: center;
 }
 
-.insight-dashboard__vehicle-stack {
+.insight-dashboard__vehicle-bars {
   display: grid;
-  grid-template-columns: 18fr 19fr 63fr;
-  gap: 2px;
-  overflow: hidden;
-  height: clamp(18px, 3.2vw, 34px);
-  background: rgba(255, 255, 255, 0.13);
+  gap: clamp(0.18rem, 0.45vw, 0.34rem);
+  min-height: 0;
 }
 
-.insight-dashboard__vehicle-stack i {
-  height: 100%;
-  background: linear-gradient(180deg, var(--dashboard-accent), rgba(255, 255, 255, 0.26));
-  transform: scaleX(0);
-  transform-origin: left;
-  animation: dashboard-meter-load 0.7s ease forwards, dashboard-meter-cycle 6.5s 1s ease-in-out infinite;
-}
-
-.insight-dashboard__vehicle-mix ul {
+.insight-dashboard__vehicle-row {
   display: grid;
-  gap: clamp(0.12rem, 0.34vw, 0.24rem);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.insight-dashboard__vehicle-mix li {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.35rem;
+  grid-template-columns: minmax(1.9rem, auto) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.18rem, 0.45vw, 0.32rem);
   color: rgba(236, 247, 255, 0.68);
   font-family: Poppins, system-ui, sans-serif;
   font-size: clamp(0.34rem, 0.54vw, 0.48rem);
   font-weight: 700;
 }
 
-.insight-dashboard__vehicle-mix strong {
+.insight-dashboard__vehicle-row i {
+  overflow: hidden;
+  height: clamp(5px, 0.85vw, 9px);
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.insight-dashboard__vehicle-row i::before {
+  display: block;
+  width: var(--vehicle-width);
+  height: 100%;
+  background: linear-gradient(90deg, var(--dashboard-accent), rgba(255, 255, 255, 0.7));
+  content: "";
+  transform-origin: left;
+  animation: dashboard-meter-load 0.7s ease both, dashboard-meter-cycle 6.5s 0.8s ease-in-out infinite;
+}
+
+.insight-dashboard__vehicle-row strong {
   color: #fff;
 }
 
@@ -2480,7 +2553,7 @@ button.project-category-card {
 .project-card img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
   transition: transform 0.55s ease;
 }
@@ -2508,7 +2581,7 @@ button.project-category-card {
 
 .project-grid,
 .project-grid--featured {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .project-group + .project-group {
@@ -3240,7 +3313,7 @@ button.project-category-card {
 .about-hero-section {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, #f5f7f9 0%, #eef2f5 100%);
+  background: #fff;
 }
 
 .history-showcase__sticky {
@@ -3621,7 +3694,7 @@ button.project-category-card {
   min-height: 260px;
   align-content: space-between;
   border: 1px solid rgba(55, 81, 126, 0.12);
-  border-radius: 0;
+  border-radius: 5px;
   background: #fff;
   color: var(--papp-heading);
   padding: 1rem;
@@ -3634,6 +3707,7 @@ button.project-category-card {
   aspect-ratio: 1;
   place-items: center;
   overflow: hidden;
+  border-radius: 4px;
   background:
     linear-gradient(135deg, rgba(71, 178, 228, 0.12), rgba(251, 134, 127, 0.12)),
     #f8fafc;
@@ -3643,6 +3717,12 @@ button.project-category-card {
   font-weight: 800;
   letter-spacing: 0.02em;
   transition: filter 0.3s ease;
+}
+
+.team-card__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .team-card__portrait::after {
@@ -5162,8 +5242,22 @@ button.project-category-card {
   }
 
   .hero-copy h1 {
-    font-size: clamp(2.55rem, 14vw, 3.4rem);
+    font-size: clamp(2.25rem, 11vw, 2.85rem);
     white-space: normal;
+  }
+
+  .subpage-hero h1,
+  .section-heading h2,
+  .sensor-product-lab__heading h2 {
+    max-width: 100%;
+    font-size: clamp(1.9rem, 8.7vw, 2.55rem);
+    overflow-wrap: anywhere;
+  }
+
+  .subpage-hero p,
+  .section-heading p,
+  .sensor-product-lab__heading p {
+    max-width: 100%;
   }
 
   .hero-secondary {
@@ -5384,14 +5478,6 @@ button.project-category-card {
   }
 
   .insight-dashboard__queue {
-    display: none;
-  }
-
-  .insight-dashboard__vehicle-mix {
-    gap: 0.22rem;
-  }
-
-  .insight-dashboard__vehicle-mix li:nth-child(n + 3) {
     display: none;
   }
 
@@ -5666,15 +5752,20 @@ button.project-category-card {
     min-height: 0;
   }
 
+  .sensor-product-lab__copy {
+    padding-block: 0;
+  }
+
   .sensor-product-lab__copy h2 {
     max-width: 14ch;
   }
 
-  .insights-data-lab__grid {
+  .insights-data-lab__split,
+  .insights-data-lab__split--reverse {
     grid-template-columns: 1fr;
   }
 
-  .insights-data-lab__card:first-child {
+  .insights-data-lab__card--wide {
     grid-column: auto;
   }
 }
@@ -5703,16 +5794,26 @@ button.project-category-card {
     justify-content: stretch;
   }
 
-  .insights-data-lab__segmented > div {
-    flex-wrap: wrap;
+  .insights-data-lab__slider-label {
+    grid-template-columns: 1fr;
   }
 
-  .insights-data-lab__segmented button {
-    flex: 1 1 auto;
+  .insights-data-lab__slider-label strong {
+    text-align: left;
   }
 
   .insights-data-lab__metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .insights-data-lab__metrics article {
+    min-width: 0;
+    min-height: 104px;
+    padding: 0.95rem;
+  }
+
+  .insights-data-lab__metrics strong {
+    font-size: clamp(1.7rem, 9vw, 2.25rem);
   }
 
   .insights-data-lab__card {
@@ -5745,12 +5846,9 @@ button.project-category-card {
     font-size: clamp(0.36rem, 1.7vw, 0.5rem);
   }
 
-  .insight-dashboard__vehicle-stack {
-    height: clamp(22px, 7.5vw, 34px);
-  }
-
-  .insight-dashboard__vehicle-mix ul {
-    display: none;
+  .insight-dashboard__vehicle-row {
+    grid-template-columns: 1.55rem minmax(0, 1fr) 1.65rem;
+    font-size: clamp(0.36rem, 1.7vw, 0.5rem);
   }
 }
 

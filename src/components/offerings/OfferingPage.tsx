@@ -13,9 +13,10 @@ interface OfferingPageProps {
   locale: Locale;
   offering: Offering;
   afterHero?: ReactNode;
+  hideDetailSections?: boolean;
 }
 
-export function OfferingPage({ locale, offering, afterHero }: OfferingPageProps) {
+export function OfferingPage({ locale, offering, afterHero, hideDetailSections = false }: OfferingPageProps) {
   const relatedProjects = getProjects(locale).filter((project) => offering.relatedProjectSlugs.includes(project.slug));
 
   return (
@@ -37,28 +38,30 @@ export function OfferingPage({ locale, offering, afterHero }: OfferingPageProps)
 
       {afterHero}
 
-      <Section>
-        <div className="detail-grid">
-          <div>
-            <SectionHeading eyebrow={locale === "da" ? "Fordele" : "Benefits"} title={locale === "da" ? "Hvad det hjælper jer med" : "What it helps you understand"} />
-            <ul className="check-list check-list--large">
-              {offering.benefits.map((benefit) => (
-                <li key={pick(locale, benefit)}>{pick(locale, benefit)}</li>
-              ))}
-            </ul>
+      {!hideDetailSections ? (
+        <Section>
+          <div className="detail-grid">
+            <div>
+              <SectionHeading eyebrow={locale === "da" ? "Fordele" : "Benefits"} title={locale === "da" ? "Hvad det hjælper jer med" : "What it helps you understand"} />
+              <ul className="check-list check-list--large">
+                {offering.benefits.map((benefit) => (
+                  <li key={pick(locale, benefit)}>{pick(locale, benefit)}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <SectionHeading eyebrow={locale === "da" ? "Brugsscenarier" : "Use cases"} title={locale === "da" ? "Hvor løsningen passer ind" : "Where the solution fits"} />
+              <ul className="tag-list">
+                {offering.useCases.map((useCase) => (
+                  <li key={pick(locale, useCase)}>{pick(locale, useCase)}</li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <div>
-            <SectionHeading eyebrow={locale === "da" ? "Brugsscenarier" : "Use cases"} title={locale === "da" ? "Hvor løsningen passer ind" : "Where the solution fits"} />
-            <ul className="tag-list">
-              {offering.useCases.map((useCase) => (
-                <li key={pick(locale, useCase)}>{pick(locale, useCase)}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </Section>
+        </Section>
+      ) : null}
 
-      {offering.process?.length ? (
+      {!hideDetailSections && offering.process?.length ? (
         <Section tone="soft">
           <SectionHeading eyebrow={locale === "da" ? "Proces" : "Process"} title={locale === "da" ? "Sådan starter et forløb" : "How a project starts"} align="center" />
           <div className="process-grid">
@@ -72,7 +75,7 @@ export function OfferingPage({ locale, offering, afterHero }: OfferingPageProps)
         </Section>
       ) : null}
 
-      {offering.category === "cameras" ? (
+      {!hideDetailSections && offering.category === "cameras" ? (
         <Section>
           <div className="review-note">
             <p className="eyebrow">{locale === "da" ? "Privacy" : "Privacy"}</p>
