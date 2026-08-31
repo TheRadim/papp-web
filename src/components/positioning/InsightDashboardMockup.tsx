@@ -267,21 +267,18 @@ function DashboardVisual({ tab, locale }: { tab: DashboardTab; locale: Locale })
   if (tab.variant === "origin") {
     return (
       <div className="insight-dashboard__origin">
-        <div className="insight-dashboard__orbit" aria-hidden="true">
-          <span className="is-core">{tab.metric}</span>
-          <i className="is-node-1" />
-          <i className="is-node-2" />
-          <i className="is-node-3" />
-          <i className="is-node-4" />
-        </div>
-        <ul className="insight-dashboard__origin-list">
-          {["8210", "8000"].map((place, index) => (
-            <li key={place}>
-              <span>{place}</span>
-              <strong>{[34, 27][index]}%</strong>
-            </li>
-          ))}
-        </ul>
+        {[
+          { zip: "8210", value: 46 },
+          { zip: "8000", value: 38 },
+          { zip: "8240", value: 31 },
+          { zip: "8462", value: 24 }
+        ].map((place) => (
+          <div className="insight-dashboard__origin-row" key={place.zip}>
+            <span>{place.zip}</span>
+            <i style={{ "--origin-width": `${place.value}%` } as CSSProperties} />
+            <strong>{place.value}%</strong>
+          </div>
+        ))}
       </div>
     );
   }
@@ -289,12 +286,19 @@ function DashboardVisual({ tab, locale }: { tab: DashboardTab; locale: Locale })
   if (tab.variant === "vehicles") {
     return (
       <div className="insight-dashboard__vehicle-mix">
-        {tab.meters.slice(0, 3).map((meter) => (
-          <div key={meter.label.en} style={{ "--donut-value": `${meter.value}%` } as CSSProperties}>
-            <span>{meter.value}%</span>
-            <small>{meter.label[locale]}</small>
-          </div>
-        ))}
+        <div className="insight-dashboard__vehicle-stack" aria-hidden="true">
+          {tab.meters.slice(0, 3).map((meter) => (
+            <i key={meter.label.en} style={{ "--stack-width": `${meter.value}%` } as CSSProperties} />
+          ))}
+        </div>
+        <ul>
+          {tab.meters.slice(0, 3).map((meter) => (
+            <li key={meter.label.en}>
+              <span>{meter.label[locale]}</span>
+              <strong>{meter.value}%</strong>
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }

@@ -87,12 +87,7 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
             return (
               <li className={`${isActive ? "is-active" : ""} ${isPassed ? "is-passed" : ""}`.trim()} key={item.date.da}>
                 <a aria-current={isActive ? "step" : undefined} href={`#timeline-${index}`} onClick={(event) => handleNavClick(event, index)}>
-                  <span className="history-story__counter">{String(index + 1).padStart(2, "0")}</span>
-                  <span className="history-story__copy">
-                    <span className="history-story__date">{item.date[locale]}</span>
-                    <strong>{item.title[locale]}</strong>
-                    <span>{item.body[locale]}</span>
-                  </span>
+                  <span className="history-story__date">{item.date[locale]}</span>
                 </a>
               </li>
             );
@@ -111,9 +106,8 @@ export function AboutTimeline({ items, locale }: AboutTimelineProps) {
               id={`timeline-${index}`}
               key={item.date.da}
             >
-              <article className="history-story__card" data-step={String(index + 1).padStart(2, "0")}>
+              <article className="history-story__card">
                 <div className="history-story__summary">
-                  <span>{String(index + 1).padStart(2, "0")}</span>
                   <time dateTime={item.date.en}>{item.date[locale]}</time>
                   <h3>{item.title[locale]}</h3>
                 </div>
