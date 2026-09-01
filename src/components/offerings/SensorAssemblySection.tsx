@@ -21,12 +21,16 @@ interface PartSnapshot {
   rotation: { x: number; y: number; z: number };
 }
 
-const copy: Record<Locale, { eyebrow: string; title: string; intro: string; steps: SensorStep[] }> = {
+const copy: Record<Locale, { eyebrow: string; title: string; intro: string; note: string[]; steps: SensorStep[] }> = {
   en: {
     eyebrow: "Sensor Hardware",
     title: "A parking sensor designed as part of the full data chain.",
     intro:
       "The sensor is the physical starting point: a compact unit that can sit in a parking space, collect occupancy signals and feed them into Papp Insights.",
+    note: [
+      "Developed in-house, the sensor measures occupancy reliably at individual parking spaces. It is especially strong when a smaller area needs precise coverage, or when specific bays need to be followed closely over time.",
+      "Where cameras give a broader view of movement, sensors provide spot-level confidence directly from the parking surface."
+    ],
     steps: [
       {
         part: "lid",
@@ -52,6 +56,10 @@ const copy: Record<Locale, { eyebrow: string; title: string; intro: string; step
     title: "En parkeringssensor designet som del af hele datakæden.",
     intro:
       "Sensoren er det fysiske udgangspunkt: en kompakt enhed, der kan sidde i en parkeringsplads, indsamle belægningssignaler og sende dem videre til Papp Insights.",
+    note: [
+      "Sensoren er udviklet internt til at måle belægning stabilt på den enkelte parkeringsplads. Den er særligt velegnet, når et mindre område skal dækkes præcist, eller når udvalgte pladser skal følges tæt over tid.",
+      "Hvor kameraer giver et bredere billede af bevægelse, giver sensorer punktpræcis sikkerhed direkte fra parkeringsfladen."
+    ],
     steps: [
       {
         part: "lid",
@@ -77,7 +85,6 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
   const text = copy[locale];
   const sectionRef = useRef<HTMLElement>(null);
   const layoutRef = useRef<HTMLDivElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
   const clearHoverFrame = useRef<number | null>(null);
   const [progress, setProgress] = useState(0);
   const [highlightedPart, setHighlightedPart] = useState<SensorPartName | null>(null);
@@ -89,15 +96,15 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
 
     function updateProgress() {
       frame = 0;
-      const element = stageRef.current ?? layoutRef.current ?? sectionRef.current;
+      const element = layoutRef.current ?? sectionRef.current;
       if (!element) return;
 
       const rect = element.getBoundingClientRect();
       const viewportHeight = window.innerHeight || 1;
-      const visibleRatio = Math.min(1, Math.max(0, (viewportHeight - rect.top) / Math.max(1, rect.height)));
-      const openProgress = Math.min(1, Math.max(0, (visibleRatio - 0.54) / 0.18));
-      const exitProgress = Math.min(1, Math.max(0, (rect.bottom - viewportHeight * 0.18) / (viewportHeight * 0.34)));
-      const nextProgress = Math.min(openProgress, exitProgress);
+      const entered = Math.min(1, Math.max(0, (viewportHeight - rect.top) / viewportHeight));
+      const opening = smoothstep(0.4, 0.48, entered);
+      const closing = 1 - smoothstep(0.6, 0.68, entered);
+      const nextProgress = Math.min(opening, closing);
       setProgress(nextProgress);
     }
 
@@ -131,7 +138,7 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
     clearHoverFrame.current = window.setTimeout(() => {
       setHighlightedPart(null);
       clearHoverFrame.current = null;
-    }, 90);
+    }, 140);
   }, []);
 
   useEffect(
@@ -152,7 +159,6 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
         <div className="sensor-product-lab__layout" ref={layoutRef}>
           <div
             className="sensor-product-lab__stage"
-            ref={stageRef}
             aria-label={locale === "da" ? "3D-model af Papp sensor" : "3D model of Papp sensor"}
           >
             <Canvas
@@ -209,11 +215,22 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
                 </li>
               ))}
             </ol>
+            <div className="sensor-product-lab__note">
+              {text.note.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
+}
+
+function smoothstep(start: number, end: number, value: number) {
+  if (start === end) return value >= end ? 1 : 0;
+  const amount = Math.min(1, Math.max(0, (value - start) / (end - start)));
+  return amount * amount * (3 - 2 * amount);
 }
 
 function SensorCameraSetup() {
@@ -246,9 +263,16 @@ function setObjectOpacity(object: Object3D | null | undefined, opacity: number) 
 
     eachMaterial(child.material, (material) => {
       const standard = material as MeshStandardMaterial;
-      standard.transparent = opacity < 0.98;
+      const transparent = opacity < 0.98;
+      const depthWrite = opacity > 0.18;
+
+      if (Math.abs((standard.opacity ?? 1) - opacity) < 0.004 && standard.transparent === transparent && standard.depthWrite === depthWrite) {
+        return;
+      }
+
+      standard.transparent = transparent;
       standard.opacity = opacity;
-      standard.depthWrite = opacity > 0.18;
+      standard.depthWrite = depthWrite;
       standard.needsUpdate = true;
     });
   });
@@ -285,6 +309,7 @@ function SensorModel({
   const partOpacities = useRef<Record<SensorPartName, number>>({ base: 1, core: 1, lid: 1 });
   const snapshots = useRef(new Map<Object3D, PartSnapshot>());
   const smoothedOpen = useRef(0);
+  const hoveredModelPart = useRef<SensorPartName | null>(null);
 
   const scene = useMemo(() => {
     const clone = gltf.scene.clone(true) as Group;
@@ -380,7 +405,7 @@ function SensorModel({
     });
   });
 
-  function handlePointerMove(event: ThreeEvent<PointerEvent>) {
+  function handlePointerOver(event: ThreeEvent<PointerEvent>) {
     const part = getSensorPartFromObject(event.object);
 
     if (!part) {
@@ -388,7 +413,10 @@ function SensorModel({
     }
 
     event.stopPropagation();
-    onPartHover(part);
+    if (hoveredModelPart.current !== part) {
+      hoveredModelPart.current = part;
+      onPartHover(part);
+    }
   }
 
   function handlePointerOut(event: ThreeEvent<PointerEvent>) {
@@ -396,12 +424,19 @@ function SensorModel({
       return;
     }
 
+    const stillOverSensorPart = event.intersections.some((hit) => hit.object !== event.object && getSensorPartFromObject(hit.object));
+
+    if (stillOverSensorPart) {
+      return;
+    }
+
     event.stopPropagation();
+    hoveredModelPart.current = null;
     onPartHover(null);
   }
 
   return (
-    <group ref={groupRef} position={[0, -1.14, 0]} onPointerMove={handlePointerMove} onPointerOut={handlePointerOut}>
+    <group ref={groupRef} position={[0, -1.14, 0]} onPointerOver={handlePointerOver} onPointerOut={handlePointerOut}>
       <primitive object={scene} />
     </group>
   );

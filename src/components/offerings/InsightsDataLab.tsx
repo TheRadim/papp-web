@@ -43,15 +43,13 @@ const plotConfig = {
 
 const copy = {
   en: {
-    eyebrow: "Papp Insights",
-    title: "Dashboards and reporting that turn mobility data into something teams can read, share and act on.",
     area: "Area",
     date: "Date range",
     allAreas: "Parking network",
     allDates: "All dates",
     featureTitle: "From mobility data to a clear picture",
     featureIntro:
-      "Papp Insights brings sensor, camera and parking-system data into one calm surface, so teams can move from measured activity to patterns they can explain.",
+      "Papp Insights brings sensor, camera and parking-system data into one calm surface, so teams can move from measured activity to patterns they can explain and compare.",
     contextTitle: "From registrations to useful explanations.",
     context:
       "Papp Insights combines measured activity, vehicle profiles, origin signals and dwell time into views that help teams understand what is happening before deciding what to change.",
@@ -69,15 +67,9 @@ const copy = {
     structureTextTitle: "Some questions need more than one signal.",
     structureText:
       "Interactive visualisations make it possible to explore relationships between different signals, such as whether longer stays occur at particular times or whether visitors from further away behave differently.",
-    dimensionsTitle: "One place to understand how an area moves",
-    dimensionsIntro:
-      "Visits, unique vehicles, arrival and departure patterns, dwell time, utilisation, vehicle profiles, origin areas and comparisons between locations can sit together in one readable product view.",
-    comparisonTitle: "Compare places. Compare periods. See what changed.",
-    comparison:
-      "A number becomes much more useful when there is something to compare it with. Papp Insights lets teams look across different areas and time periods to separate temporary fluctuations from recurring patterns.",
-    sharingTitle: "Insights that are easier to share",
-    sharing:
-      "Analysis becomes useful when other people can understand it. Papp Insights turns measured behaviour into clear visualisations and reporting for planning discussions and stakeholder communication.",
+    outcomeTitle: "Understand the pattern, then make it easy to share.",
+    outcome:
+      "Visits, dwell time, utilisation, vehicle profiles and origin signals become more useful when they can be compared across places and periods. Papp Insights turns that comparison into clear visual explanations for planning work and stakeholder conversations.",
     metrics: {
       visits: "Visits",
       vehicles: "Unique vehicles",
@@ -88,15 +80,13 @@ const copy = {
     }
   },
   da: {
-    eyebrow: "Papp Insights",
-    title: "Dashboards og rapportering, der gør mobilitetsdata nemmere at læse, dele og handle på.",
     area: "Område",
     date: "Datoperiode",
     allAreas: "Parkeringsnetværk",
     allDates: "Alle datoer",
     featureTitle: "Fra mobilitetsdata til et klart billede",
     featureIntro:
-      "Papp Insights samler sensor-, kamera- og parkeringsdata i én rolig flade, så teams kan gå fra målt aktivitet til mønstre, der kan forklares.",
+      "Papp Insights samler sensor-, kamera- og parkeringsdata i én rolig flade, så teams kan gå fra målt aktivitet til mønstre, der kan forklares og sammenlignes.",
     contextTitle: "Fra registreringer til brugbare forklaringer.",
     context:
       "Papp Insights kombinerer aktivitet, bilprofiler, opland og opholdstid i visninger, der hjælper teams med at forstå situationen, før der vælges handling.",
@@ -114,15 +104,9 @@ const copy = {
     structureTextTitle: "Nogle spørgsmål kræver flere signaler.",
     structureText:
       "Interaktive visualiseringer gør det muligt at undersøge relationer mellem flere signaler, for eksempel om lange ophold sker på bestemte tidspunkter, eller om brugere længere væk opfører sig anderledes.",
-    dimensionsTitle: "Ét sted til at forstå, hvordan et område bevæger sig",
-    dimensionsIntro:
-      "Besøg, unikke køretøjer, ankomst- og afgangsmønstre, opholdstid, udnyttelse, bilprofiler, opland og sammenligninger mellem steder kan samles i én læsbar produktvisning.",
-    comparisonTitle: "Sammenlign steder. Sammenlign perioder. Se hvad der ændrede sig.",
-    comparison:
-      "Et tal bliver langt mere brugbart, når det kan sammenlignes. Papp Insights lader teams se på tværs af områder og perioder, så midlertidige udsving kan adskilles fra mønstre, der gentager sig.",
-    sharingTitle: "Indsigter der er nemmere at dele",
-    sharing:
-      "Analyse bliver først nyttig, når andre kan forstå den. Papp Insights omsætter målt adfærd til tydelige visualiseringer og rapportering til planlægning og dialog med interessenter.",
+    outcomeTitle: "Forstå mønstret, og gør det nemt at dele.",
+    outcome:
+      "Besøg, opholdstid, udnyttelse, bilprofiler og opland bliver mere brugbare, når de kan sammenlignes på tværs af steder og perioder. Papp Insights omsætter sammenligningen til tydelige visuelle forklaringer til planlægning og dialog.",
     metrics: {
       visits: "Besøg",
       vehicles: "Unikke køretøjer",
@@ -157,10 +141,6 @@ export function InsightsDataLab({ locale }: { locale: Locale }) {
   return (
     <section className="insights-data-lab papp-section">
       <div className="container">
-        <div className="section-heading section-heading--center">
-          <p className="eyebrow">{text.eyebrow}</p>
-          <h2>{text.title}</h2>
-        </div>
         <div className="insights-feature-head">
           <h3>{text.featureTitle}</h3>
           <p>{text.featureIntro}</p>
@@ -242,21 +222,9 @@ export function InsightsDataLab({ locale }: { locale: Locale }) {
           </div>
           <PlotCard plot={plots.structure} />
         </div>
-        <div className="insights-capability-band">
-          <div className="insights-capability-band__copy">
-            <h3>{text.dimensionsTitle}</h3>
-            <p>{text.dimensionsIntro}</p>
-          </div>
-        </div>
-        <div className="insights-comparison">
-          <div>
-            <h3>{text.comparisonTitle}</h3>
-            <p>{text.comparison}</p>
-          </div>
-        </div>
-        <div className="insights-share-note">
-          <h3>{text.sharingTitle}</h3>
-          <p>{text.sharing}</p>
+        <div className="insights-outcome-note">
+          <h3>{text.outcomeTitle}</h3>
+          <p>{text.outcome}</p>
         </div>
       </div>
     </section>
@@ -303,11 +271,13 @@ function PlotCard({ className = "", plot }: { className?: string; plot: PlotSpec
     let cancelled = false;
     let loadedPlotly: Awaited<typeof import("plotly.js-dist-min")>["default"] | null = null;
 
-    void import("plotly.js-dist-min").then((module) => {
-      loadedPlotly = module.default;
-      if (cancelled) return;
-      void module.default.react(plotNode, plot.data, plot.layout, plotConfig);
-    });
+    void import("plotly.js-dist-min")
+      .then((module) => {
+        loadedPlotly = module.default;
+        if (cancelled) return;
+        void module.default.react(plotNode, plot.data, plot.layout, plotConfig).catch(() => undefined);
+      })
+      .catch(() => undefined);
 
     return () => {
       cancelled = true;

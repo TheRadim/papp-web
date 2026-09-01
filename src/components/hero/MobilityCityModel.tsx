@@ -179,21 +179,7 @@ export function MobilityCityModel({
 
   useEffect(() => {
     onStatusChange("ready");
-
-    if (process.env.NODE_ENV !== "production") {
-      const names: string[] = [];
-      model.traverse((object) => {
-        names.push(`${object.name || "(unnamed)"}:${object.type}`);
-      });
-      console.debug("[MobilityCity] GLB hierarchy", names);
-
-      MOBILITY_AREAS.forEach((area) => {
-        if (!roots[area]) {
-          console.warn(`[MobilityCity] Expected object "${CITY_OBJECT_NAMES[area]}" was not found in ${MOBILITY_CITY_MODEL_URL}.`);
-        }
-      });
-    }
-  }, [model, onStatusChange, roots]);
+  }, [onStatusChange]);
 
   useEffect(() => {
     const activeArea = selectedArea ? null : hoveredArea;
@@ -282,6 +268,18 @@ export function MobilityCityModel({
     const area = getMobilityAreaFromObject(event.object);
 
     if (!area) {
+      return;
+    }
+
+    const stillOverSelectableArea = event.intersections.some((hit) => {
+      if (hit.object === event.object) {
+        return false;
+      }
+
+      return Boolean(getMobilityAreaFromObject(hit.object));
+    });
+
+    if (stillOverSelectableArea) {
       return;
     }
 

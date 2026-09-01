@@ -34,11 +34,7 @@ class MobilityCityErrorBoundary extends Component<MobilityCityErrorBoundaryProps
     return { hasError: true };
   }
 
-  componentDidCatch(error: unknown) {
-    if (process.env.NODE_ENV !== "production") {
-      console.error("[MobilityCity] Failed to render interactive model", error);
-    }
-
+  componentDidCatch() {
     this.props.onError();
   }
 

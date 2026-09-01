@@ -1380,7 +1380,7 @@ img {
   overflow: clip;
   min-height: 0;
   background: #fff;
-  padding-bottom: clamp(0.75rem, 2vw, 1.5rem);
+  padding-bottom: clamp(0.5rem, 1.5vw, 1rem);
 }
 
 .sensor-product-lab__heading {
@@ -1402,6 +1402,7 @@ img {
   height: min(650px, calc(100svh - 120px));
   min-height: 480px;
   background: transparent;
+  transform: translateY(clamp(0.75rem, 2.2vw, 1.4rem));
 }
 
 .sensor-product-lab__stage canvas,
@@ -1435,7 +1436,7 @@ img {
 .sensor-product-lab__copy ol {
   display: grid;
   gap: 1px;
-  margin: clamp(1.6rem, 4vh, 2.6rem) 0 0;
+  margin: clamp(1rem, 2.8vh, 1.8rem) 0 0;
   padding: 0;
   list-style: none;
 }
@@ -1487,13 +1488,27 @@ img {
   line-height: 1.6;
 }
 
+.sensor-product-lab__note {
+  display: grid;
+  gap: 0.7rem;
+  max-width: 58ch;
+  border-top: 1px solid rgba(68, 68, 68, 0.12);
+  padding-top: clamp(1rem, 2.4vw, 1.45rem);
+}
+
+.sensor-product-lab__note p {
+  margin: 0;
+  color: var(--papp-body);
+  line-height: 1.68;
+}
+
 .insights-data-lab {
   background: linear-gradient(180deg, #fff, #f8fbfd 58%, #fff);
 }
 
 .insights-feature-head {
   width: min(780px, 100%);
-  margin: clamp(1.8rem, 4vw, 3.2rem) auto clamp(1.8rem, 4vw, 3rem);
+  margin: 0 auto clamp(1.8rem, 4vw, 3rem);
   text-align: center;
 }
 
@@ -1522,9 +1537,7 @@ img {
 }
 
 .insights-product-story__copy h3,
-.insights-capability-band h3,
-.insights-comparison h3,
-.insights-share-note h3 {
+.insights-outcome-note h3 {
   margin: 0 0 1rem;
   color: var(--papp-heading);
   font-size: clamp(1.8rem, 3.2vw, 2.8rem);
@@ -1534,9 +1547,7 @@ img {
 
 .insights-product-story__copy p,
 .insights-workflow p,
-.insights-capability-band p,
-.insights-comparison p,
-.insights-share-note p {
+.insights-outcome-note p {
   margin: 0;
   color: var(--papp-body);
   line-height: 1.72;
@@ -1803,13 +1814,14 @@ img {
   display: grid;
   gap: 1rem;
   min-height: 430px;
-  border: 1px solid rgba(71, 178, 228, 0.12);
-  border-radius: 5px;
-  background: rgba(255, 255, 255, 0.86);
+  border: 0;
+  border-top: 1px solid rgba(71, 178, 228, 0.14);
+  border-radius: 0;
+  background: transparent;
   color: var(--papp-heading);
-  padding: clamp(1rem, 2vw, 1.45rem);
-  box-shadow: 0 24px 70px rgba(55, 81, 126, 0.08);
-  backdrop-filter: blur(10px);
+  padding: clamp(1.1rem, 2.4vw, 1.7rem) 0 0;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .insights-data-lab__card--wide {
@@ -1830,24 +1842,12 @@ img {
 
 .insights-data-lab__plot {
   min-height: 320px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.3);
 }
 
-.insights-capability-band,
-.insights-comparison {
-  display: block;
-  width: min(1120px, 100%);
-  margin: clamp(3rem, 7vw, 5.5rem) auto 0;
-  text-align: center;
-}
-
-.insights-capability-band__copy,
-.insights-comparison > div {
-  width: min(760px, 100%);
-  margin: 0 auto;
-}
-
-.insights-share-note {
-  width: min(760px, 100%);
+.insights-outcome-note {
+  width: min(880px, 100%);
   margin: clamp(3rem, 7vw, 5.5rem) auto 0;
   text-align: center;
 }
@@ -4044,6 +4044,11 @@ button.project-category-card {
   object-fit: cover;
 }
 
+.subpage-hero h1 {
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
 .project-back-link {
   display: inline-flex;
   align-items: center;
@@ -5914,6 +5919,7 @@ button.project-category-card {
     top: auto;
     height: clamp(360px, 72vw, 560px);
     min-height: 0;
+    transform: translateY(0.75rem);
   }
 
   .sensor-product-lab__copy {
@@ -5924,9 +5930,7 @@ button.project-category-card {
     max-width: 14ch;
   }
 
-  .insights-product-story,
-  .insights-capability-band,
-  .insights-comparison {
+  .insights-product-story {
     grid-template-columns: 1fr;
   }
 
@@ -6005,7 +6009,7 @@ button.project-category-card {
 
   .insights-data-lab__card {
     min-height: 360px;
-    padding: 1rem;
+    padding-top: 1rem;
   }
 
   .insights-data-lab__plot {
@@ -6014,9 +6018,7 @@ button.project-category-card {
 
   .insights-product-story__copy h3,
   .insights-feature-head h3,
-  .insights-capability-band h3,
-  .insights-comparison h3,
-  .insights-share-note h3 {
+  .insights-outcome-note h3 {
     font-size: clamp(1.65rem, 8vw, 2.25rem);
   }
 
