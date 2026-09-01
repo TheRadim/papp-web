@@ -45,36 +45,13 @@ const copy = {
   en: {
     eyebrow: "Papp Insights",
     title: "Dashboards and reporting that turn mobility data into something teams can read, share and act on.",
-    intro: "Papp Insights visualises data from sensors, cameras and parking systems, so decision-makers can understand patterns over time.",
     area: "Area",
     date: "Date range",
     allAreas: "Parking network",
     allDates: "All dates",
-    featureEyebrow: "Platform features",
-    featureTitleStart: "Built for",
-    featureTitleAccent: "clarity",
-    featureTitleEnd: "from every mobility signal",
+    featureTitle: "From mobility data to a clear picture",
     featureIntro:
       "Papp Insights brings sensor, camera and parking-system data into one calm surface, so teams can move from measured activity to patterns they can explain.",
-    workflowTitle: "Measure, explore, understand, act",
-    workflow: [
-      {
-        title: "Measure",
-        body: "Connected devices describe how an area is being used."
-      },
-      {
-        title: "Explore",
-        body: "Choose an area and adjust the period around the question."
-      },
-      {
-        title: "Understand",
-        body: "Turn registrations into demand, dwell and vehicle patterns."
-      },
-      {
-        title: "Act",
-        body: "Use the patterns to plan, evaluate and communicate."
-      }
-    ],
     contextTitle: "From registrations to useful explanations.",
     context:
       "Papp Insights combines measured activity, vehicle profiles, origin signals and dwell time into views that help teams understand what is happening before deciding what to change.",
@@ -93,20 +70,8 @@ const copy = {
     structureText:
       "Interactive visualisations make it possible to explore relationships between different signals, such as whether longer stays occur at particular times or whether visitors from further away behave differently.",
     dimensionsTitle: "One place to understand how an area moves",
-    dimensionsIntro: "Depending on the available data sources, Papp Insights can bring together different dimensions of measured mobility behaviour.",
-    dimensions: [
-      "Visits over time",
-      "Unique vehicles",
-      "Arrival and departure patterns",
-      "Dwell time",
-      "Occupancy and utilisation",
-      "Peak periods",
-      "Vehicle profiles",
-      "EV share",
-      "Origin areas",
-      "Location comparison",
-      "Period comparison"
-    ],
+    dimensionsIntro:
+      "Visits, unique vehicles, arrival and departure patterns, dwell time, utilisation, vehicle profiles, origin areas and comparisons between locations can sit together in one readable product view.",
     comparisonTitle: "Compare places. Compare periods. See what changed.",
     comparison:
       "A number becomes much more useful when there is something to compare it with. Papp Insights lets teams look across different areas and time periods to separate temporary fluctuations from recurring patterns.",
@@ -125,36 +90,13 @@ const copy = {
   da: {
     eyebrow: "Papp Insights",
     title: "Dashboards og rapportering, der gør mobilitetsdata nemmere at læse, dele og handle på.",
-    intro: "Papp Insights visualiserer data fra sensorer, kameraer og parkeringssystemer, så beslutningstagere kan forstå mønstre over tid.",
     area: "Område",
     date: "Datoperiode",
     allAreas: "Parkeringsnetværk",
     allDates: "Alle datoer",
-    featureEyebrow: "Platform features",
-    featureTitleStart: "Bygget til",
-    featureTitleAccent: "klarhed",
-    featureTitleEnd: "fra hvert mobilitetssignal",
+    featureTitle: "Fra mobilitetsdata til et klart billede",
     featureIntro:
       "Papp Insights samler sensor-, kamera- og parkeringsdata i én rolig flade, så teams kan gå fra målt aktivitet til mønstre, der kan forklares.",
-    workflowTitle: "Mål, udforsk, forstå, handl",
-    workflow: [
-      {
-        title: "Mål",
-        body: "Forbundne enheder beskriver, hvordan et område bruges."
-      },
-      {
-        title: "Udforsk",
-        body: "Vælg område og periode omkring det spørgsmål, der betyder noget."
-      },
-      {
-        title: "Forstå",
-        body: "Omsæt registreringer til efterspørgsel, opholdstid og bilprofiler."
-      },
-      {
-        title: "Handl",
-        body: "Brug mønstrene til planlægning, evaluering og kommunikation."
-      }
-    ],
     contextTitle: "Fra registreringer til brugbare forklaringer.",
     context:
       "Papp Insights kombinerer aktivitet, bilprofiler, opland og opholdstid i visninger, der hjælper teams med at forstå situationen, før der vælges handling.",
@@ -173,20 +115,8 @@ const copy = {
     structureText:
       "Interaktive visualiseringer gør det muligt at undersøge relationer mellem flere signaler, for eksempel om lange ophold sker på bestemte tidspunkter, eller om brugere længere væk opfører sig anderledes.",
     dimensionsTitle: "Ét sted til at forstå, hvordan et område bevæger sig",
-    dimensionsIntro: "Afhængigt af datakilderne kan Papp Insights samle flere dimensioner af målt mobilitetsadfærd.",
-    dimensions: [
-      "Besøg over tid",
-      "Unikke køretøjer",
-      "Ankomst og afgang",
-      "Opholdstid",
-      "Belægning og udnyttelse",
-      "Peak-perioder",
-      "Bilprofiler",
-      "El-andel",
-      "Oplandsområder",
-      "Sammenligning af steder",
-      "Sammenligning af perioder"
-    ],
+    dimensionsIntro:
+      "Besøg, unikke køretøjer, ankomst- og afgangsmønstre, opholdstid, udnyttelse, bilprofiler, opland og sammenligninger mellem steder kan samles i én læsbar produktvisning.",
     comparisonTitle: "Sammenlign steder. Sammenlign perioder. Se hvad der ændrede sig.",
     comparison:
       "Et tal bliver langt mere brugbart, når det kan sammenlignes. Papp Insights lader teams se på tværs af områder og perioder, så midlertidige udsving kan adskilles fra mønstre, der gentager sig.",
@@ -230,13 +160,9 @@ export function InsightsDataLab({ locale }: { locale: Locale }) {
         <div className="section-heading section-heading--center">
           <p className="eyebrow">{text.eyebrow}</p>
           <h2>{text.title}</h2>
-          <p>{text.intro}</p>
         </div>
         <div className="insights-feature-head">
-          <p className="eyebrow">{text.featureEyebrow}</p>
-          <h3>
-            {text.featureTitleStart} <em>{text.featureTitleAccent}</em> {text.featureTitleEnd}
-          </h3>
+          <h3>{text.featureTitle}</h3>
           <p>{text.featureIntro}</p>
         </div>
         <div className="insights-data-lab__preview">
@@ -296,17 +222,6 @@ export function InsightsDataLab({ locale }: { locale: Locale }) {
             ))}
           </div>
         </div>
-        <ol className="insights-workflow insights-workflow--compact" role="list" aria-label={text.workflowTitle}>
-          {text.workflow.map((step, index) => (
-            <li key={step.title}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <div>
-                <h4>{step.title}</h4>
-                <p>{step.body}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
         <div className="insights-data-lab__story">
           <h3>{text.contextTitle}</h3>
           <p>{text.context}</p>
@@ -332,22 +247,11 @@ export function InsightsDataLab({ locale }: { locale: Locale }) {
             <h3>{text.dimensionsTitle}</h3>
             <p>{text.dimensionsIntro}</p>
           </div>
-          <div className="insights-capability-grid" aria-label={text.dimensionsTitle}>
-            {text.dimensions.map((dimension) => (
-              <span key={dimension}>{dimension}</span>
-            ))}
-          </div>
         </div>
         <div className="insights-comparison">
           <div>
             <h3>{text.comparisonTitle}</h3>
             <p>{text.comparison}</p>
-          </div>
-          <div className="insights-comparison__visual" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-            <span />
           </div>
         </div>
         <div className="insights-share-note">

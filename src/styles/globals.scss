@@ -1488,42 +1488,21 @@ img {
 }
 
 .insights-data-lab {
-  background: linear-gradient(180deg, #fff 0%, #effbff 24%, #f8fcfe 68%, #fff 100%);
+  background: linear-gradient(180deg, #fff, #f8fbfd 58%, #fff);
 }
 
 .insights-feature-head {
   width: min(780px, 100%);
-  margin: clamp(2.2rem, 5vw, 4.4rem) auto clamp(1.8rem, 4vw, 3rem);
+  margin: clamp(1.8rem, 4vw, 3.2rem) auto clamp(1.8rem, 4vw, 3rem);
   text-align: center;
 }
 
-.insights-feature-head .eyebrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.85rem;
-  border-radius: 999px;
-  background: rgba(71, 178, 228, 0.12);
-  padding: 0.36rem 0.72rem;
-  color: #2f92c5;
-  letter-spacing: 0.13em;
-}
-
 .insights-feature-head h3 {
-  width: min(15ch, 100%);
   margin: 0 auto 0.8rem;
   color: var(--papp-heading);
-  font-size: clamp(2rem, 4.2vw, 3.45rem);
-  line-height: 1.02;
-  letter-spacing: -0.035em;
-}
-
-.insights-feature-head h3 em {
-  color: #2f92c5;
-  font-family: Georgia, "Times New Roman", serif;
-  font-style: italic;
-  font-weight: 500;
-  letter-spacing: 0;
+  font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
 }
 
 .insights-feature-head p:not(.eyebrow) {
@@ -1567,62 +1546,12 @@ img {
   margin-top: 0.9rem;
 }
 
-.insights-workflow {
-  display: grid;
-  gap: 1.15rem;
-  margin: 0;
-  padding: 0 0 0 1.25rem;
-  border-left: 2px solid rgba(71, 178, 228, 0.22);
-  list-style: none;
-}
-
-.insights-workflow--compact {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0;
-  width: min(1120px, 100%);
-  margin: 0 auto clamp(2.5rem, 5vw, 4rem);
-  border-top: 1px solid rgba(55, 81, 126, 0.1);
-  border-bottom: 1px solid rgba(55, 81, 126, 0.1);
-  border-left: 0;
-  padding: 0;
-}
-
-.insights-workflow--compact li {
-  gap: 0.7rem;
-  border-left: 1px solid rgba(55, 81, 126, 0.1);
-  padding: clamp(1rem, 2.3vw, 1.4rem) clamp(0.8rem, 2vw, 1.2rem);
-}
-
-.insights-workflow--compact li:first-child {
-  border-left: 0;
-}
-
-.insights-workflow li {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 0.9rem;
-}
-
-.insights-workflow span {
-  color: var(--papp-blue-light);
-  font-family: ui-monospace, Menlo, Consolas, monospace;
-  font-size: 0.8rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-}
-
-.insights-workflow h4 {
-  margin: 0 0 0.22rem;
-  color: var(--papp-heading);
-  font-size: 1rem;
-}
-
 .insights-data-lab__preview {
   width: min(1180px, 100%);
-  margin: 0 auto clamp(1.8rem, 4vw, 3rem);
+  margin: 0 auto clamp(2.4rem, 5vw, 4rem);
   border: 1px solid rgba(71, 178, 228, 0.1);
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.86);
   padding: clamp(1.1rem, 2.6vw, 2rem);
   box-shadow: 0 26px 70px rgba(55, 81, 126, 0.075);
   backdrop-filter: blur(12px);
@@ -1796,10 +1725,10 @@ img {
 }
 
 .insights-data-lab__metrics article {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.18rem 0.48rem;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: 0.2rem;
+  align-content: start;
   min-height: 0;
   background: transparent;
   padding: clamp(0.8rem, 1.6vw, 1rem) 0 0;
@@ -1905,78 +1834,16 @@ img {
 
 .insights-capability-band,
 .insights-comparison {
-  display: grid;
-  grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(1.5rem, 5vw, 4rem);
+  display: block;
   width: min(1120px, 100%);
   margin: clamp(3rem, 7vw, 5.5rem) auto 0;
+  text-align: center;
 }
 
-.insights-capability-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem 0.9rem;
-}
-
-.insights-capability-grid span {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  color: var(--papp-heading);
-  font-weight: 800;
-  line-height: 1.2;
-}
-
-.insights-capability-grid span::before {
-  width: 0.42rem;
-  height: 0.42rem;
-  border-radius: 50%;
-  background: var(--papp-blue-light);
-  content: "";
-}
-
-.insights-comparison__visual {
-  position: relative;
-  display: grid;
-  align-items: end;
-  grid-template-columns: repeat(4, 1fr);
-  gap: clamp(0.6rem, 2vw, 1.2rem);
-  min-height: 220px;
-  padding: 1rem 0 0;
-}
-
-.insights-comparison__visual::before {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 1px;
-  background: rgba(55, 81, 126, 0.14);
-  content: "";
-}
-
-.insights-comparison__visual span {
-  display: block;
-  border-radius: 5px 5px 0 0;
-  background: linear-gradient(180deg, rgba(71, 178, 228, 0.54), rgba(71, 178, 228, 0.12));
-}
-
-.insights-comparison__visual span:nth-child(1) {
-  height: 56%;
-}
-
-.insights-comparison__visual span:nth-child(2) {
-  height: 78%;
-}
-
-.insights-comparison__visual span:nth-child(3) {
-  height: 44%;
-  background: linear-gradient(180deg, rgba(251, 134, 127, 0.4), rgba(251, 134, 127, 0.08));
-}
-
-.insights-comparison__visual span:nth-child(4) {
-  height: 68%;
+.insights-capability-band__copy,
+.insights-comparison > div {
+  width: min(760px, 100%);
+  margin: 0 auto;
 }
 
 .insights-share-note {
@@ -6071,18 +5938,6 @@ button.project-category-card {
     width: min(16ch, 100%);
   }
 
-  .insights-workflow--compact {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .insights-workflow--compact li:nth-child(odd) {
-    border-left: 0;
-  }
-
-  .insights-workflow--compact li:nth-child(n + 3) {
-    border-top: 1px solid rgba(55, 81, 126, 0.1);
-  }
-
   .insights-product-story {
     margin-top: clamp(2rem, 8vw, 3rem);
   }
@@ -6157,34 +6012,12 @@ button.project-category-card {
     min-height: 270px;
   }
 
-  .insights-workflow {
-    padding-left: 0.85rem;
-  }
-
-  .insights-workflow--compact {
-    grid-template-columns: 1fr;
-    padding-left: 0;
-  }
-
-  .insights-workflow--compact li {
-    border-left: 0;
-    border-top: 1px solid rgba(55, 81, 126, 0.1);
-  }
-
-  .insights-workflow--compact li:first-child {
-    border-top: 0;
-  }
-
   .insights-product-story__copy h3,
   .insights-feature-head h3,
   .insights-capability-band h3,
   .insights-comparison h3,
   .insights-share-note h3 {
     font-size: clamp(1.65rem, 8vw, 2.25rem);
-  }
-
-  .insights-comparison__visual {
-    min-height: 160px;
   }
 
   .solutions-city-panel .mobility-city {

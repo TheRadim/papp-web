@@ -3,7 +3,7 @@
 import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Box3, Group, Material, Mesh, MeshStandardMaterial, Object3D, Vector3 } from "three";
 import type { Locale } from "@/content/types";
 import { withBasePath } from "@/lib/site/basePath";
@@ -78,6 +78,7 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
   const sectionRef = useRef<HTMLElement>(null);
   const layoutRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const clearHoverFrame = useRef<number | null>(null);
   const [progress, setProgress] = useState(0);
   const [highlightedPart, setHighlightedPart] = useState<SensorPartName | null>(null);
   const highlightedStep = highlightedPart ? text.steps.findIndex((step) => step.part === highlightedPart) : -1;
@@ -93,10 +94,10 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
 
       const rect = element.getBoundingClientRect();
       const viewportHeight = window.innerHeight || 1;
-      const visibleDistance = viewportHeight - rect.top;
-      const start = rect.height * 0.4;
-      const travel = Math.max(130, Math.min(rect.height * 0.34, viewportHeight * 0.28));
-      const nextProgress = Math.min(1, Math.max(0, (visibleDistance - start) / travel));
+      const visibleRatio = Math.min(1, Math.max(0, (viewportHeight - rect.top) / Math.max(1, rect.height)));
+      const openProgress = Math.min(1, Math.max(0, (visibleRatio - 0.54) / 0.18));
+      const exitProgress = Math.min(1, Math.max(0, (rect.bottom - viewportHeight * 0.18) / (viewportHeight * 0.34)));
+      const nextProgress = Math.min(openProgress, exitProgress);
       setProgress(nextProgress);
     }
 
@@ -115,6 +116,30 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
       window.removeEventListener("resize", requestUpdate);
     };
   }, []);
+
+  const setSensorHighlight = useCallback((part: SensorPartName | null) => {
+    if (clearHoverFrame.current) {
+      window.clearTimeout(clearHoverFrame.current);
+      clearHoverFrame.current = null;
+    }
+
+    if (part) {
+      setHighlightedPart(part);
+      return;
+    }
+
+    clearHoverFrame.current = window.setTimeout(() => {
+      setHighlightedPart(null);
+      clearHoverFrame.current = null;
+    }, 90);
+  }, []);
+
+  useEffect(
+    () => () => {
+      if (clearHoverFrame.current) window.clearTimeout(clearHoverFrame.current);
+    },
+    []
+  );
 
   return (
     <section className="sensor-product-lab papp-section" ref={sectionRef}>
@@ -148,7 +173,7 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
                 shadow-bias={-0.0002}
               />
               <SensorCameraSetup />
-              <SensorModel activePart={highlightedPart} progress={progress} onPartHover={setHighlightedPart} />
+              <SensorModel activePart={highlightedPart} progress={progress} onPartHover={setSensorHighlight} />
               <Environment preset="city" environmentIntensity={0.24} />
               <OrbitControls
                 enableDamping
@@ -169,11 +194,11 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
                 <li className={activeStep === index ? "is-active" : ""} key={step.title}>
                   <button
                     type="button"
-                    onBlur={() => setHighlightedPart(null)}
-                    onClick={() => setHighlightedPart(step.part)}
-                    onFocus={() => setHighlightedPart(step.part)}
-                    onPointerEnter={() => setHighlightedPart(step.part)}
-                    onPointerLeave={() => setHighlightedPart(null)}
+                    onBlur={() => setSensorHighlight(null)}
+                    onClick={() => setSensorHighlight(step.part)}
+                    onFocus={() => setSensorHighlight(step.part)}
+                    onPointerEnter={() => setSensorHighlight(step.part)}
+                    onPointerLeave={() => setSensorHighlight(null)}
                   >
                     <span>{String(index + 1).padStart(2, "0")}</span>
                     <div>
@@ -348,7 +373,7 @@ function SensorModel({
     (["base", "core", "lid"] as SensorPartName[]).forEach((partName) => {
       const targetOpacity = !activePart || partName === activePart ? 1 : 0.1;
       const currentOpacity = partOpacities.current[partName] ?? 1;
-      const nextOpacity = currentOpacity + (targetOpacity - currentOpacity) * Math.min(1, delta * 8);
+      const nextOpacity = currentOpacity + (targetOpacity - currentOpacity) * Math.min(1, delta * 5.5);
       const settledOpacity = Math.abs(nextOpacity - targetOpacity) < 0.01 ? targetOpacity : nextOpacity;
       partOpacities.current[partName] = settledOpacity;
       setObjectOpacity(parts.current[partName], settledOpacity);
