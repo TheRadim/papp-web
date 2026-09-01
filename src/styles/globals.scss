@@ -1493,11 +1493,12 @@ img {
   margin: clamp(1.6rem, 3.5vw, 2.6rem) auto 0;
   border-top: 1px solid rgba(71, 178, 228, 0.22);
   padding-top: clamp(1.1rem, 2.6vw, 1.8rem);
+  text-align: center;
 }
 
 .sensor-product-lab__statement h3 {
   max-width: 760px;
-  margin: 0 0 0.7rem;
+  margin: 0 auto 0.7rem;
   color: var(--papp-heading);
   font-size: clamp(1.65rem, 3vw, 2.45rem);
   line-height: 1.1;
@@ -1506,7 +1507,7 @@ img {
 
 .sensor-product-lab__statement p {
   max-width: 760px;
-  margin: 0;
+  margin: 0 auto;
   color: var(--papp-body);
   font-size: clamp(1rem, 1.3vw, 1.14rem);
   line-height: 1.7;

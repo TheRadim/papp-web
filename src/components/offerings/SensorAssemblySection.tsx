@@ -330,7 +330,7 @@ function SensorModel({
       eachMaterial(object.material, (material) => {
         const standard = material as MeshStandardMaterial;
         standard.transparent = true;
-        standard.depthWrite = false;
+        standard.depthWrite = true;
 
         if (standard.roughness !== undefined) {
           standard.roughness = Math.max(standard.roughness, 0.58);
@@ -382,7 +382,7 @@ function SensorModel({
       const snapshot = snapshots.current.get(lid);
       if (snapshot) {
         lid.position.y = snapshot.position.y;
-        lid.position.z = snapshot.position.z - eased * 0.32;
+        lid.position.z = snapshot.position.z - eased * 0.12;
       }
     }
 
@@ -390,7 +390,7 @@ function SensorModel({
       const snapshot = snapshots.current.get(base);
       if (snapshot) {
         base.position.y = snapshot.position.y;
-        base.position.z = snapshot.position.z + eased * 0.2;
+        base.position.z = snapshot.position.z + eased * 0.075;
       }
     }
 
