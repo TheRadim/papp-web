@@ -21,16 +21,15 @@ interface PartSnapshot {
   rotation: { x: number; y: number; z: number };
 }
 
-const copy: Record<Locale, { eyebrow: string; title: string; intro: string; note: string[]; steps: SensorStep[] }> = {
+const copy: Record<Locale, { eyebrow: string; title: string; intro: string; statementTitle: string; statementBody: string; steps: SensorStep[] }> = {
   en: {
     eyebrow: "Sensor Hardware",
     title: "A parking sensor designed as part of the full data chain.",
     intro:
       "The sensor is the physical starting point: a compact unit that can sit in a parking space, collect occupancy signals and feed them into Papp Insights.",
-    note: [
-      "Developed in-house, the sensor measures occupancy reliably at individual parking spaces. It is especially strong when a smaller area needs precise coverage, or when specific bays need to be followed closely over time.",
-      "Where cameras give a broader view of movement, sensors provide spot-level confidence directly from the parking surface."
-    ],
+    statementTitle: "Precise occupancy data, built from the ground up.",
+    statementBody:
+      "Papp sensors are developed in-house for projects where every space matters. They are designed for reliable spot-level measurement, smaller coverage areas and locations where teams need to understand exactly which bays are used, when pressure builds and how behaviour changes over time.",
     steps: [
       {
         part: "lid",
@@ -56,10 +55,9 @@ const copy: Record<Locale, { eyebrow: string; title: string; intro: string; note
     title: "En parkeringssensor designet som del af hele datakæden.",
     intro:
       "Sensoren er det fysiske udgangspunkt: en kompakt enhed, der kan sidde i en parkeringsplads, indsamle belægningssignaler og sende dem videre til Papp Insights.",
-    note: [
-      "Sensoren er udviklet internt til at måle belægning stabilt på den enkelte parkeringsplads. Den er særligt velegnet, når et mindre område skal dækkes præcist, eller når udvalgte pladser skal følges tæt over tid.",
-      "Hvor kameraer giver et bredere billede af bevægelse, giver sensorer punktpræcis sikkerhed direkte fra parkeringsfladen."
-    ],
+    statementTitle: "Præcise belægningsdata, bygget fra bunden.",
+    statementBody:
+      "Papps sensorer er udviklet internt til projekter, hvor hver enkelt plads betyder noget. De er skabt til stabil punktmåling, mindre dækningsområder og steder, hvor teams skal forstå præcist hvilke pladser der bruges, hvornår presset opstår, og hvordan adfærden ændrer sig over tid.",
     steps: [
       {
         part: "lid",
@@ -222,7 +220,8 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
           </div>
         </div>
         <div className="sensor-product-lab__statement">
-          <p>{text.note.join(" ")}</p>
+          <h3>{text.statementTitle}</h3>
+          <p>{text.statementBody}</p>
         </div>
       </div>
     </section>
@@ -265,17 +264,12 @@ function setObjectOpacity(object: Object3D | null | undefined, opacity: number) 
 
     eachMaterial(child.material, (material) => {
       const standard = material as MeshStandardMaterial;
-      const transparent = opacity < 0.98;
-      const depthWrite = opacity > 0.18;
 
-      if (Math.abs((standard.opacity ?? 1) - opacity) < 0.004 && standard.transparent === transparent && standard.depthWrite === depthWrite) {
+      if (Math.abs((standard.opacity ?? 1) - opacity) < 0.004) {
         return;
       }
 
-      standard.transparent = transparent;
       standard.opacity = opacity;
-      standard.depthWrite = depthWrite;
-      standard.needsUpdate = true;
     });
   });
 }
@@ -335,6 +329,9 @@ function SensorModel({
 
       eachMaterial(object.material, (material) => {
         const standard = material as MeshStandardMaterial;
+        standard.transparent = true;
+        standard.depthWrite = false;
+
         if (standard.roughness !== undefined) {
           standard.roughness = Math.max(standard.roughness, 0.58);
           standard.metalness *= 0.4;
@@ -384,16 +381,16 @@ function SensorModel({
     if (lid) {
       const snapshot = snapshots.current.get(lid);
       if (snapshot) {
-        lid.position.y = snapshot.position.y + eased * 0.32;
-        lid.position.z = snapshot.position.z;
+        lid.position.y = snapshot.position.y;
+        lid.position.z = snapshot.position.z - eased * 0.32;
       }
     }
 
     if (base) {
       const snapshot = snapshots.current.get(base);
       if (snapshot) {
-        base.position.y = snapshot.position.y - eased * 0.2;
-        base.position.z = snapshot.position.z;
+        base.position.y = snapshot.position.y;
+        base.position.z = snapshot.position.z + eased * 0.2;
       }
     }
 
