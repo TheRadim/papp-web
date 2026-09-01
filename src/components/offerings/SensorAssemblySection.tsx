@@ -29,6 +29,12 @@ const copy: Record<Locale, { eyebrow: string; title: string; intro: string; step
       "The sensor is the physical starting point: a compact unit that can sit in a parking space, collect occupancy signals and feed them into Papp Insights.",
     steps: [
       {
+        part: "lid",
+        title: "Lid",
+        body:
+          "The lid works with the base to create a watertight seal, protects the electronics and is built to handle even heavy vehicles."
+      },
+      {
         part: "core",
         title: "Core",
         body:
@@ -38,12 +44,6 @@ const copy: Record<Locale, { eyebrow: string; title: string; intro: string; step
         part: "base",
         title: "Base",
         body: "The base holds the whole sensor in place, designed to be sturdy yet flexible through daily pressure, weather and installation conditions."
-      },
-      {
-        part: "lid",
-        title: "Lid",
-        body:
-          "The lid works with the base to create a watertight seal, protects the electronics and is built to handle even heavy vehicles."
       }
     ]
   },
@@ -54,6 +54,11 @@ const copy: Record<Locale, { eyebrow: string; title: string; intro: string; step
       "Sensoren er det fysiske udgangspunkt: en kompakt enhed, der kan sidde i en parkeringsplads, indsamle belægningssignaler og sende dem videre til Papp Insights.",
     steps: [
       {
+        part: "lid",
+        title: "Låg",
+        body: "Låget arbejder sammen med basen for at skabe en vandtæt forsegling, beskytte elektronikken og håndtere selv tunge køretøjer."
+      },
+      {
         part: "core",
         title: "Kerne",
         body:
@@ -63,11 +68,6 @@ const copy: Record<Locale, { eyebrow: string; title: string; intro: string; step
         part: "base",
         title: "Base",
         body: "Basen holder hele sensoren på plads og er designet til at være robust, men fleksibel under daglig belastning, vejr og installation."
-      },
-      {
-        part: "lid",
-        title: "Låg",
-        body: "Låget arbejder sammen med basen for at skabe en vandtæt forsegling, beskytte elektronikken og håndtere selv tunge køretøjer."
       }
     ]
   }
@@ -77,6 +77,7 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
   const text = copy[locale];
   const sectionRef = useRef<HTMLElement>(null);
   const layoutRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
   const [highlightedPart, setHighlightedPart] = useState<SensorPartName | null>(null);
   const highlightedStep = highlightedPart ? text.steps.findIndex((step) => step.part === highlightedPart) : -1;
@@ -87,12 +88,15 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
 
     function updateProgress() {
       frame = 0;
-      const element = layoutRef.current ?? sectionRef.current;
+      const element = stageRef.current ?? layoutRef.current ?? sectionRef.current;
       if (!element) return;
 
       const rect = element.getBoundingClientRect();
-      const travel = Math.max(1, Math.min(window.innerHeight * 1.35, rect.height + window.innerHeight * 0.35));
-      const nextProgress = Math.min(1, Math.max(0, (window.innerHeight * 0.35 - rect.top) / travel));
+      const viewportHeight = window.innerHeight || 1;
+      const visibleDistance = viewportHeight - rect.top;
+      const start = rect.height * 0.4;
+      const travel = Math.max(130, Math.min(rect.height * 0.34, viewportHeight * 0.28));
+      const nextProgress = Math.min(1, Math.max(0, (visibleDistance - start) / travel));
       setProgress(nextProgress);
     }
 
@@ -121,7 +125,11 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
           <p>{text.intro}</p>
         </div>
         <div className="sensor-product-lab__layout" ref={layoutRef}>
-          <div className="sensor-product-lab__stage" aria-label={locale === "da" ? "3D-model af Papp sensor" : "3D model of Papp sensor"}>
+          <div
+            className="sensor-product-lab__stage"
+            ref={stageRef}
+            aria-label={locale === "da" ? "3D-model af Papp sensor" : "3D model of Papp sensor"}
+          >
             <Canvas
               className="sensor-product-lab__canvas"
               camera={{ position: [3.2, 2.35, 4.4], fov: 38 }}
@@ -249,6 +257,7 @@ function SensorModel({
   const gltf = useGLTF(withBasePath("/models/sensor/parking-sensor.glb"));
   const groupRef = useRef<Group>(null);
   const parts = useRef<Partial<Record<SensorPartName, Object3D>>>({});
+  const partOpacities = useRef<Record<SensorPartName, number>>({ base: 1, core: 1, lid: 1 });
   const snapshots = useRef(new Map<Object3D, PartSnapshot>());
   const smoothedOpen = useRef(0);
 
@@ -306,13 +315,12 @@ function SensorModel({
 
     parts.current = nextParts;
     snapshots.current = nextSnapshots;
-  }, [scene]);
 
-  useEffect(() => {
     (["base", "core", "lid"] as SensorPartName[]).forEach((partName) => {
-      setObjectOpacity(parts.current[partName], !activePart || partName === activePart ? 1 : 0.1);
+      partOpacities.current[partName] = 1;
+      setObjectOpacity(nextParts[partName], 1);
     });
-  }, [activePart, scene]);
+  }, [scene]);
 
   useFrame((_, delta) => {
     const targetOpen = Math.min(1, Math.max(0, progress * 1.08));
@@ -325,7 +333,7 @@ function SensorModel({
       const snapshot = snapshots.current.get(lid);
       if (snapshot) {
         lid.position.y = snapshot.position.y;
-        lid.position.z = snapshot.position.z - eased * 0.11;
+        lid.position.z = snapshot.position.z - eased * 0.22;
       }
     }
 
@@ -333,9 +341,18 @@ function SensorModel({
       const snapshot = snapshots.current.get(core);
       if (snapshot) {
         core.position.y = snapshot.position.y;
-        core.position.z = snapshot.position.z - eased * 0.055;
+        core.position.z = snapshot.position.z - eased * 0.11;
       }
     }
+
+    (["base", "core", "lid"] as SensorPartName[]).forEach((partName) => {
+      const targetOpacity = !activePart || partName === activePart ? 1 : 0.1;
+      const currentOpacity = partOpacities.current[partName] ?? 1;
+      const nextOpacity = currentOpacity + (targetOpacity - currentOpacity) * Math.min(1, delta * 8);
+      const settledOpacity = Math.abs(nextOpacity - targetOpacity) < 0.01 ? targetOpacity : nextOpacity;
+      partOpacities.current[partName] = settledOpacity;
+      setObjectOpacity(parts.current[partName], settledOpacity);
+    });
   });
 
   function handlePointerMove(event: ThreeEvent<PointerEvent>) {
@@ -359,7 +376,7 @@ function SensorModel({
   }
 
   return (
-    <group ref={groupRef} position={[0, -1.05, 0]} onPointerMove={handlePointerMove} onPointerOut={handlePointerOut}>
+    <group ref={groupRef} position={[0, -1.14, 0]} onPointerMove={handlePointerMove} onPointerOut={handlePointerOut}>
       <primitive object={scene} />
     </group>
   );

@@ -50,29 +50,29 @@ const copy = {
     date: "Date range",
     allAreas: "Parking network",
     allDates: "All dates",
-    productTitle: "From mobility data to a clear picture",
-    productParagraphs: [
-      "Papp Insights brings data from sensors, cameras and connected parking systems into one place.",
-      "Instead of working with isolated registrations or raw datasets, teams can explore how an area is actually being used: when vehicles arrive, how long they stay, where they come from, how demand changes over time and how different locations compare.",
-      "Filter by area and time period, move from an overview into individual patterns, and combine different signals to understand not only how much activity takes place, but how that activity behaves."
-    ],
+    featureEyebrow: "Platform features",
+    featureTitleStart: "Built for",
+    featureTitleAccent: "clarity",
+    featureTitleEnd: "from every mobility signal",
+    featureIntro:
+      "Papp Insights brings sensor, camera and parking-system data into one calm surface, so teams can move from measured activity to patterns they can explain.",
     workflowTitle: "Measure, explore, understand, act",
     workflow: [
       {
         title: "Measure",
-        body: "Cameras, sensors and connected parking infrastructure continuously describe how an area is being used."
+        body: "Connected devices describe how an area is being used."
       },
       {
         title: "Explore",
-        body: "Choose an area, adjust the time period and filter the data around the question that matters."
+        body: "Choose an area and adjust the period around the question."
       },
       {
         title: "Understand",
-        body: "Turn thousands of registrations into patterns such as demand, dwell time, vehicle mix and recurring peaks."
+        body: "Turn registrations into demand, dwell and vehicle patterns."
       },
       {
         title: "Act",
-        body: "Use those patterns to support planning, evaluate changes and communicate findings to stakeholders."
+        body: "Use the patterns to plan, evaluate and communicate."
       }
     ],
     contextTitle: "From registrations to useful explanations.",
@@ -130,29 +130,29 @@ const copy = {
     date: "Datoperiode",
     allAreas: "Parkeringsnetværk",
     allDates: "Alle datoer",
-    productTitle: "Fra mobilitetsdata til et klart billede",
-    productParagraphs: [
-      "Papp Insights samler data fra sensorer, kameraer og forbundne parkeringssystemer ét sted.",
-      "I stedet for isolerede registreringer eller rå datasæt kan teams undersøge, hvordan et område faktisk bliver brugt: hvornår biler ankommer, hvor længe de bliver, hvor de kommer fra, og hvordan efterspørgslen ændrer sig over tid.",
-      "Filtrer efter område og periode, gå fra overblik til mønstre, og kombiner flere signaler for at forstå både aktivitetens størrelse og adfærd."
-    ],
+    featureEyebrow: "Platform features",
+    featureTitleStart: "Bygget til",
+    featureTitleAccent: "klarhed",
+    featureTitleEnd: "fra hvert mobilitetssignal",
+    featureIntro:
+      "Papp Insights samler sensor-, kamera- og parkeringsdata i én rolig flade, så teams kan gå fra målt aktivitet til mønstre, der kan forklares.",
     workflowTitle: "Mål, udforsk, forstå, handl",
     workflow: [
       {
         title: "Mål",
-        body: "Kameraer, sensorer og forbundet parkeringsinfrastruktur beskriver løbende, hvordan et område bruges."
+        body: "Forbundne enheder beskriver, hvordan et område bruges."
       },
       {
         title: "Udforsk",
-        body: "Vælg område, juster perioden og filtrer data omkring det spørgsmål, der betyder noget."
+        body: "Vælg område og periode omkring det spørgsmål, der betyder noget."
       },
       {
         title: "Forstå",
-        body: "Omsæt tusindvis af registreringer til mønstre som efterspørgsel, opholdstid, biltyper og peaks."
+        body: "Omsæt registreringer til efterspørgsel, opholdstid og bilprofiler."
       },
       {
         title: "Handl",
-        body: "Brug mønstrene til planlægning, evaluering af ændringer og kommunikation med interessenter."
+        body: "Brug mønstrene til planlægning, evaluering og kommunikation."
       }
     ],
     contextTitle: "Fra registreringer til brugbare forklaringer.",
@@ -232,24 +232,12 @@ export function InsightsDataLab({ locale }: { locale: Locale }) {
           <h2>{text.title}</h2>
           <p>{text.intro}</p>
         </div>
-        <div className="insights-product-story">
-          <div className="insights-product-story__copy">
-            <h3>{text.productTitle}</h3>
-            {text.productParagraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-          <ol className="insights-workflow" role="list" aria-label={text.workflowTitle}>
-            {text.workflow.map((step, index) => (
-              <li key={step.title}>
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                <div>
-                  <h4>{step.title}</h4>
-                  <p>{step.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
+        <div className="insights-feature-head">
+          <p className="eyebrow">{text.featureEyebrow}</p>
+          <h3>
+            {text.featureTitleStart} <em>{text.featureTitleAccent}</em> {text.featureTitleEnd}
+          </h3>
+          <p>{text.featureIntro}</p>
         </div>
         <div className="insights-data-lab__preview">
           <div className="insights-data-lab__controls" aria-label={locale === "da" ? "Datafiltre" : "Data filters"}>
@@ -308,6 +296,17 @@ export function InsightsDataLab({ locale }: { locale: Locale }) {
             ))}
           </div>
         </div>
+        <ol className="insights-workflow insights-workflow--compact" role="list" aria-label={text.workflowTitle}>
+          {text.workflow.map((step, index) => (
+            <li key={step.title}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                <h4>{step.title}</h4>
+                <p>{step.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
         <div className="insights-data-lab__story">
           <h3>{text.contextTitle}</h3>
           <p>{text.context}</p>
@@ -380,15 +379,13 @@ function buildMetrics(filteredRows: DemoRow[], locale: Locale) {
   const sortedDwell = safeRows.map((row) => row.dwellMin).sort((a, b) => a - b);
   const medianDwell = sortedDwell[Math.floor(sortedDwell.length / 2)] ?? 0;
   const evShare = Math.round((safeRows.filter((row) => row.fuel === "EV").length / safeRows.length) * 100);
-  const hourly = Array.from({ length: 24 }, (_, hour) => ({ hour, count: safeRows.filter((row) => row.hour === hour).length })).sort((a, b) => b.count - a.count)[0];
 
   return [
     { label: text.visits, value: safeRows.length.toLocaleString(locale === "da" ? "da-DK" : "en"), detail: locale === "da" ? "målte besøg" : "measured visits" },
     { label: text.vehicles, value: uniqueVehicles.toLocaleString(locale === "da" ? "da-DK" : "en"), detail: locale === "da" ? "genkendte profiler" : "recognised profiles" },
     { label: text.dwell, value: `${medianDwell}m`, detail: locale === "da" ? "inde i området" : "inside the area" },
     { label: text.ev, value: `${evShare}%`, detail: locale === "da" ? "batterielektriske" : "battery-electric" },
-    { label: text.origin, value: uniqueZips.toLocaleString(locale === "da" ? "da-DK" : "en"), detail: locale === "da" ? "postnumre" : "postal areas" },
-    { label: text.peak, value: `${hourly?.hour ?? 0}:00`, detail: locale === "da" ? `${hourly?.count ?? 0} besøg` : `${hourly?.count ?? 0} visits` }
+    { label: text.origin, value: uniqueZips.toLocaleString(locale === "da" ? "da-DK" : "en"), detail: locale === "da" ? "postnumre" : "postal areas" }
   ];
 }
 
@@ -476,7 +473,7 @@ function buildPlots(filteredRows: DemoRow[], locale: Locale): PlotCollection {
           type: "bar",
           x: Array.from({ length: 24 }, (_, hour) => `${hour}:00`),
           y: hourly,
-          marker: { color: "rgba(71, 178, 228, 0.64)", line: { color: "#47b2e4", width: 1 } },
+          marker: { color: "rgba(151, 216, 247, 0.72)", line: { color: "#47b2e4", width: 1 } },
           hovertemplate: locale === "da" ? "%{x}<br>%{y} besøg<extra></extra>" : "%{x}<br>%{y} visits<extra></extra>"
         },
         {
@@ -484,7 +481,7 @@ function buildPlots(filteredRows: DemoRow[], locale: Locale): PlotCollection {
           mode: "lines",
           x: Array.from({ length: 24 }, (_, hour) => `${hour}:00`),
           y: movingAverage(hourly),
-          line: { color: "#fb867f", width: 3, shape: "spline" },
+          line: { color: "#2f92c5", width: 3, shape: "spline" },
           hovertemplate: locale === "da" ? "%{x}<br>%{y:.1f} glattet<extra></extra>" : "%{x}<br>%{y:.1f} smoothed<extra></extra>"
         }
       ],
@@ -539,7 +536,7 @@ function buildPlots(filteredRows: DemoRow[], locale: Locale): PlotCollection {
           text: safeRows.map((row) => `${row.fuel}<br>${row.zip === "Unknown" ? (locale === "da" ? "Ukendt opland" : "Unknown origin") : row.zip}`),
           marker: {
             size: 3.8,
-            color: safeRows.map((row) => (row.fuel === "EV" ? "#47b2e4" : row.fuel === "Hybrid" ? "#8fd4f0" : row.fuel === "ICE" ? "#fb867f" : "#dbeafe")),
+            color: safeRows.map((row) => (row.fuel === "EV" ? "#47b2e4" : row.fuel === "Hybrid" ? "#8fd4f0" : row.fuel === "ICE" ? "#aebbc7" : "#dbeafe")),
             opacity: 0.82
           },
           hovertemplate: locale === "da" ? "%{text}<br>Time %{x}<br>%{y} min<extra></extra>" : "%{text}<br>Hour %{x}<br>%{y} min<extra></extra>"
