@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Locale } from "@/content/types";
 import { MobilityCityDetails } from "@/components/hero/MobilityCityDetails";
 import { MobilityCityFallback } from "@/components/hero/MobilityCityFallback";
+import { MobilityCityControls } from "@/components/hero/MobilityCityControls";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import type { MobilityArea, MobilityModelStatus, MobilityView } from "@/types/mobility-city";
 
@@ -37,15 +38,28 @@ function browserSupportsWebGL() {
   }
 }
 
-function useDesktop3dEnabled() {
+function useWebGLEnabled() {
   const [state, setState] = useState({ enabled: false, resolved: false });
 
   useEffect(() => {
-    const query = window.matchMedia("(min-width: 992px)");
+    const handle = window.setTimeout(() => {
+      setState({ enabled: browserSupportsWebGL(), resolved: true });
+    }, 0);
 
-    function update() {
-      setState({ enabled: query.matches && browserSupportsWebGL(), resolved: true });
-    }
+    return () => {
+      window.clearTimeout(handle);
+    };
+  }, []);
+
+  return state;
+}
+
+function useCompactViewport() {
+  const [compact, setCompact] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 991.98px)");
+    const update = () => setCompact(query.matches);
 
     update();
     query.addEventListener("change", update);
@@ -55,7 +69,7 @@ function useDesktop3dEnabled() {
     };
   }, []);
 
-  return state;
+  return compact;
 }
 
 function useNearViewport(rootMargin = "420px 0px") {
@@ -104,7 +118,8 @@ export function MobilityCityVisual({
   locale
 }: MobilityCityVisualProps) {
   const reducedMotion = useReducedMotion();
-  const desktop3d = useDesktop3dEnabled();
+  const webGL = useWebGLEnabled();
+  const compactViewport = useCompactViewport();
   const { ref, nearViewport } = useNearViewport(lockedArea ? "24px 0px" : "420px 0px");
   const [hoveredArea, setHoveredArea] = useState<MobilityArea | null>(activeArea);
   const [selectedArea, setSelectedArea] = useState<MobilityArea | null>(lockedArea ?? (initialView === "overview" ? null : initialView));
@@ -112,11 +127,13 @@ export function MobilityCityVisual({
   const [resetSignal, setResetSignal] = useState(0);
 
   const wants3d = interactive && visualMode === "3d";
-  const canUse3d = wants3d && desktop3d.enabled && nearViewport;
-  const showImageFallback = !wants3d || (desktop3d.resolved && !desktop3d.enabled) || modelStatus === "error";
+  const canUse3d = wants3d && webGL.enabled && nearViewport;
+  const showImageFallback = !wants3d || (webGL.resolved && !webGL.enabled) || modelStatus === "error";
   const showLoadingPlate = wants3d && !showImageFallback && modelStatus !== "ready";
   const activeDisplayArea = selectedArea ?? activeArea ?? hoveredArea;
   const view: MobilityView = selectedArea ?? "overview";
+  const showSceneMarkers = showMarkers && !compactViewport;
+  const showTouchControls = canUse3d && showMarkers && !lockedArea && compactViewport;
 
   useEffect(() => {
     return () => {
@@ -181,12 +198,17 @@ export function MobilityCityVisual({
             onAreaSelect={handleSelect}
             onReturnToOverview={handleReturnToOverview}
             onStatusChange={setModelStatus}
-            showMarkers={showMarkers}
+            showMarkers={showSceneMarkers}
             locale={locale}
           />
         ) : null}
-        {showDetails && selectedArea ? <MobilityCityDetails area={selectedArea} locale={locale} selected onReturnToOverview={handleReturnToOverview} /> : null}
       </div>
+      {showTouchControls ? (
+        <div className="mobility-city__touch-controls">
+          <MobilityCityControls activeArea={activeDisplayArea ?? null} locale={locale} onAreaHover={handleHover} onAreaSelect={handleSelect} />
+        </div>
+      ) : null}
+      {showDetails && selectedArea ? <MobilityCityDetails area={selectedArea} locale={locale} selected onReturnToOverview={handleReturnToOverview} /> : null}
     </figure>
   );
 }

@@ -85,6 +85,7 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
   const text = copy[locale];
   const sectionRef = useRef<HTMLElement>(null);
   const layoutRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const clearHoverFrame = useRef<number | null>(null);
   const [progress, setProgress] = useState(0);
   const [highlightedPart, setHighlightedPart] = useState<SensorPartName | null>(null);
@@ -96,14 +97,17 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
 
     function updateProgress() {
       frame = 0;
-      const element = layoutRef.current ?? sectionRef.current;
-      if (!element) return;
+      const stage = stageRef.current;
+      const layout = layoutRef.current ?? sectionRef.current;
+      if (!stage || !layout) return;
 
-      const rect = element.getBoundingClientRect();
+      const stageRect = stage.getBoundingClientRect();
+      const layoutRect = layout.getBoundingClientRect();
       const viewportHeight = window.innerHeight || 1;
-      const entered = Math.min(1, Math.max(0, (viewportHeight - rect.top) / viewportHeight));
-      const opening = smoothstep(0.4, 0.48, entered);
-      const closing = 1 - smoothstep(0.6, 0.68, entered);
+      const stageTopRatio = stageRect.top / viewportHeight;
+      const layoutBottomRatio = layoutRect.bottom / viewportHeight;
+      const opening = 1 - smoothstep(0.32, 0.42, stageTopRatio);
+      const closing = smoothstep(0.54, 0.74, layoutBottomRatio);
       const nextProgress = Math.min(opening, closing);
       setProgress(nextProgress);
     }
@@ -159,6 +163,7 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
         <div className="sensor-product-lab__layout" ref={layoutRef}>
           <div
             className="sensor-product-lab__stage"
+            ref={stageRef}
             aria-label={locale === "da" ? "3D-model af Papp sensor" : "3D model of Papp sensor"}
           >
             <Canvas
@@ -194,7 +199,7 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
               />
             </Canvas>
           </div>
-          <div className="sensor-product-lab__copy">
+          <div className="sensor-product-lab__copy" onPointerLeave={() => setSensorHighlight(null)}>
             <ol role="list">
               {text.steps.map((step, index) => (
                 <li className={activeStep === index ? "is-active" : ""} key={step.title}>
@@ -204,7 +209,6 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
                     onClick={() => setSensorHighlight(step.part)}
                     onFocus={() => setSensorHighlight(step.part)}
                     onPointerEnter={() => setSensorHighlight(step.part)}
-                    onPointerLeave={() => setSensorHighlight(null)}
                   >
                     <span>{String(index + 1).padStart(2, "0")}</span>
                     <div>
@@ -215,12 +219,10 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
                 </li>
               ))}
             </ol>
-            <div className="sensor-product-lab__note">
-              {text.note.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-            </div>
           </div>
+        </div>
+        <div className="sensor-product-lab__statement">
+          <p>{text.note.join(" ")}</p>
         </div>
       </div>
     </section>
@@ -376,22 +378,22 @@ function SensorModel({
     const targetOpen = Math.min(1, Math.max(0, progress * 1.08));
     smoothedOpen.current += (targetOpen - smoothedOpen.current) * Math.min(1, delta * 5);
     const eased = smoothedOpen.current * smoothedOpen.current * (3 - 2 * smoothedOpen.current);
+    const base = parts.current.base;
     const lid = parts.current.lid;
-    const core = parts.current.core;
 
     if (lid) {
       const snapshot = snapshots.current.get(lid);
       if (snapshot) {
-        lid.position.y = snapshot.position.y;
-        lid.position.z = snapshot.position.z - eased * 0.22;
+        lid.position.y = snapshot.position.y + eased * 0.32;
+        lid.position.z = snapshot.position.z;
       }
     }
 
-    if (core) {
-      const snapshot = snapshots.current.get(core);
+    if (base) {
+      const snapshot = snapshots.current.get(base);
       if (snapshot) {
-        core.position.y = snapshot.position.y;
-        core.position.z = snapshot.position.z - eased * 0.11;
+        base.position.y = snapshot.position.y - eased * 0.2;
+        base.position.z = snapshot.position.z;
       }
     }
 
@@ -436,7 +438,7 @@ function SensorModel({
   }
 
   return (
-    <group ref={groupRef} position={[0, -1.14, 0]} onPointerOver={handlePointerOver} onPointerOut={handlePointerOut}>
+    <group ref={groupRef} position={[0, -0.9, 0]} onPointerOver={handlePointerOver} onPointerOut={handlePointerOut}>
       <primitive object={scene} />
     </group>
   );

@@ -1380,7 +1380,7 @@ img {
   overflow: clip;
   min-height: 0;
   background: #fff;
-  padding-bottom: clamp(0.5rem, 1.5vw, 1rem);
+  padding-bottom: clamp(1rem, 2.5vw, 2rem);
 }
 
 .sensor-product-lab__heading {
@@ -1402,7 +1402,7 @@ img {
   height: min(650px, calc(100svh - 120px));
   min-height: 480px;
   background: transparent;
-  transform: translateY(clamp(0.75rem, 2.2vw, 1.4rem));
+  transform: translateY(clamp(-1.4rem, -2vw, -0.7rem));
 }
 
 .sensor-product-lab__stage canvas,
@@ -1488,18 +1488,21 @@ img {
   line-height: 1.6;
 }
 
-.sensor-product-lab__note {
-  display: grid;
-  gap: 0.7rem;
-  max-width: 58ch;
-  border-top: 1px solid rgba(68, 68, 68, 0.12);
-  padding-top: clamp(1rem, 2.4vw, 1.45rem);
+.sensor-product-lab__statement {
+  width: min(1080px, 100%);
+  margin: clamp(1.6rem, 4vw, 3rem) auto 0;
+  border-top: 1px solid rgba(71, 178, 228, 0.22);
+  padding-top: clamp(1.25rem, 3vw, 2rem);
 }
 
-.sensor-product-lab__note p {
+.sensor-product-lab__statement p {
+  max-width: 980px;
   margin: 0;
-  color: var(--papp-body);
-  line-height: 1.68;
+  color: var(--papp-heading);
+  font-size: clamp(1.55rem, 3vw, 2.65rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.03em;
 }
 
 .insights-data-lab {
@@ -3075,6 +3078,35 @@ button.project-category-card {
 .mobility-city-marker--cameras .mobility-city-marker__label {
   top: calc(100% + 0.6rem);
   bottom: auto;
+}
+
+.mobility-city__touch-controls {
+  display: none;
+}
+
+.mobility-city__controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+}
+
+.mobility-city__control {
+  border: 1px solid rgba(71, 178, 228, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--papp-heading);
+  padding: 0.65rem 0.82rem;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 800;
+  box-shadow: 0 10px 28px rgba(55, 81, 126, 0.08);
+}
+
+.mobility-city__control.is-active {
+  border-color: rgba(71, 178, 228, 0.55);
+  background: rgba(71, 178, 228, 0.12);
+  color: var(--papp-hero);
 }
 
 .mobility-city__panel {
@@ -5387,7 +5419,26 @@ button.project-category-card {
   }
 
   .solutions-city-panel .mobility-city {
-    height: clamp(300px, 74vw, 500px);
+    height: auto;
+  }
+
+  .solutions-city-panel .mobility-city__stage {
+    height: clamp(320px, 64vw, 500px);
+  }
+
+  .mobility-city__touch-controls {
+    display: block;
+    margin-top: 0.85rem;
+  }
+
+  .mobility-city__panel {
+    position: static;
+    width: 100%;
+    margin-top: 0.95rem;
+  }
+
+  .mobility-city__panel--selected {
+    width: 100%;
   }
 
   .project-article-aside {
@@ -5919,7 +5970,7 @@ button.project-category-card {
     top: auto;
     height: clamp(360px, 72vw, 560px);
     min-height: 0;
-    transform: translateY(0.75rem);
+    transform: translateY(-0.5rem);
   }
 
   .sensor-product-lab__copy {
@@ -6023,7 +6074,23 @@ button.project-category-card {
   }
 
   .solutions-city-panel .mobility-city {
+    height: auto;
+  }
+
+  .solutions-city-panel .mobility-city__stage {
     height: clamp(280px, 78vw, 420px);
+  }
+
+  .mobility-city__controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  .mobility-city__control {
+    min-height: 44px;
+    padding: 0.55rem 0.42rem;
+    font-size: clamp(0.72rem, 3.3vw, 0.82rem);
   }
 
   .insight-dashboard__origin {
