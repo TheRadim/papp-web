@@ -76,23 +76,23 @@ const copy: Record<Locale, { eyebrow: string; title: string; intro: string; step
 export function SensorAssemblySection({ locale }: { locale: Locale }) {
   const text = copy[locale];
   const sectionRef = useRef<HTMLElement>(null);
+  const layoutRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
   const [highlightedPart, setHighlightedPart] = useState<SensorPartName | null>(null);
-  const scrollStep = Math.min(text.steps.length - 1, Math.max(0, Math.floor(progress * text.steps.length)));
   const highlightedStep = highlightedPart ? text.steps.findIndex((step) => step.part === highlightedPart) : -1;
-  const activeStep = highlightedStep >= 0 ? highlightedStep : scrollStep;
+  const activeStep = highlightedStep;
 
   useEffect(() => {
     let frame = 0;
 
     function updateProgress() {
       frame = 0;
-      const element = sectionRef.current;
+      const element = layoutRef.current ?? sectionRef.current;
       if (!element) return;
 
       const rect = element.getBoundingClientRect();
-      const travel = Math.max(1, rect.height - window.innerHeight);
-      const nextProgress = Math.min(1, Math.max(0, (window.innerHeight * 0.45 - rect.top) / travel));
+      const travel = Math.max(1, Math.min(window.innerHeight * 1.35, rect.height + window.innerHeight * 0.35));
+      const nextProgress = Math.min(1, Math.max(0, (window.innerHeight * 0.35 - rect.top) / travel));
       setProgress(nextProgress);
     }
 
@@ -120,11 +120,11 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
           <h2>{text.title}</h2>
           <p>{text.intro}</p>
         </div>
-        <div className="sensor-product-lab__layout">
+        <div className="sensor-product-lab__layout" ref={layoutRef}>
           <div className="sensor-product-lab__stage" aria-label={locale === "da" ? "3D-model af Papp sensor" : "3D model of Papp sensor"}>
             <Canvas
               className="sensor-product-lab__canvas"
-              camera={{ position: [3.2, 2.35, 4.4], fov: 30 }}
+              camera={{ position: [3.2, 2.35, 4.4], fov: 38 }}
               dpr={[1, 1.6]}
               gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
               shadows
@@ -315,7 +315,7 @@ function SensorModel({
   }, [activePart, scene]);
 
   useFrame((_, delta) => {
-    const targetOpen = Math.min(1, Math.max(0, progress * 1.18));
+    const targetOpen = Math.min(1, Math.max(0, progress * 1.08));
     smoothedOpen.current += (targetOpen - smoothedOpen.current) * Math.min(1, delta * 5);
     const eased = smoothedOpen.current * smoothedOpen.current * (3 - 2 * smoothedOpen.current);
     const lid = parts.current.lid;
@@ -325,7 +325,7 @@ function SensorModel({
       const snapshot = snapshots.current.get(lid);
       if (snapshot) {
         lid.position.y = snapshot.position.y;
-        lid.position.z = snapshot.position.z - eased * 0.055;
+        lid.position.z = snapshot.position.z - eased * 0.11;
       }
     }
 
@@ -333,7 +333,7 @@ function SensorModel({
       const snapshot = snapshots.current.get(core);
       if (snapshot) {
         core.position.y = snapshot.position.y;
-        core.position.z = snapshot.position.z - eased * 0.0275;
+        core.position.z = snapshot.position.z - eased * 0.055;
       }
     }
   });
@@ -359,7 +359,7 @@ function SensorModel({
   }
 
   return (
-    <group ref={groupRef} onPointerMove={handlePointerMove} onPointerOut={handlePointerOut}>
+    <group ref={groupRef} position={[0, -1.05, 0]} onPointerMove={handlePointerMove} onPointerOut={handlePointerOut}>
       <primitive object={scene} />
     </group>
   );

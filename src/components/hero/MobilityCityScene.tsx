@@ -4,7 +4,7 @@
 
 import { ContactShadows, Html, OrbitControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, type MutableRefObject } from "react";
 import { Vector3 } from "three";
 import { CAMERA_VIEWS, MOBILITY_AREAS, MOBILITY_MARKERS } from "@/config/mobility-city";
 import type { Locale } from "@/content/types";
@@ -26,16 +26,24 @@ interface MobilityCitySceneProps {
   locale: Locale;
 }
 
+interface OrbitControllerHandle {
+  enabled: boolean;
+  target: Vector3;
+  update: () => void;
+}
+
 function CameraController({
   view,
   reducedMotion,
   enabled,
-  resetSignal
+  resetSignal,
+  controlsRef
 }: {
   view: MobilityView;
   reducedMotion: boolean;
   enabled: boolean;
   resetSignal: number;
+  controlsRef: MutableRefObject<OrbitControllerHandle | null>;
 }) {
   const { camera, invalidate } = useThree();
   const target = useRef(new Vector3(...CAMERA_VIEWS.overview.target));
@@ -43,6 +51,16 @@ function CameraController({
   const targetPosition = useMemo(() => new Vector3(...CAMERA_VIEWS[view].position), [view]);
   const targetLookAt = useMemo(() => new Vector3(...CAMERA_VIEWS[view].target), [view]);
   const targetFov = CAMERA_VIEWS[view].fov;
+
+  const releaseControls = useCallback(() => {
+    const controls = controlsRef.current;
+
+    if (!controls) return;
+
+    controls.target.copy(target.current);
+    controls.enabled = true;
+    controls.update();
+  }, [controlsRef]);
 
   useEffect(() => {
     camera.lookAt(target.current);
@@ -52,9 +70,12 @@ function CameraController({
   useEffect(() => {
     if (resetSignal > 0 && view === "overview") {
       resetActive.current = true;
+      if (controlsRef.current) {
+        controlsRef.current.enabled = false;
+      }
       invalidate();
     }
-  }, [invalidate, resetSignal, view]);
+  }, [controlsRef, invalidate, resetSignal, view]);
 
   useEffect(() => {
     if (reducedMotion) {
@@ -67,9 +88,11 @@ function CameraController({
         camera.updateProjectionMatrix();
       }
 
+      resetActive.current = false;
+      releaseControls();
       invalidate();
     }
-  }, [camera, invalidate, reducedMotion, targetFov, targetLookAt, targetPosition]);
+  }, [camera, invalidate, reducedMotion, releaseControls, targetFov, targetLookAt, targetPosition]);
 
   useFrame(() => {
     if (reducedMotion || (!enabled && !resetActive.current)) {
@@ -80,8 +103,19 @@ function CameraController({
     const targetDistance = target.current.distanceTo(targetLookAt);
     const fovDistance = "fov" in camera ? Math.abs(camera.fov - targetFov) : 0;
 
-    if (positionDistance < 0.004 && targetDistance < 0.004 && fovDistance < 0.02) {
+    if (positionDistance < 0.035 && targetDistance < 0.035 && fovDistance < 0.18) {
+      camera.position.copy(targetPosition);
+      target.current.copy(targetLookAt);
+      camera.lookAt(target.current);
+
+      if ("fov" in camera) {
+        camera.fov = targetFov;
+        camera.updateProjectionMatrix();
+      }
+
       resetActive.current = false;
+      releaseControls();
+      invalidate();
       return;
     }
 
@@ -165,6 +199,7 @@ export function MobilityCityScene({
   locale
 }: MobilityCitySceneProps) {
   const debug = process.env.NEXT_PUBLIC_DEBUG_MOBILITY_CITY === "true";
+  const controlsRef = useRef<OrbitControllerHandle | null>(null);
 
   return (
     <>
@@ -187,7 +222,7 @@ export function MobilityCityScene({
         shadow-normalBias={0.035}
       />
       <ContactShadows position={[0, -0.015, 0]} opacity={0.28} scale={8.5} blur={2.8} far={4.5} resolution={512} color="#52616a" frames={1} />
-      <CameraController view={view} reducedMotion={reducedMotion} enabled={view !== "overview"} resetSignal={resetSignal} />
+      <CameraController view={view} reducedMotion={reducedMotion} enabled={view !== "overview"} resetSignal={resetSignal} controlsRef={controlsRef} />
       <MobilityCityModel
         hoveredArea={hoveredArea}
         selectedArea={selectedArea}
@@ -206,6 +241,9 @@ export function MobilityCityScene({
         />
       ) : null}
       <OrbitControls
+        ref={(controls) => {
+          controlsRef.current = controls;
+        }}
         enabled={view === "overview" || debug}
         target={CAMERA_VIEWS.overview.target}
         enableDamping
