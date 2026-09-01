@@ -2,6 +2,7 @@
 
 import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import type { ThreeEvent } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Box3, Group, Material, Mesh, MeshStandardMaterial, Object3D, Vector3 } from "three";
 import type { Locale } from "@/content/types";
@@ -29,7 +30,7 @@ const copy: Record<Locale, { eyebrow: string; title: string; intro: string; step
     steps: [
       {
         part: "core",
-        title: "Sensor core",
+        title: "Core",
         body:
           "The core hides the technical work: mobile-network transmission, remote updates, LoRaWAN support, optimised battery drain and energy-efficient vehicle detection."
       },
@@ -54,7 +55,7 @@ const copy: Record<Locale, { eyebrow: string; title: string; intro: string; step
     steps: [
       {
         part: "core",
-        title: "Sensorkerne",
+        title: "Kerne",
         body:
           "Kernen rummer teknikken: mobilnetværk, fjernopdateringer, LoRaWAN-support, optimeret batteriforbrug og energieffektiv bilregistrering."
       },
@@ -76,10 +77,10 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
   const text = copy[locale];
   const sectionRef = useRef<HTMLElement>(null);
   const [progress, setProgress] = useState(0);
-  const [selectedStep, setSelectedStep] = useState<number | null>(null);
+  const [highlightedPart, setHighlightedPart] = useState<SensorPartName | null>(null);
   const scrollStep = Math.min(text.steps.length - 1, Math.max(0, Math.floor(progress * text.steps.length)));
-  const activeStep = selectedStep ?? scrollStep;
-  const activePart = text.steps[activeStep]?.part ?? "core";
+  const highlightedStep = highlightedPart ? text.steps.findIndex((step) => step.part === highlightedPart) : -1;
+  const activeStep = highlightedStep >= 0 ? highlightedStep : scrollStep;
 
   useEffect(() => {
     let frame = 0;
@@ -139,15 +140,14 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
                 shadow-bias={-0.0002}
               />
               <SensorCameraSetup />
-              <SensorModel activePart={activePart} progress={progress} />
+              <SensorModel activePart={highlightedPart} progress={progress} onPartHover={setHighlightedPart} />
               <Environment preset="city" environmentIntensity={0.24} />
               <OrbitControls
                 enableDamping
                 enablePan={false}
-                enableZoom
+                enableZoom={false}
                 dampingFactor={0.08}
                 rotateSpeed={0.5}
-                zoomSpeed={0.6}
                 minDistance={2.1}
                 maxDistance={6.5}
                 minPolarAngle={0}
@@ -161,9 +161,11 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
                 <li className={activeStep === index ? "is-active" : ""} key={step.title}>
                   <button
                     type="button"
-                    onClick={() => setSelectedStep(index)}
-                    onFocus={() => setSelectedStep(index)}
-                    onPointerEnter={() => setSelectedStep(index)}
+                    onBlur={() => setHighlightedPart(null)}
+                    onClick={() => setHighlightedPart(step.part)}
+                    onFocus={() => setHighlightedPart(step.part)}
+                    onPointerEnter={() => setHighlightedPart(step.part)}
+                    onPointerLeave={() => setHighlightedPart(null)}
                   >
                     <span>{String(index + 1).padStart(2, "0")}</span>
                     <div>
@@ -219,8 +221,32 @@ function setObjectOpacity(object: Object3D | null | undefined, opacity: number) 
   });
 }
 
-function SensorModel({ activePart, progress }: { activePart: SensorPartName; progress: number }) {
-  const gltf = useGLTF(withBasePath("/models/sensor/sensor.gltf"));
+function getSensorPartFromObject(object: Object3D): SensorPartName | null {
+  let current: Object3D | null = object;
+
+  while (current) {
+    const name = current.name.toLowerCase();
+
+    if (name.includes("base")) return "base";
+    if (name.includes("lid")) return "lid";
+    if (name.includes("perry") || name.includes("core")) return "core";
+
+    current = current.parent;
+  }
+
+  return null;
+}
+
+function SensorModel({
+  activePart,
+  progress,
+  onPartHover
+}: {
+  activePart: SensorPartName | null;
+  progress: number;
+  onPartHover: (part: SensorPartName | null) => void;
+}) {
+  const gltf = useGLTF(withBasePath("/models/sensor/parking-sensor.glb"));
   const groupRef = useRef<Group>(null);
   const parts = useRef<Partial<Record<SensorPartName, Object3D>>>({});
   const snapshots = useRef(new Map<Object3D, PartSnapshot>());
@@ -232,12 +258,14 @@ function SensorModel({ activePart, progress }: { activePart: SensorPartName; pro
     const center = box.getCenter(new Vector3());
     const size = box.getSize(new Vector3());
     const maxAxis = Math.max(size.x, size.y, size.z) || 1;
+    const normalized = new Group();
 
     clone.position.sub(center);
-    clone.scale.setScalar(1.8 / maxAxis);
-    clone.rotation.set(Math.PI / 2, -0.58, 0.03);
+    normalized.add(clone);
+    normalized.scale.setScalar(1.8 / maxAxis);
+    normalized.rotation.set(0, -0.58, 0.03);
 
-    clone.traverse((object) => {
+    normalized.traverse((object) => {
       if (!(object instanceof Mesh)) return;
 
       object.material = cloneMaterial(object.material);
@@ -253,7 +281,7 @@ function SensorModel({ activePart, progress }: { activePart: SensorPartName; pro
       });
     });
 
-    return clone;
+    return normalized;
   }, [gltf.scene]);
 
   useEffect(() => {
@@ -282,52 +310,59 @@ function SensorModel({ activePart, progress }: { activePart: SensorPartName; pro
 
   useEffect(() => {
     (["base", "core", "lid"] as SensorPartName[]).forEach((partName) => {
-      setObjectOpacity(parts.current[partName], partName === activePart ? 1 : 0.12);
+      setObjectOpacity(parts.current[partName], !activePart || partName === activePart ? 1 : 0.1);
     });
   }, [activePart, scene]);
 
   useFrame((_, delta) => {
-    const targetOpen = Math.min(1, Math.max(0.18, progress * 1.2));
+    const targetOpen = Math.min(1, Math.max(0, progress * 1.18));
     smoothedOpen.current += (targetOpen - smoothedOpen.current) * Math.min(1, delta * 5);
     const eased = smoothedOpen.current * smoothedOpen.current * (3 - 2 * smoothedOpen.current);
     const lid = parts.current.lid;
     const core = parts.current.core;
-    const base = parts.current.base;
 
     if (lid) {
       const snapshot = snapshots.current.get(lid);
       if (snapshot) {
-        lid.position.y = snapshot.position.y + eased * 0.52;
-        lid.position.x = snapshot.position.x + eased * 0.03;
-        lid.rotation.z = snapshot.rotation.z + eased * 0.07;
+        lid.position.y = snapshot.position.y;
+        lid.position.z = snapshot.position.z - eased * 0.055;
       }
     }
 
     if (core) {
       const snapshot = snapshots.current.get(core);
       if (snapshot) {
-        core.position.y = snapshot.position.y + eased * 0.22;
-        core.rotation.y = snapshot.rotation.y - eased * 0.08;
+        core.position.y = snapshot.position.y;
+        core.position.z = snapshot.position.z - eased * 0.0275;
       }
-    }
-
-    if (base) {
-      const snapshot = snapshots.current.get(base);
-      if (snapshot) {
-        base.position.y = snapshot.position.y - eased * 0.14;
-      }
-    }
-
-    if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.045;
     }
   });
 
+  function handlePointerMove(event: ThreeEvent<PointerEvent>) {
+    const part = getSensorPartFromObject(event.object);
+
+    if (!part) {
+      return;
+    }
+
+    event.stopPropagation();
+    onPartHover(part);
+  }
+
+  function handlePointerOut(event: ThreeEvent<PointerEvent>) {
+    if (!getSensorPartFromObject(event.object)) {
+      return;
+    }
+
+    event.stopPropagation();
+    onPartHover(null);
+  }
+
   return (
-    <group ref={groupRef}>
+    <group ref={groupRef} onPointerMove={handlePointerMove} onPointerOut={handlePointerOut}>
       <primitive object={scene} />
     </group>
   );
 }
 
-useGLTF.preload(withBasePath("/models/sensor/sensor.gltf"));
+useGLTF.preload(withBasePath("/models/sensor/parking-sensor.glb"));

@@ -13,6 +13,7 @@ interface MobilityCityCanvasProps {
   selectedArea: MobilityArea | null;
   view: MobilityView;
   reducedMotion: boolean;
+  resetSignal: number;
   onAreaHover: (area: MobilityArea | null) => void;
   onAreaSelect: (area: MobilityArea) => void;
   onReturnToOverview: () => void;
@@ -63,6 +64,7 @@ export default function MobilityCityCanvas({
   selectedArea,
   view,
   reducedMotion,
+  resetSignal,
   onAreaHover,
   onAreaSelect,
   onReturnToOverview,
@@ -99,6 +101,7 @@ export default function MobilityCityCanvas({
             selectedArea={selectedArea}
             view={view}
             reducedMotion={reducedMotion}
+            resetSignal={resetSignal}
             onAreaHover={onAreaHover}
             onAreaSelect={onAreaSelect}
             onStatusChange={onStatusChange}

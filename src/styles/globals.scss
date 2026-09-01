@@ -1378,7 +1378,7 @@ img {
 
 .sensor-product-lab {
   overflow: clip;
-  min-height: 165vh;
+  min-height: 130vh;
   background: #fff;
 }
 
@@ -1398,8 +1398,8 @@ img {
   position: sticky;
   top: 92px;
   overflow: hidden;
-  height: min(740px, calc(100svh - 120px));
-  min-height: 520px;
+  height: min(650px, calc(100svh - 120px));
+  min-height: 480px;
   background: transparent;
 }
 
@@ -1534,9 +1534,70 @@ img {
   grid-column: 1 / -1;
 }
 
-.insights-data-lab__slider-label input {
+.insights-data-lab__range-control {
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-height: 30px;
+}
+
+.insights-data-lab__range-track {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 6px;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(68, 68, 68, 0.1) 0 var(--range-start),
+      var(--papp-blue-light) var(--range-start) var(--range-end),
+      rgba(68, 68, 68, 0.1) var(--range-end) 100%
+    );
+}
+
+.insights-data-lab__range-control input {
+  position: relative;
+  grid-area: 1 / 1;
   width: 100%;
-  accent-color: var(--papp-blue-light);
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+.insights-data-lab__range-control input::-webkit-slider-runnable-track {
+  height: 6px;
+  background: transparent;
+}
+
+.insights-data-lab__range-control input::-moz-range-track {
+  height: 6px;
+  background: transparent;
+}
+
+.insights-data-lab__range-control input::-webkit-slider-thumb {
+  width: 18px;
+  height: 18px;
+  margin-top: -6px;
+  border: 3px solid #fff;
+  border-radius: 999px;
+  appearance: none;
+  background: var(--papp-blue-light);
+  box-shadow: 0 4px 14px rgba(47, 146, 197, 0.28);
+  cursor: grab;
+  pointer-events: auto;
+}
+
+.insights-data-lab__range-control input::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 3px solid #fff;
+  border-radius: 999px;
+  background: var(--papp-blue-light);
+  box-shadow: 0 4px 14px rgba(47, 146, 197, 0.28);
+  cursor: grab;
+  pointer-events: auto;
 }
 
 .insights-data-lab__slider-label strong {
@@ -1588,6 +1649,7 @@ img {
   gap: 1px;
   overflow: hidden;
   margin: 0 auto clamp(2rem, 5vw, 4rem);
+  max-width: 880px;
   border: 1px solid rgba(68, 68, 68, 0.1);
   border-radius: 5px;
   background: rgba(68, 68, 68, 0.1);
@@ -2553,7 +2615,7 @@ button.project-category-card {
 .project-card img {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 2.05 / 1;
   object-fit: cover;
   transition: transform 0.55s ease;
 }

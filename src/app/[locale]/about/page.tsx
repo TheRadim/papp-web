@@ -107,7 +107,7 @@ const teamMembers = [
     role: { en: "Software Developer", da: "Softwareudvikler" },
     email: "alfred.rydahl@pappmobility.com",
     linkedinUrl: "https://www.linkedin.com/in/alfred-r%C3%B6ttger-rydahl-8a6707a2/",
-    image: "/images/team/alfred-profile-new.jpg"
+    image: "/images/team/radim-profile-new.jpg"
   },
   {
     name: "Martine Winther",
@@ -121,20 +121,19 @@ const teamMembers = [
     role: { en: "Backend Software Engineer", da: "Backend-softwareingeniør" },
     email: "maxim.zavidei@pappmobility.com",
     linkedinUrl: "https://www.linkedin.com/in/v1max/",
-    image: "/images/team/maxim-profile.jpg"
+    image: "/images/team/alfred-profile-new.jpg"
   },
   {
     name: "Radim Theiner",
     role: { en: "Product Owner", da: "Product Owner" },
     email: "radim.theiner@pappmobility.com",
     linkedinUrl: "https://www.linkedin.com/in/therad/",
-    image: "/images/team/radim-profile-new.jpg"
+    image: "/images/team/maxim-profile.jpg"
   },
   {
     name: "Sarah Sigvardt",
     role: { en: "Team Member", da: "Teammedlem" },
-    linkedinUrl: linkedinSearch("Sarah Sigvardt"),
-    image: "/images/team/sarah-profile.jpg"
+    linkedinUrl: linkedinSearch("Sarah Sigvardt")
   },
   {
     name: "Henrik Gade Hyldgaard",

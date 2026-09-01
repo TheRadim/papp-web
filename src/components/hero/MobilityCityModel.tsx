@@ -210,9 +210,8 @@ export function MobilityCityModel({
       }
 
       const active = area === activeArea;
-      const muted = Boolean(activeArea && area !== activeArea);
 
-      eachMaterial(child.material, (material) => applyMaterialState(material, active, muted, AREA_COLORS[area]));
+      eachMaterial(child.material, (material) => applyMaterialState(material, active, false, AREA_COLORS[area]));
     });
     invalidate();
   }, [hoveredArea, invalidate, model, selectedArea]);

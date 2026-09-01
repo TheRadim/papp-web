@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { Locale } from "@/content/types";
 import demoData from "@/content/insights/demo-data.json";
 
@@ -48,7 +48,7 @@ const copy = {
     intro:
       "A simple layer for filtering measured parking behaviour, reading the key signals and turning raw registrations into decisions that people can understand.",
     area: "Area",
-    date: "Date",
+    date: "Date range",
     allAreas: "Parking network",
     allDates: "All dates",
     contextTitle: "From registrations to useful explanations.",
@@ -83,7 +83,7 @@ const copy = {
     intro:
       "Et enkelt lag til at filtrere målt parkeringsadfærd, aflæse de vigtigste signaler og omsætte registreringer til beslutninger, der kan forstås.",
     area: "Område",
-    date: "Dato",
+    date: "Datoperiode",
     allAreas: "Parkeringsnetværk",
     allDates: "Alle datoer",
     contextTitle: "Fra registreringer til brugbare forklaringer.",
@@ -117,11 +117,18 @@ const copy = {
 export function InsightsDataLab({ locale }: { locale: Locale }) {
   const text = copy[locale];
   const [area, setArea] = useState("all");
-  const [dateIndex, setDateIndex] = useState(0);
-  const selectedDate = dateIndex === 0 ? "all" : dates[dateIndex - 1];
+  const [dateRange, setDateRange] = useState<[number, number]>([0, Math.max(0, dates.length - 1)]);
+  const startIndex = Math.min(dateRange[0], dateRange[1]);
+  const endIndex = Math.max(dateRange[0], dateRange[1]);
+  const startDate = dates[startIndex] ?? dates[0];
+  const endDate = dates[endIndex] ?? dates[dates.length - 1];
+  const dateRangeLabel = startDate && endDate ? `${formatDate(startDate, locale)} - ${formatDate(endDate, locale)}` : text.allDates;
+  const startPercent = dates.length > 1 ? (startIndex / (dates.length - 1)) * 100 : 0;
+  const endPercent = dates.length > 1 ? (endIndex / (dates.length - 1)) * 100 : 100;
+  const rangeStyle = { "--range-start": `${startPercent}%`, "--range-end": `${endPercent}%` } as CSSProperties;
   const filteredRows = useMemo(
-    () => rows.filter((row) => (area === "all" || row.area === area) && (selectedDate === "all" || row.date === selectedDate)),
-    [area, selectedDate]
+    () => rows.filter((row) => (area === "all" || row.area === area) && row.date >= startDate && row.date <= endDate),
+    [area, endDate, startDate]
   );
 
   const metrics = useMemo(() => buildMetrics(filteredRows, locale), [filteredRows, locale]);
@@ -149,16 +156,36 @@ export function InsightsDataLab({ locale }: { locale: Locale }) {
           </label>
           <label className="insights-data-lab__slider-label">
             <span>{text.date}</span>
-            <input
-              aria-valuetext={selectedDate === "all" ? text.allDates : formatDate(selectedDate, locale)}
-              max={dates.length}
-              min={0}
-              onChange={(event) => setDateIndex(Number(event.target.value))}
-              step={1}
-              type="range"
-              value={dateIndex}
-            />
-            <strong>{selectedDate === "all" ? text.allDates : formatDate(selectedDate, locale)}</strong>
+            <div className="insights-data-lab__range-control" style={rangeStyle}>
+              <span className="insights-data-lab__range-track" aria-hidden="true" />
+              <input
+                aria-label={locale === "da" ? "Startdato" : "Start date"}
+                aria-valuetext={formatDate(startDate, locale)}
+                max={dates.length - 1}
+                min={0}
+                onChange={(event) => {
+                  const next = Number(event.target.value);
+                  setDateRange((current) => [Math.min(next, current[1]), current[1]]);
+                }}
+                step={1}
+                type="range"
+                value={startIndex}
+              />
+              <input
+                aria-label={locale === "da" ? "Slutdato" : "End date"}
+                aria-valuetext={formatDate(endDate, locale)}
+                max={dates.length - 1}
+                min={0}
+                onChange={(event) => {
+                  const next = Number(event.target.value);
+                  setDateRange((current) => [current[0], Math.max(next, current[0])]);
+                }}
+                step={1}
+                type="range"
+                value={endIndex}
+              />
+            </div>
+            <strong>{dateRangeLabel}</strong>
           </label>
         </div>
         <div className="insights-data-lab__metrics">
@@ -265,17 +292,32 @@ function buildPlots(filteredRows: DemoRow[], locale: Locale): PlotCollection {
   const safeRows = filteredRows.length ? filteredRows : rows.slice(0, 120);
   const hourly = Array.from({ length: 24 }, (_, hour) => safeRows.filter((row) => row.hour === hour).length);
   const weekdays = locale === "da" ? ["Man", "Tir", "Ons", "Tor", "Fre", "Lor", "Son"] : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const heatmap = weekdays.map((_, dayIndex) =>
-    Array.from({ length: 24 }, (_, hour) =>
-      safeRows.filter((row) => {
+  const heatmapHours = Array.from({ length: 12 }, (_, index) => index + 7);
+  const dateCountsByWeekday = new Map<number, Set<string>>();
+
+  safeRows.forEach((row) => {
+    const day = new Date(`${row.date}T12:00:00`).getDay();
+    const mondayIndex = (day + 6) % 7;
+    const dateSet = dateCountsByWeekday.get(mondayIndex) ?? new Set<string>();
+    dateSet.add(row.date);
+    dateCountsByWeekday.set(mondayIndex, dateSet);
+  });
+
+  const heatmap = weekdays.map((_, dayIndex) => {
+    const daysInSelection = dateCountsByWeekday.get(dayIndex)?.size || 1;
+
+    return heatmapHours.map((hour) => {
+      const count = safeRows.filter((row) => {
         const day = new Date(`${row.date}T12:00:00`).getDay();
         const mondayIndex = (day + 6) % 7;
         return mondayIndex === dayIndex && row.hour === hour;
-      }).length
-    )
-  );
+      }).length;
 
-  const lightLayout = {
+      return Number((count / daysInSelection).toFixed(1));
+    });
+  });
+
+  const lightLayout = () => ({
     autosize: true,
     margin: { l: 42, r: 18, t: 14, b: 36 },
     paper_bgcolor: "rgba(0,0,0,0)",
@@ -285,7 +327,7 @@ function buildPlots(filteredRows: DemoRow[], locale: Locale): PlotCollection {
     hoverlabel: { bgcolor: "#ffffff", bordercolor: "#47b2e4", font: { color: "#444444" } },
     xaxis: { fixedrange: true, gridcolor: "rgba(68,68,68,0.08)", zeroline: false },
     yaxis: { fixedrange: true, gridcolor: "rgba(68,68,68,0.08)", zeroline: false }
-  };
+  });
 
   return {
     hourly: {
@@ -308,7 +350,7 @@ function buildPlots(filteredRows: DemoRow[], locale: Locale): PlotCollection {
           hovertemplate: locale === "da" ? "%{x}<br>%{y:.1f} glattet<extra></extra>" : "%{x}<br>%{y:.1f} smoothed<extra></extra>"
         }
       ],
-      layout: { ...lightLayout, height: 390 }
+      layout: { ...lightLayout(), height: 390 }
     },
     heatmap: {
       title: text.heatmap,
@@ -316,20 +358,35 @@ function buildPlots(filteredRows: DemoRow[], locale: Locale): PlotCollection {
       data: [
         {
           type: "heatmap",
-          x: Array.from({ length: 24 }, (_, hour) => `${hour}`),
+          x: heatmapHours.map((hour) => `${hour}`),
           y: weekdays,
           z: heatmap,
           colorscale: [
-            [0, "#f7fbff"],
-            [0.35, "#d7effb"],
-            [0.7, "#7ccded"],
-            [1, "#2f92c5"]
+            [0, "#f8fbff"],
+            [0.16, "#e4f0fb"],
+            [0.42, "#a9cdf0"],
+            [0.72, "#5f9ee2"],
+            [1, "#2f73c8"]
           ],
-          showscale: false,
-          hovertemplate: locale === "da" ? "%{y} %{x}:00<br>%{z} besøg<extra></extra>" : "%{y} %{x}:00<br>%{z} visits<extra></extra>"
+          showscale: true,
+          colorbar: {
+            title: locale === "da" ? "Besøg pr. dag" : "Visits per day",
+            thickness: 10,
+            len: 0.82,
+            outlinewidth: 0
+          },
+          xgap: 2,
+          ygap: 2,
+          hovertemplate: locale === "da" ? "%{y} %{x}:00<br>%{z} besøg pr. dag<extra></extra>" : "%{y} %{x}:00<br>%{z} visits per day<extra></extra>"
         }
       ],
-      layout: { ...lightLayout, height: 330, margin: { l: 48, r: 12, t: 12, b: 30 } }
+      layout: {
+        ...lightLayout(),
+        height: 340,
+        margin: { l: 48, r: 52, t: 12, b: 34 },
+        xaxis: { fixedrange: true, side: "bottom", title: locale === "da" ? "Time" : "Hour", gridcolor: "#ffffff", zeroline: false },
+        yaxis: { fixedrange: true, autorange: "reversed", gridcolor: "#ffffff", zeroline: false }
+      }
     },
     structure: {
       title: text.structure,
@@ -351,16 +408,17 @@ function buildPlots(filteredRows: DemoRow[], locale: Locale): PlotCollection {
         }
       ],
       layout: {
-        ...lightLayout,
-        height: 330,
-        margin: { l: 0, r: 0, t: 4, b: 0 },
+        ...lightLayout(),
+        height: 380,
+        margin: { l: 6, r: 6, t: 4, b: 4 },
+        dragmode: "orbit",
         scene: {
           bgcolor: "rgba(0,0,0,0)",
-          dragmode: false,
           xaxis: { title: locale === "da" ? "Time" : "Hour", gridcolor: "rgba(68,68,68,0.08)", zeroline: false },
           yaxis: { title: locale === "da" ? "Ophold" : "Dwell", gridcolor: "rgba(68,68,68,0.08)", zeroline: false },
           zaxis: { title: locale === "da" ? "Opland" : "Origin", gridcolor: "rgba(68,68,68,0.08)", zeroline: false },
-          camera: { eye: { x: 1.45, y: 1.35, z: 0.95 } }
+          camera: { eye: { x: 1.95, y: 1.82, z: 1.25 } },
+          aspectmode: "cube"
         }
       }
     }

@@ -18,6 +18,7 @@ interface MobilityCitySceneProps {
   selectedArea: MobilityArea | null;
   view: MobilityView;
   reducedMotion: boolean;
+  resetSignal: number;
   onAreaHover: (area: MobilityArea | null) => void;
   onAreaSelect: (area: MobilityArea) => void;
   onStatusChange: (status: MobilityModelStatus) => void;
@@ -25,9 +26,20 @@ interface MobilityCitySceneProps {
   locale: Locale;
 }
 
-function CameraController({ view, reducedMotion, enabled }: { view: MobilityView; reducedMotion: boolean; enabled: boolean }) {
+function CameraController({
+  view,
+  reducedMotion,
+  enabled,
+  resetSignal
+}: {
+  view: MobilityView;
+  reducedMotion: boolean;
+  enabled: boolean;
+  resetSignal: number;
+}) {
   const { camera, invalidate } = useThree();
   const target = useRef(new Vector3(...CAMERA_VIEWS.overview.target));
+  const resetActive = useRef(false);
   const targetPosition = useMemo(() => new Vector3(...CAMERA_VIEWS[view].position), [view]);
   const targetLookAt = useMemo(() => new Vector3(...CAMERA_VIEWS[view].target), [view]);
   const targetFov = CAMERA_VIEWS[view].fov;
@@ -36,6 +48,13 @@ function CameraController({ view, reducedMotion, enabled }: { view: MobilityView
     camera.lookAt(target.current);
     invalidate();
   }, [camera, invalidate, targetFov, targetLookAt, targetPosition]);
+
+  useEffect(() => {
+    if (resetSignal > 0 && view === "overview") {
+      resetActive.current = true;
+      invalidate();
+    }
+  }, [invalidate, resetSignal, view]);
 
   useEffect(() => {
     if (reducedMotion) {
@@ -53,7 +72,7 @@ function CameraController({ view, reducedMotion, enabled }: { view: MobilityView
   }, [camera, invalidate, reducedMotion, targetFov, targetLookAt, targetPosition]);
 
   useFrame(() => {
-    if (reducedMotion || !enabled) {
+    if (reducedMotion || (!enabled && !resetActive.current)) {
       return;
     }
 
@@ -62,6 +81,7 @@ function CameraController({ view, reducedMotion, enabled }: { view: MobilityView
     const fovDistance = "fov" in camera ? Math.abs(camera.fov - targetFov) : 0;
 
     if (positionDistance < 0.004 && targetDistance < 0.004 && fovDistance < 0.02) {
+      resetActive.current = false;
       return;
     }
 
@@ -137,6 +157,7 @@ export function MobilityCityScene({
   selectedArea,
   view,
   reducedMotion,
+  resetSignal,
   onAreaHover,
   onAreaSelect,
   onStatusChange,
@@ -166,7 +187,7 @@ export function MobilityCityScene({
         shadow-normalBias={0.035}
       />
       <ContactShadows position={[0, -0.015, 0]} opacity={0.28} scale={8.5} blur={2.8} far={4.5} resolution={512} color="#52616a" frames={1} />
-      <CameraController view={view} reducedMotion={reducedMotion} enabled={view !== "overview"} />
+      <CameraController view={view} reducedMotion={reducedMotion} enabled={view !== "overview"} resetSignal={resetSignal} />
       <MobilityCityModel
         hoveredArea={hoveredArea}
         selectedArea={selectedArea}
@@ -186,6 +207,7 @@ export function MobilityCityScene({
       ) : null}
       <OrbitControls
         enabled={view === "overview" || debug}
+        target={CAMERA_VIEWS.overview.target}
         enableDamping
         enablePan={false}
         enableZoom={false}
