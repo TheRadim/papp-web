@@ -435,7 +435,7 @@ function SensorModel({
   }
 
   return (
-    <group ref={groupRef} position={[0, -0.9, 0]} onPointerOver={handlePointerOver} onPointerOut={handlePointerOut}>
+    <group ref={groupRef} position={[0, -0.72, 0]} onPointerOver={handlePointerOver} onPointerOut={handlePointerOut}>
       <primitive object={scene} />
     </group>
   );
