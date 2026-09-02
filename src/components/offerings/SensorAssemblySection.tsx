@@ -382,7 +382,7 @@ function SensorModel({
       const snapshot = snapshots.current.get(lid);
       if (snapshot) {
         lid.position.y = snapshot.position.y;
-        lid.position.z = snapshot.position.z - eased * 0.12;
+        lid.position.z = snapshot.position.z - eased * 0.075;
       }
     }
 
@@ -435,7 +435,7 @@ function SensorModel({
   }
 
   return (
-    <group ref={groupRef} position={[0, -0.72, 0]} onPointerOver={handlePointerOver} onPointerOut={handlePointerOut}>
+    <group ref={groupRef} position={[0, -0.58, 0]} onPointerOver={handlePointerOver} onPointerOut={handlePointerOut}>
       <primitive object={scene} />
     </group>
   );
