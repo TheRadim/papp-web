@@ -114,7 +114,7 @@ const teamMembers = [
     role: { en: "Development Consultant", da: "Udviklingskonsulent" },
     email: "martine.winther@pappmobility.com",
     linkedinUrl: "https://www.linkedin.com/in/martine-winther-54b29696/",
-    image: "/images/team/martine-profile.png"
+    image: "/images/team/martine-profile-new.webp"
   },
   {
     name: "Maxim Zavidei",

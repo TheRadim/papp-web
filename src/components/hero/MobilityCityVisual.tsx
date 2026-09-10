@@ -159,8 +159,17 @@ export function MobilityCityVisual({
       setHoveredArea(null);
       onAreaHover?.(null);
       onAreaSelect?.(area);
+      if (window.matchMedia("(max-width: 991.98px)").matches && showDetails) {
+        window.requestAnimationFrame(() => {
+          const stage = ref.current;
+          if (!stage) return;
+          const header = document.querySelector("header");
+          const inset = (header?.getBoundingClientRect().height ?? 80) + 12;
+          window.scrollTo({ top: window.scrollY + stage.getBoundingClientRect().top - inset, behavior: reducedMotion ? "instant" : "smooth" });
+        });
+      }
     },
-    [lockedArea, onAreaHover, onAreaSelect]
+    [lockedArea, onAreaHover, onAreaSelect, reducedMotion, ref, showDetails]
   );
 
   const handleReturnToOverview = useCallback(() => {

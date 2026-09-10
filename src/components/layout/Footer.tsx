@@ -33,6 +33,11 @@ export function Footer({ locale }: FooterProps) {
             <span>CVR {company.cvr}</span>
           </div>
         </div>
+        <p className="footer-camera-credit" id="camera-model-credit">
+          <span aria-hidden="true">* </span>
+          {locale === "da" ? "Kameramodel og produktinformation fra " : "Camera model and product information courtesy of "}
+          <a href="https://adaptiverecognition.com/products/einar-anpr-camera/" target="_blank" rel="noreferrer">Adaptive Recognition</a>.
+        </p>
       </div>
     </footer>
   );

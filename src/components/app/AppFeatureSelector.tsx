@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import type { CSSProperties } from "react";
-import { Bell, ChevronLeft, ChevronRight, Clock, Info, MapPinned, Navigation, Search } from "lucide-react";
+
+import { ChevronLeft, ChevronRight, Info, Map, MapPinned, Navigation, Search, SlidersHorizontal } from "lucide-react";
 import { company } from "@/content/global/company";
 import type { Locale } from "@/content/types";
 import { withBasePath } from "@/lib/site/basePath";
@@ -18,28 +18,12 @@ interface AppFeatureSelectorProps {
   locale: Locale;
 }
 
-const icons = [MapPinned, Navigation, Search, Clock, Info, Bell];
-const phoneFrames = [
-  { x: "0%", y: "0%", scale: "1" },
-  { x: "1.8%", y: "-1.2%", scale: "1.018" },
-  { x: "-1.5%", y: "1.1%", scale: "1.012" },
-  { x: "1.2%", y: "1.7%", scale: "1.02" },
-  { x: "-1.8%", y: "-0.7%", scale: "1.016" },
-  { x: "0.8%", y: "-1.6%", scale: "1.014" }
-];
-
+const icons = [MapPinned, Navigation, Search, Map, SlidersHorizontal, MapPinned];
 export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [userSelected, setUserSelected] = useState(false);
   const swipeStartRef = useRef<number | null>(null);
   const activeFeature = features[activeIndex];
-  const phoneFrame = phoneFrames[activeIndex % phoneFrames.length];
-  const phoneStyle = {
-    "--app-phone-pan-x": phoneFrame.x,
-    "--app-phone-pan-y": phoneFrame.y,
-    "--app-phone-scale": phoneFrame.scale
-  } as CSSProperties;
-
   function showFeature(index: number) {
     setActiveIndex((index + features.length) % features.length);
     setUserSelected(true);
@@ -94,12 +78,12 @@ export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps
           >
             <ChevronLeft aria-hidden="true" size={22} />
           </button>
-          <div className="app-feature-selector__phone" key={`phone-${activeIndex}`} style={phoneStyle}>
+          <div className="app-feature-selector__phone" key={`phone-${activeIndex}`}>
             <Image
-              src={withBasePath("/images/app/papp-app-phone.png")}
-              alt=""
-              width={580}
-              height={1112}
+              src={withBasePath(`/images/app/feature-${activeIndex + 1}.webp`)}
+              alt={activeFeature.title[locale]}
+              width={600}
+              height={1300}
               sizes="(max-width: 768px) 70vw, 240px"
             />
           </div>

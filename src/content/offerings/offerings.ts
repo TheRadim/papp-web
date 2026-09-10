@@ -1,7 +1,6 @@
 import type { Locale, Offering } from "@/content/types";
 
 const sensorVisual = "/images/corporate/parking-sensor-ground.jpg";
-const cameraVisual = "/images/corporate/parking-tablet-review.jpg";
 const insightVisual = "/images/corporate/insights-screen.jpg";
 const analysisVisual = "/images/corporate/insights-meeting-city.jpg";
 const consultancyVisual = "/images/corporate/parking-consultation-charger.jpg";
@@ -74,7 +73,7 @@ export const offerings: Offering[] = [
       { en: "Deploy cameras for the agreed measurement period.", da: "Opsæt kameraer i den aftalte måleperiode." },
       { en: "Use analytics to identify practical patterns.", da: "Brug analysen til at finde praktiske mønstre." }
     ],
-    heroImage: cameraVisual,
+    heroImage: "/images/camera/installed-camera.webp",
     relatedProjectSlugs: ["parkeringsmoenstre-ishoej", "kystparkering-thisted"],
     contentStatus: "needs-review",
     seo: {

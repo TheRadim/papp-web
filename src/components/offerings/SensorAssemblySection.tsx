@@ -32,16 +32,10 @@ const copy: Record<Locale, { eyebrow: string; title: string; intro: string; stat
       "Papp sensors are developed in-house for projects where every space matters. They are designed for reliable spot-level measurement, smaller coverage areas and locations where teams need to understand exactly which bays are used, when pressure builds and how behaviour changes over time.",
     steps: [
       {
-        part: "lid",
-        title: "Lid",
-        body:
-          "The lid works with the base to create a watertight seal, protects the electronics and is built to handle even heavy vehicles."
-      },
-      {
         part: "core",
         title: "Core",
         body:
-          "The core hides the technical work: mobile-network transmission, remote updates, LoRaWAN support, optimised battery drain and energy-efficient vehicle detection."
+          "The sealed core combines energy-efficient vehicle detection and connectivity in one protected unit. Its robust exterior works with the base to withstand weather and daily vehicle traffic."
       },
       {
         part: "base",
@@ -60,15 +54,10 @@ const copy: Record<Locale, { eyebrow: string; title: string; intro: string; stat
       "Papps sensorer er udviklet internt til projekter, hvor hver enkelt plads betyder noget. De er skabt til stabil punktmåling, mindre dækningsområder og steder, hvor teams skal forstå præcist hvilke pladser der bruges, hvornår presset opstår, og hvordan adfærden ændrer sig over tid.",
     steps: [
       {
-        part: "lid",
-        title: "Låg",
-        body: "Låget arbejder sammen med basen for at skabe en vandtæt forsegling, beskytte elektronikken og håndtere selv tunge køretøjer."
-      },
-      {
         part: "core",
         title: "Kerne",
         body:
-          "Kernen rummer teknikken: mobilnetværk, fjernopdateringer, LoRaWAN-support, optimeret batteriforbrug og energieffektiv bilregistrering."
+          "Den forseglede kerne samler energieffektiv bilregistrering og forbindelse i én beskyttet enhed. Den robuste overflade arbejder sammen med basen for at modstå vejr og daglig trafik."
       },
       {
         part: "base",
@@ -133,7 +122,7 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
     }
 
     if (part) {
-      setHighlightedPart(part);
+      setHighlightedPart(part === "lid" ? "core" : part);
       return;
     }
 
@@ -258,22 +247,6 @@ function eachMaterial(material: Material | Material[], callback: (material: Mate
   callback(material);
 }
 
-function setObjectOpacity(object: Object3D | null | undefined, opacity: number) {
-  object?.traverse((child) => {
-    if (!(child instanceof Mesh)) return;
-
-    eachMaterial(child.material, (material) => {
-      const standard = material as MeshStandardMaterial;
-
-      if (Math.abs((standard.opacity ?? 1) - opacity) < 0.004) {
-        return;
-      }
-
-      standard.opacity = opacity;
-    });
-  });
-}
-
 function getSensorPartFromObject(object: Object3D): SensorPartName | null {
   let current: Object3D | null = object;
 
@@ -302,7 +275,6 @@ function SensorModel({
   const gltf = useGLTF(withBasePath("/models/sensor/parking-sensor.glb"));
   const groupRef = useRef<Group>(null);
   const parts = useRef<Partial<Record<SensorPartName, Object3D>>>({});
-  const partOpacities = useRef<Record<SensorPartName, number>>({ base: 1, core: 1, lid: 1 });
   const snapshots = useRef(new Map<Object3D, PartSnapshot>());
   const smoothedOpen = useRef(0);
   const hoveredModelPart = useRef<SensorPartName | null>(null);
@@ -330,7 +302,9 @@ function SensorModel({
       eachMaterial(object.material, (material) => {
         const standard = material as MeshStandardMaterial;
         standard.transparent = true;
+        standard.opacity = 1;
         standard.depthWrite = true;
+        standard.emissiveIntensity = 0;
 
         if (standard.roughness !== undefined) {
           standard.roughness = Math.max(standard.roughness, 0.58);
@@ -365,42 +339,35 @@ function SensorModel({
     parts.current = nextParts;
     snapshots.current = nextSnapshots;
 
-    (["base", "core", "lid"] as SensorPartName[]).forEach((partName) => {
-      partOpacities.current[partName] = 1;
-      setObjectOpacity(nextParts[partName], 1);
-    });
   }, [scene]);
 
   useFrame((_, delta) => {
     const targetOpen = Math.min(1, Math.max(0, progress * 1.08));
     smoothedOpen.current += (targetOpen - smoothedOpen.current) * Math.min(1, delta * 5);
     const eased = smoothedOpen.current * smoothedOpen.current * (3 - 2 * smoothedOpen.current);
-    const base = parts.current.base;
-    const lid = parts.current.lid;
-
-    if (lid) {
-      const snapshot = snapshots.current.get(lid);
-      if (snapshot) {
-        lid.position.y = snapshot.position.y;
-        lid.position.z = snapshot.position.z - eased * 0.075;
-      }
-    }
-
-    if (base) {
-      const snapshot = snapshots.current.get(base);
-      if (snapshot) {
-        base.position.y = snapshot.position.y;
-        base.position.z = snapshot.position.z + eased * 0.075;
-      }
+    // The imported model's parent rotates local -Z onto the vertical Y axis.
+    // Both meshes keep their assembled offset and lift as one sealed core.
+    for (const part of [parts.current.core, parts.current.lid]) {
+      if (!part) continue;
+      const snapshot = snapshots.current.get(part);
+      if (snapshot) part.position.z = snapshot.position.z - eased * 0.075;
     }
 
     (["base", "core", "lid"] as SensorPartName[]).forEach((partName) => {
-      const targetOpacity = !activePart || partName === activePart ? 1 : 0.1;
-      const currentOpacity = partOpacities.current[partName] ?? 1;
-      const nextOpacity = currentOpacity + (targetOpacity - currentOpacity) * Math.min(1, delta * 5.5);
-      const settledOpacity = Math.abs(nextOpacity - targetOpacity) < 0.01 ? targetOpacity : nextOpacity;
-      partOpacities.current[partName] = settledOpacity;
-      setObjectOpacity(parts.current[partName], settledOpacity);
+      const publicPart = partName === "lid" ? "core" : partName;
+      parts.current[partName]?.traverse((object) => {
+        if (!(object instanceof Mesh)) return;
+        eachMaterial(object.material, (material) => {
+          const standard = material as MeshStandardMaterial;
+          if (!standard.emissive) return;
+          const targetOpacity = !activePart || activePart === publicPart ? 1 : 0.1;
+          standard.opacity += (targetOpacity - standard.opacity) * Math.min(1, delta * 5.5);
+          standard.depthWrite = standard.opacity > 0.95;
+          standard.emissive.set("#47b2e4");
+          const intensity = activePart === publicPart ? 0.12 : 0;
+          standard.emissiveIntensity += (intensity - standard.emissiveIntensity) * Math.min(1, delta * 5.5);
+        });
+      });
     });
   });
 

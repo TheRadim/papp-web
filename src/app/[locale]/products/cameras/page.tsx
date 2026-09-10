@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { Locale } from "@/content/types";
 import { getOfferingBySlug } from "@/lib/content/accessors";
+import { CameraExplorer } from "@/components/offerings/CameraExplorer";
 import { OfferingPage } from "@/components/offerings/OfferingPage";
 import { pageMetadata } from "@/lib/seo/metadata";
 
@@ -16,5 +17,5 @@ export default async function CamerasPage({ params }: { params: Promise<{ locale
   const { locale } = await params;
   const offering = getOfferingBySlug(locale, "cameras");
   if (!offering) notFound();
-  return <OfferingPage locale={locale} offering={offering} />;
+  return <OfferingPage locale={locale} offering={offering} afterHero={<CameraExplorer locale={locale} />} />;
 }

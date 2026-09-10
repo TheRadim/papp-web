@@ -7,6 +7,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { pick } from "@/lib/i18n/locales";
 import { getProjects } from "@/lib/content/accessors";
 import { withBasePath } from "@/lib/site/basePath";
+import { CameraInstallation } from "@/components/offerings/CameraInstallation";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 
 interface OfferingPageProps {
@@ -40,7 +41,7 @@ export function OfferingPage({ locale, offering, afterHero, hideDetailSections =
 
       {!hideDetailSections ? (
         <Section>
-          <div className="detail-grid">
+          <div className="offering-benefits">
             <div>
               <SectionHeading eyebrow={locale === "da" ? "Fordele" : "Benefits"} title={locale === "da" ? "Hvad det hjælper jer med" : "What it helps you understand"} />
               <ul className="check-list check-list--large">
@@ -49,19 +50,17 @@ export function OfferingPage({ locale, offering, afterHero, hideDetailSections =
                 ))}
               </ul>
             </div>
-            <div>
-              <SectionHeading eyebrow={locale === "da" ? "Brugsscenarier" : "Use cases"} title={locale === "da" ? "Hvor løsningen passer ind" : "Where the solution fits"} />
-              <ul className="tag-list">
-                {offering.useCases.map((useCase) => (
-                  <li key={pick(locale, useCase)}>{pick(locale, useCase)}</li>
-                ))}
+            <div className="offering-use-cases">
+              <span className="eyebrow">{locale === "da" ? "Velegnet til" : "Ideal for"}</span>
+              <ul aria-label={locale === "da" ? "Brugsscenarier" : "Use cases"}>
+                {offering.useCases.map((useCase) => <li key={pick(locale, useCase)}>{pick(locale, useCase)}</li>)}
               </ul>
             </div>
           </div>
         </Section>
       ) : null}
 
-      {!hideDetailSections && offering.process?.length ? (
+      {!hideDetailSections && offering.category === "cameras" ? <CameraInstallation locale={locale} /> : !hideDetailSections && offering.process?.length ? (
         <Section tone="soft">
           <SectionHeading eyebrow={locale === "da" ? "Proces" : "Process"} title={locale === "da" ? "Sådan starter et forløb" : "How a project starts"} align="center" />
           <div className="process-grid">
@@ -71,20 +70,6 @@ export function OfferingPage({ locale, offering, afterHero, hideDetailSections =
                 <p>{pick(locale, step)}</p>
               </article>
             ))}
-          </div>
-        </Section>
-      ) : null}
-
-      {!hideDetailSections && offering.category === "cameras" ? (
-        <Section>
-          <div className="review-note">
-            <p className="eyebrow">{locale === "da" ? "Privacy" : "Privacy"}</p>
-            <h2>{locale === "da" ? "Godkendt databehandlingscopy mangler" : "Approved data-handling copy is needed"}</h2>
-            <p>
-              {locale === "da"
-                ? "Denne sektion er reserveret til verificeret privacy- og databehandlingssprog. Den bør godkendes juridisk før lancering."
-                : "This section is reserved for verified privacy and data-handling language. It should receive legal review before launch."}
-            </p>
           </div>
         </Section>
       ) : null}

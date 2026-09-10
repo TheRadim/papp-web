@@ -1199,23 +1199,32 @@ img {
   display: flex;
   width: max-content;
   align-items: center;
+  gap: 0;
+  animation: partner-scroll 48s linear infinite;
+}
+
+.partner-track__group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
   gap: clamp(2.8rem, 7vw, 6rem);
-  animation: partner-scroll 34s linear infinite;
+  padding-right: clamp(2.8rem, 7vw, 6rem);
 }
-
+.partner-track__group > span { display: flex; flex-shrink: 0; align-items: center; }
 .partner-track img {
+  display: block;
+  height: 48px;
   width: auto;
-  max-width: 132px;
-  max-height: 48px;
-  filter: none;
-  opacity: 0.9;
-  transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+  max-width: none;
+  object-fit: contain;
+  filter: brightness(0);
 }
-
-.partner-track img:hover {
-  filter: grayscale(0);
-  opacity: 1;
-  transform: scale(1.08);
+@media (max-width: 767.98px) {
+  .partner-track img { height: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .partner-track__group { flex-wrap: wrap; justify-content: center; padding-right: 0; }
+  .partner-track__group[aria-hidden="true"] { display: none; }
 }
 
 @keyframes partner-scroll {
@@ -3124,7 +3133,7 @@ button.project-category-card {
   z-index: 5;
   width: min(430px, calc(100% - 2rem));
   border: 1px solid rgba(71, 178, 228, 0.28);
-  border-top: 4px solid var(--papp-blue-light);
+
   border-radius: 10px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(247, 252, 255, 0.9));
   box-shadow: 0 26px 80px rgba(0, 84, 131, 0.16);
@@ -6141,3 +6150,65 @@ button.project-category-card {
     width: auto;
   }
 }
+
+/* Let the horizontal comparisons use the full available chart height. */
+.insight-dashboard__origin,
+.insight-dashboard__vehicle-mix { align-content: stretch; }
+.insight-dashboard__origin { grid-auto-rows: minmax(0, 1fr); }
+.insight-dashboard__vehicle-bars { grid-auto-rows: minmax(0, 1fr); }
+.insight-dashboard__origin-row i,
+.insight-dashboard__vehicle-row i { height: 72%; min-height: 5px; }
+
+.solutions-city-panel .mobility-city { height: clamp(340px, 52svh, 520px); }
+.solutions-city-panel { margin-top: 1rem; }
+@media (max-width: 1199.98px), (pointer: coarse) {
+  .sensor-product-lab__stage { width: 56%; margin-inline: auto; }
+}
+@media (max-width: 991.98px) {
+  .solutions-city-panel .mobility-city { height: auto; }
+  .solutions-city-panel .mobility-city__stage { height: clamp(230px, 40svh, 380px); width: calc(100% - 48px); margin-inline: auto; }
+}
+
+.camera-explorer { background: linear-gradient(145deg, #f5faff, #fff 70%); }
+.camera-explorer__layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+.camera-explorer__viewer { min-width: 0; }
+.camera-explorer__spin { overflow: hidden; touch-action: pan-y; cursor: grab; }
+.camera-explorer__spin:active { cursor: grabbing; }
+.camera-explorer__spin img { width: 100%; height: auto; transform: scale(1.65); user-select: none; }
+.camera-explorer__hint { text-align: center; color: var(--papp-muted); font-size: .88rem; margin: 1rem 0; }
+.camera-explorer__controls { display: flex; align-items: center; gap: 1rem; max-width: 360px; margin-inline: auto; }
+.camera-explorer__controls input { width: 100%; min-width: 0; accent-color: var(--papp-blue); }
+.camera-explorer__controls button { flex-shrink: 0; width: 44px; height: 44px; border: 1px solid #d9e6ef; border-radius: 50%; background: white; color: var(--papp-blue); }
+.camera-explorer__features article { border-bottom: 1px solid #dae5ed; padding-block: 1.2rem; }
+.camera-explorer__features h3 { margin: 0; font-size: clamp(1.15rem, 2vw, 1.5rem); }
+.camera-explorer__features h3 { display: flex; align-items: baseline; gap: 1rem; padding: .25rem 0; }
+.camera-explorer__features h3 span { font-size: .8rem; color: var(--papp-blue); }
+.camera-explorer__features p { margin: 1rem 0 0 2.1rem; color: var(--papp-muted); }
+.camera-explorer__source { display: inline-block; margin-top: 1.25rem; font-size: .8rem; }
+@media (max-width: 991.98px) {
+  .camera-explorer__layout { grid-template-columns: 1fr; }
+  .camera-explorer__spin { width: calc(100% - 48px); margin-inline: auto; }
+}
+
+.camera-installation { background: #f5f9fc; }
+.camera-installation__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
+.camera-installation__grid article { background: white; overflow: hidden; border-radius: 12px; }
+.camera-installation__grid img { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+.camera-installation__grid article > div { padding: 1.5rem; }
+.camera-installation__grid h3 { font-size: 1.4rem; margin-block: .5rem 1rem; }
+.camera-installation__grid p { margin-bottom: 0; }
+@media (max-width: 767.98px) {
+  .camera-installation__grid { grid-template-columns: 1fr; }
+}
+
+.footer-camera-credit { display: none; margin: 1.25rem 0 0; font-size: .75rem; color: var(--papp-muted); }
+body:has(.camera-explorer) .footer-camera-credit { display: block; }
+.camera-explorer__hint sup { font-size: 1rem; }
+.solutions-city-panel .mobility-city__panel,
+.solutions-city-panel .mobility-city__control { box-shadow: none; }
+
+.offering-benefits { display: grid; gap: 1.5rem; }
+.offering-use-cases { display: flex; align-items: baseline; flex-wrap: wrap; gap: .65rem 1.5rem; padding-block: 1rem; border-block: 1px solid #e3ebf0; }
+.offering-use-cases > .eyebrow { margin: 0; }
+.offering-use-cases ul { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; list-style: none; margin: 0; padding: 0; }
+.offering-use-cases li + li::before { content: "·"; margin-right: 1.25rem; color: var(--papp-blue); }

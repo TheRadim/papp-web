@@ -6,10 +6,10 @@ import { getMobilityCityProduct } from "@/content/mobility-city/mobility-city";
 describe("interactive mobility city config", () => {
   it("keeps Blender object names centralised", () => {
     expect(CITY_OBJECT_NAMES).toEqual({
-      base: "City_Base",
-      sensors: "Sensors_Test",
-      cameras: "Camera_Test",
-      insights: "Insights_Test"
+      base: "parking",
+      sensors: "PappSensor",
+      cameras: "PappCamera",
+      insights: "PappInsights"
     });
   });
 

@@ -7,45 +7,63 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 
 const appFeatures = [
   {
-    title: { en: "See availability nearby", da: "Se ledige pladser i nærheden" },
-    body: {
-      en: "A live map shows where Papp has active datapoints and how occupancy appears to the people using the area.",
-      da: "Et livekort viser, hvor Papp har aktive datapunkter, og hvordan belægning opleves af brugerne i området."
+    "title": {
+      "en": "See availability nearby",
+      "da": "Se ledige pladser i nærheden"
+    },
+    "body": {
+      "en": "Tap a location to see its address, total spaces and available bays. Coloured indicators help you read availability at a glance.",
+      "da": "Tryk på en lokation for at se adresse, samlet antal pladser og ledige båse. Farvede indikatorer giver et hurtigt overblik."
     }
   },
   {
-    title: { en: "Navigate directly", da: "Naviger direkte" },
-    body: {
-      en: "Selected locations connect directly to navigation, turning mobility data into a practical action for end users.",
-      da: "Valgte lokationer kobles direkte til navigation, så mobilitetsdata bliver til en praktisk handling for slutbrugere."
+    "title": {
+      "en": "Navigate to your chosen spot",
+      "da": "Naviger til din valgte plads"
+    },
+    "body": {
+      "en": "Choose a parking location and tap “Navigate me here” to continue to navigation. Check the available spaces before setting off.",
+      "da": "Vælg en parkeringslokation, og tryk på “Naviger mig hertil” for at gå videre til navigation. Se antallet af ledige pladser, før du kører."
     }
   },
   {
-    title: { en: "Compare practical details", da: "Sammenlign praktiske detaljer" },
-    body: {
-      en: "Pricing, location context and special parking types help partners see how information is presented outside the dashboard.",
-      da: "Priser, lokationskontekst og særlige parkeringstyper viser partnere, hvordan information præsenteres uden for dashboardet."
+    "title": {
+      "en": "Search for a destination",
+      "da": "Søg efter en destination"
+    },
+    "body": {
+      "en": "Search for an address, shop or place by name. Choose a result to explore parking around the destination you have in mind.",
+      "da": "Søg efter en adresse, butik eller et sted ved navn. Vælg et resultat for at udforske parkering omkring din destination."
     }
   },
   {
-    title: { en: "Plan before arrival", da: "Planlæg før ankomst" },
-    body: {
-      en: "The app reveals how real-time signals can reduce uncertainty before a driver reaches a busy destination.",
-      da: "Appen viser, hvordan realtidssignaler kan mindske usikkerhed, før en bilist når frem til et travlt område."
+    "title": {
+      "en": "Explore parking on the map",
+      "da": "Udforsk parkering på kortet"
+    },
+    "body": {
+      "en": "Explore the map to find parking locations and different parking types. Select a marker to see the location details and available spaces.",
+      "da": "Udforsk kortet for at finde parkeringslokationer og forskellige parkeringstyper. Vælg en markør for at se detaljer og ledige pladser."
     }
   },
   {
-    title: { en: "Find relevant parking types", da: "Find relevante parkeringstyper" },
-    body: {
-      en: "Different parking types make the public app a useful reference for understanding site coverage and user needs.",
-      da: "Forskellige parkeringstyper gør den offentlige app til en nyttig reference for dækning og brugerbehov."
+    "title": {
+      "en": "Filter for the parking you need",
+      "da": "Filtrér efter den parkering, du har brug for"
+    },
+    "body": {
+      "en": "Show the parking types relevant to your trip: regular parking, EV parking, charging stations, accessible spaces, tradesperson parking or shared cars.",
+      "da": "Vis de parkeringstyper, der passer til din tur: almindelig parkering, elbilparkering, ladestandere, handicappladser, håndværkerparkering eller delebiler."
     }
   },
   {
-    title: { en: "Stay updated on the move", da: "Hold dig opdateret undervejs" },
-    body: {
-      en: "Live availability shows the operational side of Papp's data network as conditions change through the day.",
-      da: "Live tilgængelighed viser den operationelle side af Papps datanetværk, når forhold ændrer sig i løbet af dagen."
+    "title": {
+      "en": "See the bigger picture",
+      "da": "Få det store overblik"
+    },
+    "body": {
+      "en": "Zoom out to explore parking across the city. Compare the coloured availability markers and zoom in on an area that works for your journey.",
+      "da": "Zoom ud for at udforske parkering i hele byen. Sammenlign de farvede markører for tilgængelighed, og zoom ind på et område, der passer til din tur."
     }
   }
 ];
