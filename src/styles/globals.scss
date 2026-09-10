@@ -6212,3 +6212,18 @@ body:has(.camera-explorer) .footer-camera-credit { display: block; }
 .offering-use-cases > .eyebrow { margin: 0; }
 .offering-use-cases ul { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; list-style: none; margin: 0; padding: 0; }
 .offering-use-cases li + li::before { content: "·"; margin-right: 1.25rem; color: var(--papp-blue); }
+
+.app-feature-selector__phone--crossfade img {
+  grid-area: 1 / 1;
+  opacity: 0;
+  animation: none;
+  transition: opacity 1.2s ease-in-out;
+  pointer-events: none;
+}
+.app-feature-selector__phone--crossfade img.is-visible { opacity: 1; }
+@media (max-width: 767.98px) {
+  .nav-actions > .login-link { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-feature-selector__phone--crossfade img { transition: none; }
+}

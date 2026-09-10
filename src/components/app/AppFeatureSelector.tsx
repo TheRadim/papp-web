@@ -21,9 +21,15 @@ interface AppFeatureSelectorProps {
 const icons = [MapPinned, Navigation, Search, Map, SlidersHorizontal, MapPinned];
 export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({});
+  const [displayedIndex, setDisplayedIndex] = useState(0);
   const [userSelected, setUserSelected] = useState(false);
   const swipeStartRef = useRef<number | null>(null);
   const activeFeature = features[activeIndex];
+  if (loadedImages[activeIndex] && displayedIndex !== activeIndex) {
+    setDisplayedIndex(activeIndex);
+  }
+
   function showFeature(index: number) {
     setActiveIndex((index + features.length) % features.length);
     setUserSelected(true);
@@ -78,14 +84,21 @@ export function AppFeatureSelector({ features, locale }: AppFeatureSelectorProps
           >
             <ChevronLeft aria-hidden="true" size={22} />
           </button>
-          <div className="app-feature-selector__phone" key={`phone-${activeIndex}`}>
-            <Image
-              src={withBasePath(`/images/app/feature-${activeIndex + 1}.webp`)}
-              alt={activeFeature.title[locale]}
-              width={600}
-              height={1300}
-              sizes="(max-width: 768px) 70vw, 240px"
-            />
+          <div className="app-feature-selector__phone app-feature-selector__phone--crossfade" aria-busy={!loadedImages[activeIndex]}>
+            {features.map((feature, index) => (
+              <Image
+                key={index}
+                className={displayedIndex === index && loadedImages[index] ? "is-visible" : ""}
+                src={withBasePath(`/images/app/feature-${index + 1}.webp`)}
+                alt={displayedIndex === index ? feature.title[locale] : ""}
+                aria-hidden={displayedIndex !== index}
+                width={600}
+                height={1300}
+                loading="eager"
+                unoptimized
+                onLoad={() => setLoadedImages((current) => ({ ...current, [index]: true }))}
+              />
+            ))}
           </div>
           <button
             aria-label={locale === "da" ? "Næste appfunktion" : "Next app feature"}

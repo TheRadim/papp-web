@@ -129,7 +129,7 @@ export function SensorAssemblySection({ locale }: { locale: Locale }) {
     clearHoverFrame.current = window.setTimeout(() => {
       setHighlightedPart(null);
       clearHoverFrame.current = null;
-    }, 140);
+    }, 60);
   }, []);
 
   useEffect(
@@ -254,7 +254,7 @@ function getSensorPartFromObject(object: Object3D): SensorPartName | null {
     const name = current.name.toLowerCase();
 
     if (name.includes("base")) return "base";
-    if (name.includes("lid")) return "lid";
+    if (name.includes("lid")) return "core";
     if (name.includes("perry") || name.includes("core")) return "core";
 
     current = current.parent;
@@ -277,6 +277,7 @@ function SensorModel({
   const parts = useRef<Partial<Record<SensorPartName, Object3D>>>({});
   const snapshots = useRef(new Map<Object3D, PartSnapshot>());
   const smoothedOpen = useRef(0);
+  const opacity = useRef({ base: 1, core: 1 });
   const hoveredModelPart = useRef<SensorPartName | null>(null);
 
   const scene = useMemo(() => {
@@ -353,6 +354,13 @@ function SensorModel({
       if (snapshot) part.position.z = snapshot.position.z - eased * 0.075;
     }
 
+    const blend = 1 - Math.exp(-delta * 8);
+    for (const part of ["base", "core"] as const) {
+      const target = !activePart || activePart === part ? 1 : 0.1;
+      opacity.current[part] += (target - opacity.current[part]) * blend;
+      if (Math.abs(opacity.current[part] - target) < 0.001) opacity.current[part] = target;
+    }
+
     (["base", "core", "lid"] as SensorPartName[]).forEach((partName) => {
       const publicPart = partName === "lid" ? "core" : partName;
       parts.current[partName]?.traverse((object) => {
@@ -360,9 +368,7 @@ function SensorModel({
         eachMaterial(object.material, (material) => {
           const standard = material as MeshStandardMaterial;
           if (!standard.emissive) return;
-          const targetOpacity = !activePart || activePart === publicPart ? 1 : 0.1;
-          standard.opacity += (targetOpacity - standard.opacity) * Math.min(1, delta * 5.5);
-          standard.depthWrite = standard.opacity > 0.95;
+          standard.opacity = opacity.current[publicPart];
           standard.emissive.set("#47b2e4");
           const intensity = activePart === publicPart ? 0.12 : 0;
           standard.emissiveIntensity += (intensity - standard.emissiveIntensity) * Math.min(1, delta * 5.5);
@@ -402,7 +408,7 @@ function SensorModel({
   }
 
   return (
-    <group ref={groupRef} position={[0, -0.22, 0]} onPointerOver={handlePointerOver} onPointerOut={handlePointerOut}>
+    <group ref={groupRef} position={[0, -0.22, 0]} onPointerOver={handlePointerOver} onPointerMove={handlePointerOver} onPointerOut={handlePointerOut}>
       <primitive object={scene} />
     </group>
   );
