@@ -6227,3 +6227,16 @@ body:has(.camera-explorer) .footer-camera-credit { display: block; }
 @media (prefers-reduced-motion: reduce) {
   .app-feature-selector__phone--crossfade img { transition: none; }
 }
+
+/* Keep the app preview and dock together in a laptop-height viewport. */
+@media (min-width: 992px) {
+  .app-feature-page { min-height: calc(100svh - 76px); padding-block: clamp(1rem, 2.5svh, 2rem); align-content: start; }
+  .app-feature-page > .container > .section-heading { margin-bottom: clamp(1rem, 2.5svh, 1.75rem); }
+  .app-feature-page > .container > .section-heading h2 { font-size: clamp(1.65rem, 2.4vw, 2.25rem); }
+  .app-feature-page > .container > .section-heading p { margin-bottom: .5rem; }
+  .app-feature-page .app-feature-selector { gap: clamp(.8rem, 2svh, 1.5rem); }
+  .app-feature-page .app-feature-selector__phone img { width: auto; height: clamp(220px, calc(100svh - 430px), 420px); }
+  .app-feature-page .app-feature-selector__badges { margin-top: 1rem; }
+  .app-feature-page .app-feature-selector__panel > span { margin-bottom: .4rem; }
+  .app-feature-page .app-feature-selector__buttons { padding: .6rem; }
+}

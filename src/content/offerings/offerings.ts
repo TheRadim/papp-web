@@ -1,7 +1,7 @@
 import type { Locale, Offering } from "@/content/types";
 
 const sensorVisual = "/images/corporate/parking-sensor-ground.jpg";
-const insightVisual = "/images/corporate/insights-screen.jpg";
+const insightVisual = "/images/corporate/insights-laptop.webp";
 const analysisVisual = "/images/corporate/insights-meeting-city.jpg";
 const consultancyVisual = "/images/corporate/parking-consultation-charger.jpg";
 

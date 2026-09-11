@@ -34,7 +34,7 @@ const timeline = [
       en: "Live parking data and AI forecasting move from idea to active development.",
       da: "Live parkeringsdata og AI-prognoser går fra idé til aktiv udvikling."
     },
-    image: "/images/about/timeline-data.jpg"
+    image: "/images/corporate/insights-laptop.webp"
   },
   {
     date: { en: "May 2022", da: "Maj 2022" },
